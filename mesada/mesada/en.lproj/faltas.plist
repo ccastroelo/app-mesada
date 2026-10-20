@@ -1,0 +1,102 @@
+(
+	{
+		descricao = "Make the bed";
+		idFalta = 1;
+		valor = "0.5";
+	},
+	{
+		descricao = "Grade A at school";
+		idFalta = 2;
+		valor = "1.5";
+	},
+	{
+		descricao = "Leave the light on";
+		idFalta = 3;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Don't do the homework";
+		idFalta = 4;
+		valor = "-1";
+	},
+	{
+		descricao = "Leave the toys on the floor";
+		idFalta = 5;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Leave the fridge open";
+		idFalta = 6;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Do not brush the teeth";
+		idFalta = 7;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Leave cloth or towel on the floor";
+		idFalta = 8;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Delay to school";
+		idFalta = 9;
+		valor = "-0.5";
+	},
+	{
+		descricao = "No lunch or dinner";
+		idFalta = 10;
+		valor = "-0.75";
+	},
+	{
+		descricao = "Complaining to go to school";
+		idFalta = 11;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Do not bathe";
+		idFalta = 12;
+		valor = "-0.25";
+	},
+	{
+		descricao = "Do not flush the toilet";
+		idFalta = 13;
+		valor = "-0.25";
+	},
+	{
+		descricao = "Do not put the seatbelt";
+		idFalta = 14;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Bad grade at school";
+		idFalta = 15;
+		valor = "-2";
+	},
+	{
+		descricao = "Eating off the table";
+		idFalta = 16;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Leave the TV or other devices on";
+		idFalta = 17;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Leave the faucet or shower open or dripping";
+		idFalta = 18;
+		valor = "-0.5";
+	},
+	{
+		descricao = "Swearing, fighting or hitting";
+		idFalta = 19;
+		valor = "-1.5";
+	},
+	{
+		descricao = Lie;
+		idFalta = 20;
+		valor = "-1";
+	},
+)

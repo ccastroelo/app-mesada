@@ -1,0 +1,84 @@
+/* Class = "IBUILabel"; text = "Digite sua senha"; ObjectID = "4Hc-zQ-1Sb"; */
+"4Hc-zQ-1Sb.text" = "Introduzca su contraseña";
+
+/* Class = "IBUINavigationItem"; title = "Lançamentos"; ObjectID = "6lX-s7-Jhe"; */
+"6lX-s7-Jhe.title" = "Anotaciones";
+
+/* Class = "IBUITabBarItem"; title = "Mesadas"; ObjectID = "9A1-tu-SEM"; */
+"9A1-tu-SEM.title" = "Semanadas";
+
+/* Class = "IBUILabel"; text = "Agradecemos por utilizar o MESADA, estamos trabalhando para fazer um aplicativo cada vez mais completo para você, então não esqueça de deixar sua avaliação e seu comentário. Sua opinião é muito importante."; ObjectID = "9TB-Q6-qAi"; */
+"9TB-Q6-qAi.text" = "Gracias por usar SEMANADA, estamos trabajando para hacer una aplicación más completa para usted, así que no te olvides de dejar tu opinión y sus comentarios. Tu opinión es muy importante.";
+
+/* Class = "IBUISegmentedControl"; G2D-9o-TrI.segmentTitles[0] = "Desconto"; ObjectID = "G2D-9o-TrI"; */
+"G2D-9o-TrI.segmentTitles[0]" = "Deducción";
+
+/* Class = "IBUISegmentedControl"; G2D-9o-TrI.segmentTitles[1] = "Recompensa"; ObjectID = "G2D-9o-TrI"; */
+"G2D-9o-TrI.segmentTitles[1]" = "Recompensa";
+
+/* Class = "IBUILabel"; text = "A situação para a sua senha é:"; ObjectID = "J4E-cH-vTf"; */
+"J4E-cH-vTf.text" = "La situación de su contraseña es:";
+
+/* Class = "IBUILabel"; text = "Valor da Mesada:"; ObjectID = "LWz-e8-99f"; */
+"LWz-e8-99f.text" = "Valor del Semanada:";
+
+/* Class = "IBUINavigationItem"; title = "Mesadas"; ObjectID = "NaS-Xv-PXl"; */
+"NaS-Xv-PXl.title" = "Semanadas";
+
+/* Class = "IBUINavigationItem"; title = "Senha"; ObjectID = "TZ8-HQ-8ev"; */
+"TZ8-HQ-8ev.title" = "Contraseña";
+
+/* Class = "IBUINavigationItem"; title = "Senha"; ObjectID = "TuS-K5-iL2"; */
+"TuS-K5-iL2.title" = "Contraseña";
+
+/* Class = "IBUILabel"; text = "Tipo:"; ObjectID = "Uha-Ml-yiB"; */
+"Uha-Ml-yiB.text" = "Tipo:";
+
+/* Class = "IBUILabel"; text = "Email:"; ObjectID = "UzV-vK-Yj7"; */
+"UzV-vK-Yj7.text" = "Email:";
+
+/* Class = "IBUILabel"; text = "Valor:"; ObjectID = "VMf-0e-aJ2"; */
+"VMf-0e-aJ2.text" = "Valor:";
+
+/* Class = "IBUITabBarItem"; title = "Ajuda"; ObjectID = "VOG-Dt-k0L"; */
+"VOG-Dt-k0L.title" = "Ayuda";
+
+/* Class = "IBUIButton"; normalTitle = "Iniciar tutorial"; ObjectID = "WHw-dG-u5J"; */
+"WHw-dG-u5J.normalTitle" = "Iniciar Tutorial";
+
+/* Class = "IBUINavigationItem"; title = "Regras"; ObjectID = "WJl-98-hAO"; */
+"WJl-98-hAO.title" = "Reglas";
+
+/* Class = "IBUITabBarItem"; title = "Regras"; ObjectID = "XaC-fT-Nrx"; */
+"XaC-fT-Nrx.title" = "Reglas";
+
+/* Class = "IBUINavigationItem"; title = "Mesada"; ObjectID = "a5J-2z-lOy"; */
+"a5J-2z-lOy.title" = "Semanada";
+
+/* Class = "IBUILabel"; text = "Nome:"; ObjectID = "e0z-mw-KtH"; */
+"e0z-mw-KtH.text" = "Nombre:";
+
+/* Class = "IBUINavigationItem"; title = "Regras"; ObjectID = "g7w-e1-eI0"; */
+"g7w-e1-eI0.title" = "Reglas";
+
+/* Class = "IBUINavigationItem"; title = "Ajuda"; ObjectID = "gYZ-kB-aHS"; */
+"gYZ-kB-aHS.title" = "Ayuda";
+
+/* Class = "IBUILabel"; text = "Descrição:"; ObjectID = "pgV-0C-4pM"; */
+"pgV-0C-4pM.text" = "Descripción:";
+
+/* Class = "IBUILabel"; text = "Digite novamente sua senha"; ObjectID = "qZH-xV-TgO"; */
+"qZH-xV-TgO.text" = "Introduzca su contraseña nuevamente";
+
+/* Class = "IBUITabBarItem"; title = "Senha"; ObjectID = "tdA-hx-V3m"; */
+"tdA-hx-V3m.title" = "Contraseña";
+
+// ------------------
+
+/* Class = "IBUITabBarItem"; title = "Nuvem"; ObjectID = "H6A-Aa-Ezc"; */
+"H6A-Aa-Ezc.title" = "Nube";
+
+/* Class = "IBUIButton"; normalTitle = "Linkar com drop box"; ObjectID = "q7Y-XS-EkN"; */
+"q7Y-XS-EkN.normalTitle" = "Linkar com drop box";
+
+

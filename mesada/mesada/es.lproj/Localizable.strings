@@ -1,0 +1,45 @@
+"Senha incorreta" = "Contraseña incorrecta";
+
+"As senhas não coincidem. Tente novamente." = "Las contraseñas no coinciden, por favor intente de nuevo.";
+
+"ATIVADA" = "ACTIVA";
+
+"DESATIVADA" = "DESACTIVA";
+
+"Toque aqui para ativar uma senha" = "Toque aquí para activar una contraseña";
+
+"Senha incorreta (tentativa %d)\n Após 3 tentativas o app será fechado." = "Contraseña incorrecta (intento %d)\n Después de 3 intentos la aplicación se cerrará";
+
+"Digite sua senha:" = "Introduzca su contraseña:";
+
+"Mesada" = "Semanada";
+
+"Recompensa: %@" = "Recompensa: %@";
+
+"Desconto: %@" = "Deducción: %@";
+
+"Mesada: %@" = "Semanada: %@";
+
+"Saldo: %@" = "Saldo: %@";
+
+"Desconto: %@" = "Deducción: %@";
+
+"Zerar lançamentos para essa mesada?" = "Eliminar notas para esta semanada?";
+
+"Zerar todas Mesadas" = "Eliminar notas para todas las semanadas";
+
+"Cancelar" = "Cancelar";
+
+"Mesada:" = "Semanada:";
+
+"Saldo:" = "Saldo:";
+
+"Toque aqui para desativar sua senha" = "Pulse aquí para desactivar la contraseña";
+
+"Fechar Tutorial" = "Terminar Tutorial";
+
+"Não é possível enviar email deste dispositivo" = "No se puede enviar correo electrónico desde este dispositivo";
+
+"Editar" = "Editar";
+
+"Done" = "Ok";

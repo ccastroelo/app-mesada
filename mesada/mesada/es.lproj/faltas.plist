@@ -1,0 +1,102 @@
+(
+        {
+        descricao = "Hacer la cama";
+        idFalta = 1;
+        valor = "0.5";
+    },
+        {
+        descricao = "Obtener la m\U00e1xima calificaci\U00f3n en la escuela";
+        idFalta = 2;
+        valor = "1.5";
+    },
+        {
+        descricao = "Dejar la luz encendida";
+        idFalta = 3;
+        valor = "-0.5";
+    },
+        {
+        descricao = "No haces el deberes de casa";
+        idFalta = 4;
+        valor = "-1";
+    },
+        {
+        descricao = "Deja los juguetes desordenados";
+        idFalta = 5;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deja la nevera abierta";
+        idFalta = 6;
+        valor = "-0.5";
+    },
+        {
+        descricao = "No cepillarse los dientes";
+        idFalta = 7;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deja  la ropa o una toalla en el suelo";
+        idFalta = 8;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Retraso a la escuela";
+        idFalta = 9;
+        valor = "-0.5";
+    },
+        {
+        descricao = "No comer o no cenar";
+        idFalta = 10;
+        valor = "-0.75";
+    },
+        {
+        descricao = "Quej\U00e1ndose de ir a la escuela";
+        idFalta = 11;
+        valor = "-0.5";
+    },
+        {
+        descricao = "No ducharse";
+        idFalta = 12;
+        valor = "-0.25";
+    },
+        {
+        descricao = "No tirar de la cadena";
+        idFalta = 13;
+        valor = "-0.25";
+    },
+        {
+        descricao = "No abrocharse el cintur\U00f3n de seguridad";
+        idFalta = 14;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Recibir una mala calificaci\U00f3n en la escuela";
+        idFalta = 15;
+        valor = "-2";
+    },
+        {
+        descricao = "No comer en la mesa";
+        idFalta = 16;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deja la Televisi\U00f3n  u otros aparatos encendidos";
+        idFalta = 17;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deja el grifo o la ducha abierto o goteando";
+        idFalta = 18;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Insultar, pelear o golpear";
+        idFalta = 19;
+        valor = "-1.5";
+    },
+        {
+        descricao = Mentir;
+        idFalta = 20;
+        valor = "-1";
+    }
+)

@@ -1,0 +1,86 @@
+
+/* Class = "IBUILabel"; text = "Digite sua senha"; ObjectID = "4Hc-zQ-1Sb"; */
+"4Hc-zQ-1Sb.text" = "Digite sua senha";
+
+/* Class = "IBUINavigationItem"; title = "Lançamentos"; ObjectID = "6lX-s7-Jhe"; */
+"6lX-s7-Jhe.title" = "Lançamentos";
+
+/* Class = "IBUITabBarItem"; title = "Mesadas"; ObjectID = "9A1-tu-SEM"; */
+"9A1-tu-SEM.title" = "Mesadas";
+
+/* Class = "IBUILabel"; text = "Agradecemos por utilizar o MESADA, estamos trabalhando para fazer um aplicativo cada vez mais completo para você, então não esqueça de deixar sua avaliação e seu comentário. Sua opinião é muito importante."; ObjectID = "9TB-Q6-qAi"; */
+"9TB-Q6-qAi.text" = "Agradecemos por utilizar o MESADA, estamos trabalhando para fazer um aplicativo cada vez mais completo para você, então não esqueça de deixar sua avaliação e seu comentário. Sua opinião é muito importante.";
+
+/* Class = "IBUISegmentedControl"; G2D-9o-TrI.segmentTitles[0] = "Desconto"; ObjectID = "G2D-9o-TrI"; */
+"G2D-9o-TrI.segmentTitles[0]" = "Desconto";
+
+/* Class = "IBUISegmentedControl"; G2D-9o-TrI.segmentTitles[1] = "Recompensa"; ObjectID = "G2D-9o-TrI"; */
+"G2D-9o-TrI.segmentTitles[1]" = "Recompensa";
+
+/* Class = "IBUILabel"; text = "A situação para a sua senha é:"; ObjectID = "J4E-cH-vTf"; */
+"J4E-cH-vTf.text" = "A situação para a sua senha é:";
+
+/* Class = "IBUILabel"; text = "Valor da Mesada:"; ObjectID = "LWz-e8-99f"; */
+"LWz-e8-99f.text" = "Valor:";
+
+/* Class = "IBUINavigationItem"; title = "Mesadas"; ObjectID = "NaS-Xv-PXl"; */
+"NaS-Xv-PXl.title" = "Mesadas";
+
+/* Class = "IBUINavigationItem"; title = "Senha"; ObjectID = "TZ8-HQ-8ev"; */
+"TZ8-HQ-8ev.title" = "Senha";
+
+/* Class = "IBUINavigationItem"; title = "Senha"; ObjectID = "TuS-K5-iL2"; */
+"TuS-K5-iL2.title" = "Senha";
+
+/* Class = "IBUILabel"; text = "Tipo:"; ObjectID = "Uha-Ml-yiB"; */
+"Uha-Ml-yiB.text" = "Tipo:";
+
+/* Class = "IBUILabel"; text = "Email:"; ObjectID = "UzV-vK-Yj7"; */
+"UzV-vK-Yj7.text" = "Email:";
+
+/* Class = "IBUILabel"; text = "Valor:"; ObjectID = "VMf-0e-aJ2"; */
+"VMf-0e-aJ2.text" = "Valor:";
+
+/* Class = "IBUITabBarItem"; title = "Ajuda"; ObjectID = "VOG-Dt-k0L"; */
+"VOG-Dt-k0L.title" = "Ajuda";
+
+/* Class = "IBUIButton"; normalTitle = "Iniciar tutorial"; ObjectID = "WHw-dG-u5J"; */
+"WHw-dG-u5J.normalTitle" = "Iniciar Tutorial";
+
+/* Class = "IBUINavigationItem"; title = "Regras"; ObjectID = "WJl-98-hAO"; */
+"WJl-98-hAO.title" = "Regras";
+
+/* Class = "IBUITabBarItem"; title = "Regras"; ObjectID = "XaC-fT-Nrx"; */
+"XaC-fT-Nrx.title" = "Regras";
+
+/* Class = "IBUINavigationItem"; title = "Mesada"; ObjectID = "a5J-2z-lOy"; */
+"a5J-2z-lOy.title" = "Mesada";
+
+/* Class = "IBUILabel"; text = "Nome:"; ObjectID = "e0z-mw-KtH"; */
+"e0z-mw-KtH.text" = "Nome:";
+
+/* Class = "IBUINavigationItem"; title = "Regras"; ObjectID = "g7w-e1-eI0"; */
+"g7w-e1-eI0.title" = "Regras";
+
+/* Class = "IBUINavigationItem"; title = "Ajuda"; ObjectID = "gYZ-kB-aHS"; */
+"gYZ-kB-aHS.title" = "Ajuda";
+
+/* Class = "IBUILabel"; text = "Descrição:"; ObjectID = "pgV-0C-4pM"; */
+"pgV-0C-4pM.text" = "Descrição:";
+
+/* Class = "IBUILabel"; text = "Digite novamente sua senha"; ObjectID = "qZH-xV-TgO"; */
+"qZH-xV-TgO.text" = "Digite novamente sua senha";
+
+/* Class = "IBUITabBarItem"; title = "Senha"; ObjectID = "tdA-hx-V3m"; */
+"tdA-hx-V3m.title" = "Senha";
+
+//----------------------------------------
+
+/* Class = "IBUITabBarItem"; title = "Nuvem"; ObjectID = "H6A-Aa-Ezc"; */
+"H6A-Aa-Ezc.title" = "Nuvem";
+
+/* Class = "IBUIButton"; normalTitle = "Linkar com drop box"; ObjectID = "q7Y-XS-EkN"; */
+"q7Y-XS-EkN.normalTitle" = "Linkar com drop box";
+
+
+

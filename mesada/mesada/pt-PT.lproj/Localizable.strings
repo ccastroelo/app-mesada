@@ -1,0 +1,45 @@
+"Senha incorreta" = "Senha incorreta";
+
+"As senhas não coincidem. Tente novamente." = "As senhas não coincidem. Tente novamente.";
+
+"ATIVADA" = "ATIVADA";
+
+"DESATIVADA" = "DESATIVADA";
+
+"Toque aqui para ativar uma senha" = "Toque aqui para ativar uma senha";
+
+"Senha incorreta (tentativa %d)\n Após 3 tentativas o app será fechado." = "Senha incorreta (tentativa %d)\n Após 3 tentativas o app será fechado.";
+
+"Digite sua senha:" = "Digite sua senha:";
+
+"Mesada" = "Mesada";
+
+"Recompensa: %@" = "Recompensa: %@";
+
+"Desconto: %@" = "Desconto: %@";
+
+"Mesada: %@" = "Mesada: %@";
+
+"Saldo: %@" = "Saldo: %@";
+
+"Desconto: %@" = "Desconto: %@";
+
+"Zerar lançamentos para essa mesada?" = "Zerar lançamentos para essa mesada?";
+
+"Zerar todas Mesadas" = "Zerar todas Mesadas";
+
+"Cancelar" = "Cancelar";
+
+"Mesada:" = "Mesada:";
+
+"Saldo:" = "Saldo:";
+
+"Toque aqui para desativar sua senha" = "Toque aqui para desativar sua senha";
+
+"Fechar Tutorial" = "Fechar Tutorial";
+
+"Não é possível enviar email deste dispositivo" = "Não é possível enviar email deste dispositivo";
+
+"Editar" = "Editar";
+
+"Done" = "Ok";

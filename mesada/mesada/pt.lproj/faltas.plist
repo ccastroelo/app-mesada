@@ -1,0 +1,102 @@
+(
+        {
+        descricao = "Arrumar a cama";
+        idFalta = 1;
+        valor = "0.5";
+    },
+        {
+        descricao = "Tirar nota 10";
+        idFalta = 2;
+        valor = "1.5";
+    },
+        {
+        descricao = "Deixar a luz acessa";
+        idFalta = 3;
+        valor = "-0.5";
+    },
+        {
+        descricao = "N\U00e3o fazer o dever de casa";
+        idFalta = 4;
+        valor = "-1";
+    },
+        {
+        descricao = "Deixar os brinquedos jogados";
+        idFalta = 5;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deixar a geladeira aberta";
+        idFalta = 6;
+        valor = "-0.5";
+    },
+        {
+        descricao = "N\U00e3o escovar os dentes";
+        idFalta = 7;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deixar roupa ou toalha largada no ch\U00e3o";
+        idFalta = 8;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Atrasar para o ingl\U00eas ou para a escola";
+        idFalta = 9;
+        valor = "-0.5";
+    },
+        {
+        descricao = "N\U00e3o almo\U00e7ar ou jantar";
+        idFalta = 10;
+        valor = "-0.75";
+    },
+        {
+        descricao = "Reclamar para ir ao ingl\U00eas ou a escola";
+        idFalta = 11;
+        valor = "-0.5";
+    },
+        {
+        descricao = "N\U00e3o tomar banho";
+        idFalta = 12;
+        valor = "-0.25";
+    },
+        {
+        descricao = "N\U00e3o puxar a descarga";
+        idFalta = 13;
+        valor = "-0.25";
+    },
+        {
+        descricao = "N\U00e3o colocar o cinto de seguran\U00e7a ";
+        idFalta = 14;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Tirar nota baixa na escola ou no ingl\U00eas ";
+        idFalta = 15;
+        valor = "-2";
+    },
+        {
+        descricao = "Comer fora da mesa";
+        idFalta = 16;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deixar a TV ou outros aparelhos ligados";
+        idFalta = 17;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Deixar a torneira ou o chuveiro aberto ou pingando";
+        idFalta = 18;
+        valor = "-0.5";
+    },
+        {
+        descricao = "Xingar, brigar ou bater";
+        idFalta = 19;
+        valor = "-1.5";
+    },
+        {
+        descricao = Mentir;
+        idFalta = 20;
+        valor = "-1";
+    }
+)
