@@ -18,12 +18,13 @@ Valores em centavos inteiros. IDs gerados pelo Firestore (acaba a colisão do `m
 
 ```
 users/{uid}                          familyId
-families/{familyId}                  name, memberUids[], createdAt
+families/{familyId}                  name, createdBy, createdAt
+families/{familyId}/members/{uid}    email, joinedAt, code (só se entrou por convite)   ← define quem é membro (ADR-0011)
 families/{familyId}/children/{id}    name, email, allowanceCents, order
 families/{familyId}/rules/{id}       description, valueCents, order      (valueCents < 0 = desconto)
 families/{familyId}/entries/{childId}_{ruleId}
                                      childId, ruleId, quantity, enabled          (um por par filho×regra; ordem = ordem da regra, ver design.md §10)
-invites/{code}                       familyId, createdBy, expiresAt
+invites/{code}                       familyId, createdBy, expiresAt, usedBy (null até usar)
 ```
 
 - Saldo = `allowanceCents + Σ(quantity × rule.valueCents)`, calculado no domínio (Dart puro, testado).

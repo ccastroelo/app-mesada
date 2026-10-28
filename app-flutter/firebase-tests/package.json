@@ -1,0 +1,14 @@
+{
+  "name": "mesada-firebase-tests",
+  "private": true,
+  "type": "module",
+  "description": "Testes das regras do Firestore no emulador local (sem tocar a nuvem). Terminal 1: npm run emulator. Terminal 2: npm test.",
+  "scripts": {
+    "emulator": "firebase emulators:start --config ../firebase.json --only firestore --project demo-mesada",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
+    "firebase": "^12.19.0"
+  }
+}

@@ -4,6 +4,13 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0011 — Regras do Firestore: membros em subcoleção, convite consumido em lote
+- Data: 2026-10-28 · Status: aceita e **publicada em `mesada-proj` em 2026-10-28** (ruleset `fdb8f084-e893-46cb-9749-47715765167a`; antes: regras padrão de produção que bloqueavam tudo) — regras em `app-flutter/firestore.rules`, **testadas no emulador (28 testes passando)** · Escopo: Firestore de `mesada-proj`
+- Contexto: no plano Spark não há Cloud Functions, então as regras precisam permitir que quem tem um código de convite entre na família, sem abrir a base a qualquer usuário logado.
+- Decisão proposta: membro = existência de `families/{fid}/members/{uid}` (em vez de array `memberUids` no documento da família). Criador grava a família e depois o próprio documento de membro. Convidado grava, **no mesmo lote**, `members/{uid}` (com o `code`), `invites/{code}.usedBy = uid` e `users/{uid}`; as regras exigem convite da mesma família, não usado, não expirado (48 h) e consumido nesse lote. Convites podem ser lidos por `get` (quem tem o código), nunca listados. Dados validados por tipo e limites (centavos inteiros, quantidade ≥ 0). Sair da família = apagar o próprio documento de membro. Famílias não podem ser apagadas.
+- Alternativas descartadas: array `memberUids` (não dá para validar o convite no update sem informar o código); Cloud Function para entrar (exige plano Blaze).
+- Consequências: cada requisição paga uma leitura extra (`exists` do membro). Código de 6 caracteres tem ~887 milhões de combinações: aceitável com validade de 48 h e uso único, mas é um risco residual de adivinhação; App Check e limite de tentativas ficam como melhoria. Famílias sem membros ficam órfãs (sem limpeza automática). Testes (`app-flutter/firebase-tests/`) cobrem: sem login, família, convite (uso único, expirado, de outra família, em nome de outro), dados e limites, `increment` atômico com piso 0 e sair da família. Qualquer mudança nas regras: ajustar `firestore.rules`, rodar os testes e só então publicar, com OK do usuário. A cópia local do comentário de cabeçalho foi corrigida depois do deploy (o conteúdo das regras é o mesmo).
+
 ### ADR-0010 — Arquivos de configuração do Firebase entram no Git
 - Data: 2026-10-28 · Status: aceita · Escopo: `app-flutter/`
 - Contexto: `flutterfire configure` gera `lib/firebase_options.dart`, `android/app/google-services.json` e `firebase.json`, com identificadores e chaves de API **de cliente** do projeto `mesada-proj`. O repositório no GitHub é privado.

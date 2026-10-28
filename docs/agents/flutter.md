@@ -27,6 +27,22 @@ flutter test
 | Executado em aparelho/emulador | **não** — só testes de widget |
 | Firebase | projeto `mesada-proj`; apps Android e iOS registrados; `firebase_core` inicializado no `main.dart`. Auth e Firestore ainda não habilitados. Não rodado em aparelho. |
 
+## Testes das regras do Firestore (emulador local)
+
+Pasta `app-flutter/firebase-tests/` (Node 22, Java 21, `firebase` CLI). Baseline (2026-10-28): **28 testes passando**. Não toca a nuvem (projeto `demo-mesada`).
+
+```bash
+cd app-flutter/firebase-tests
+npm install
+```
+
+Terminal 1 (deixe aberto): `npm run emulator`. Terminal 2: `npm test`.
+
+Pegadinhas no Windows:
+- Rode o emulador **no terminal do usuário**, não num shell com sandbox (o Java falha com "failed to open a new selector").
+- Não use `firebase emulators:exec` com `node --test`: o `node` do CLI standalone não é o Node real. Por isso são dois terminais.
+- Se uma execução cair, pode sobrar um `java.exe` segurando as portas 8080/9150 ("port taken"): finalize esse processo antes de tentar de novo.
+
 ## Pendências que o código ainda não resolve
 
 - `pubspec.yaml` está em `version: 1.0.0+1` (padrão do `flutter create`). Como o app **substitui** o publicado (ADR-0007, legado 1.2 build 9), a versão de release precisa ser **maior que 1.2 e build > 9**. Definição de versão/build é decisão do usuário; não alterar sem pedir.
