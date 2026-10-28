@@ -8,6 +8,7 @@ Projeto em **modo reescrita**: app Flutter novo em `app-flutter/`; o app iOS ant
 
 - `docs/agents/working-agreement.md`
 - `docs/agents/continuidade.md`
+- `docs/agents/architecture.md`
 - `docs/agents/design.md`
 - `docs/agents/flutter.md`
 

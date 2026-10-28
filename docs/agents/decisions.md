@@ -4,6 +4,13 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0012 — Login com Google pelo fluxo OAuth do Firebase; uma família por conta
+- Data: 2026-10-28 · Status: aceita · Escopo: feature `auth_family`
+- Contexto: o login com Google nativo (`google_sign_in`) exige SHA-1 por computador no Android e configuração extra no iOS.
+- Decisão: usar `FirebaseAuth.signInWithProvider(GoogleAuthProvider())` (abre o navegador do sistema; sem SHA-1, sem pacote extra). Cada conta pertence a **uma** família (`users/{uid}.familyId`). "Entrar com a Apple" fica para quando houver conta Apple Developer. O Riverpod roda **sem retentativa automática** (`ProviderScope(retry: null)`): erro de permissão não melhora tentando de novo; a tela de espera oferece "Tentar de novo".
+- Alternativas descartadas: `google_sign_in` nativo (mais rápido para o usuário, mais configuração por máquina).
+- Consequências: o login com Google tem uma troca de contexto para o navegador. **Não foi exercitado em aparelho** (iOS pode exigir esquema de URL no `Info.plist`). Sair da família e trocar de família ainda não existem na UI.
+
 ### ADR-0011 — Regras do Firestore: membros em subcoleção, convite consumido em lote
 - Data: 2026-10-28 · Status: aceita e **publicada em `mesada-proj` em 2026-10-28** (ruleset `fdb8f084-e893-46cb-9749-47715765167a`; antes: regras padrão de produção que bloqueavam tudo) — regras em `app-flutter/firestore.rules`, **testadas no emulador (28 testes passando)** · Escopo: Firestore de `mesada-proj`
 - Contexto: no plano Spark não há Cloud Functions, então as regras precisam permitir que quem tem um código de convite entre na família, sem abrir a base a qualquer usuário logado.

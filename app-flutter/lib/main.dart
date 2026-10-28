@@ -8,5 +8,9 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const ProviderScope(child: MesadaApp()));
+  runApp(
+    // Sem retentativa automática: erro de permissão não melhora tentando de
+    // novo; a tela de espera oferece "Tentar de novo".
+    ProviderScope(retry: (_, _) => null, child: const MesadaApp()),
+  );
 }

@@ -22,6 +22,7 @@ Decisões de produto, arquitetura e escopo são do usuário; as já tomadas est�
 
 @docs/agents/working-agreement.md
 @docs/agents/continuidade.md
+@docs/agents/architecture.md
 @docs/agents/design.md
 @docs/agents/flutter.md
 
@@ -30,4 +31,4 @@ Decisões de produto, arquitetura e escopo são do usuário; as já tomadas est�
 - [`docs/agents/decisions.md`](docs/agents/decisions.md) — ADRs vigentes (reescrita, Firebase, família com convite, Riverpod, foto local, design...). Leia antes de propor mudança de padrão.
 - [`docs/agents/migration-plan.md`](docs/agents/migration-plan.md) — marcos, modelo de dados do Firestore e perguntas em aberto.
 - [`docs/agents/behavior-inventory.md`](docs/agents/behavior-inventory.md) — o que o app antigo faz (telas, regras de negócio, dados). Leia antes de portar qualquer área.
-- `docs/agents/architecture.md` — **ainda não existe**: nasce no M1 com o fluxo real da fatia-piloto. Até lá vale `~/.claude/skills/project-docs/reference/target-architecture.md`.
+- `~/.claude/skills/project-docs/reference/target-architecture.md` — regras completas da arquitetura-alvo (o `architecture.md` acima descreve o que existe de fato).

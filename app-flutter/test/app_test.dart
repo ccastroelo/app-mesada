@@ -1,57 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mesada/app.dart';
+import 'package:mesada/features/auth_family/domain/entities/family.dart';
+
+import 'support/fakes.dart';
+import 'support/pump_app.dart';
 
 void main() {
-  Future<void> pumpApp(WidgetTester tester, Locale locale) async {
-    tester.platformDispatcher.localesTestValue = [locale];
-    addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-    await tester.pumpWidget(const ProviderScope(child: MesadaApp()));
-    await tester.pumpAndSettle();
-  }
+  FakeAuthRepository signedIn() => FakeAuthRepository(user: testUser);
+  FakeFamilyRepository withFamily() => FakeFamilyRepository(
+    family: const Family(id: 'f1', name: 'Família Castro'),
+  );
+
+  Finder inAppBar(String text) =>
+      find.descendant(of: find.byType(AppBar), matching: find.text(text));
+  Finder inNavBar(String text) => find.descendant(
+    of: find.byType(NavigationBar),
+    matching: find.text(text),
+  );
 
   testWidgets('abre em Filhos e navega pelos 3 destinos', (tester) async {
-    await pumpApp(tester, const Locale('pt', 'BR'));
+    await pumpApp(tester, auth: signedIn(), family: withFamily());
 
-    expect(
-      find.descendant(of: find.byType(AppBar), matching: find.text('Filhos')),
-      findsOneWidget,
-    );
+    expect(inAppBar('Filhos'), findsOneWidget);
 
-    await tester.tap(
-      find.descendant(
-        of: find.byType(NavigationBar),
-        matching: find.text('Regras'),
-      ),
-    );
+    await tester.tap(inNavBar('Regras'));
     await tester.pumpAndSettle();
-    expect(
-      find.descendant(of: find.byType(AppBar), matching: find.text('Regras')),
-      findsOneWidget,
-    );
+    expect(inAppBar('Regras'), findsOneWidget);
 
-    await tester.tap(
-      find.descendant(
-        of: find.byType(NavigationBar),
-        matching: find.text('Ajustes'),
-      ),
-    );
+    await tester.tap(inNavBar('Ajustes'));
     await tester.pumpAndSettle();
-    expect(
-      find.descendant(of: find.byType(AppBar), matching: find.text('Ajustes')),
-      findsOneWidget,
-    );
+    expect(inAppBar('Ajustes'), findsOneWidget);
   });
 
   testWidgets('textos seguem o idioma do aparelho', (tester) async {
-    await pumpApp(tester, const Locale('en'));
+    await pumpApp(
+      tester,
+      auth: signedIn(),
+      family: withFamily(),
+      locale: const Locale('en'),
+    );
     expect(find.text('Children'), findsWidgets);
 
-    await pumpApp(tester, const Locale('es'));
+    await tester.pumpWidget(const SizedBox());
+    await pumpApp(
+      tester,
+      auth: signedIn(),
+      family: withFamily(),
+      locale: const Locale('es'),
+    );
     expect(find.text('Hijos'), findsWidgets);
 
-    await pumpApp(tester, const Locale('pt', 'PT'));
+    await tester.pumpWidget(const SizedBox());
+    await pumpApp(
+      tester,
+      auth: signedIn(),
+      family: withFamily(),
+      locale: const Locale('pt', 'PT'),
+    );
     expect(find.text('Definições'), findsOneWidget);
   });
 }

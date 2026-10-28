@@ -124,6 +124,288 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Ajustes'**
   String get navSettings;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'A mesada dos seus filhos, em dia, com os dois responsáveis.'**
+  String get welcomeTitle;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Continuar com o Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @continueWithEmail.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar com e-mail'**
+  String get continueWithEmail;
+
+  /// No description provided for @signInTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar'**
+  String get signInTitle;
+
+  /// No description provided for @signUpTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar conta'**
+  String get signUpTitle;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get emailLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha'**
+  String get passwordLabel;
+
+  /// No description provided for @signInAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar'**
+  String get signInAction;
+
+  /// No description provided for @signUpAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar conta'**
+  String get signUpAction;
+
+  /// No description provided for @switchToSignUp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não tem conta? Criar conta'**
+  String get switchToSignUp;
+
+  /// No description provided for @switchToSignIn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já tem conta? Entrar'**
+  String get switchToSignIn;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esqueci a senha'**
+  String get forgotPassword;
+
+  /// No description provided for @passwordResetSent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviamos um e-mail para você redefinir a senha.'**
+  String get passwordResetSent;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite um e-mail válido.'**
+  String get emailInvalid;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In pt, this message translates to:
+  /// **'A senha precisa ter pelo menos 6 caracteres.'**
+  String get passwordTooShort;
+
+  /// No description provided for @errorInvalidCredentials.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail ou senha incorretos.'**
+  String get errorInvalidCredentials;
+
+  /// No description provided for @errorInvalidEmail.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esse e-mail não parece válido.'**
+  String get errorInvalidEmail;
+
+  /// No description provided for @errorEmailInUse.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já existe uma conta com esse e-mail.'**
+  String get errorEmailInUse;
+
+  /// No description provided for @errorWeakPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha uma senha com pelo menos 6 caracteres.'**
+  String get errorWeakPassword;
+
+  /// No description provided for @errorNoConnection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem conexão. Tente de novo.'**
+  String get errorNoConnection;
+
+  /// No description provided for @errorInvalidInvite.
+  ///
+  /// In pt, this message translates to:
+  /// **'Código inválido, expirado ou já usado.'**
+  String get errorInvalidInvite;
+
+  /// No description provided for @errorPermissionDenied.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você não tem permissão para isso.'**
+  String get errorPermissionDenied;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Algo deu errado. Tente de novo.'**
+  String get errorUnexpected;
+
+  /// No description provided for @familyChoiceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua família'**
+  String get familyChoiceTitle;
+
+  /// No description provided for @familyChoiceSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Crie uma família nova ou entre na que o outro responsável já criou.'**
+  String get familyChoiceSubtitle;
+
+  /// No description provided for @createFamilyOption.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar uma família'**
+  String get createFamilyOption;
+
+  /// No description provided for @haveCodeOption.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tenho um código'**
+  String get haveCodeOption;
+
+  /// No description provided for @createFamilyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova família'**
+  String get createFamilyTitle;
+
+  /// No description provided for @familyNameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da família'**
+  String get familyNameLabel;
+
+  /// No description provided for @familyNameHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Família Castro'**
+  String get familyNameHint;
+
+  /// No description provided for @familyNameRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite um nome.'**
+  String get familyNameRequired;
+
+  /// No description provided for @createFamilyAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar família'**
+  String get createFamilyAction;
+
+  /// No description provided for @joinFamilyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar com código'**
+  String get joinFamilyTitle;
+
+  /// No description provided for @inviteCodeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Código de convite'**
+  String get inviteCodeLabel;
+
+  /// No description provided for @joinFamilyAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar na família'**
+  String get joinFamilyAction;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tentar de novo'**
+  String get tryAgain;
+
+  /// No description provided for @signOutAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair'**
+  String get signOutAction;
+
+  /// No description provided for @settingsFamilySection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Família'**
+  String get settingsFamilySection;
+
+  /// No description provided for @settingsInviteTile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Convidar outro responsável'**
+  String get settingsInviteTile;
+
+  /// No description provided for @settingsAccountSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta'**
+  String get settingsAccountSection;
+
+  /// No description provided for @inviteDialogTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Código de convite'**
+  String get inviteDialogTitle;
+
+  /// No description provided for @inviteDialogBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Peça para o outro responsável escolher “Tenho um código” e digitar este código. Vale por 2 dias e só pode ser usado uma vez.'**
+  String get inviteDialogBody;
+
+  /// No description provided for @inviteCopy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Copiar'**
+  String get inviteCopy;
+
+  /// No description provided for @inviteShare.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar'**
+  String get inviteShare;
+
+  /// No description provided for @inviteCopied.
+  ///
+  /// In pt, this message translates to:
+  /// **'Código copiado'**
+  String get inviteCopied;
+
+  /// No description provided for @inviteShareText.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entre na nossa família no app Mesada com o código {code}.'**
+  String inviteShareText(String code);
+
+  /// No description provided for @close.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate
