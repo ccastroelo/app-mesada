@@ -102,5 +102,43 @@
     }
   },
   "deleteRuleBody": "Isso remove os lançamentos dessa regra de todos os filhos.",
-  "ruleDeleted": "Regra excluída"
+  "ruleDeleted": "Regra excluída",
+  "childrenEmptyTitle": "Adicione o primeiro filho para começar",
+  "addChildAction": "Adicionar filho",
+  "newChildTitle": "Novo filho",
+  "editChildTitle": "Editar filho",
+  "childNameLabel": "Nome",
+  "childNameRequired": "Digite o nome.",
+  "childEmailLabel": "E-mail (opcional)",
+  "childEmailInvalid": "Digite um e-mail válido ou deixe em branco.",
+  "childAllowanceLabel": "Mesada",
+  "childPhotoAction": "Escolher foto",
+  "childPhotoRemove": "Remover foto",
+  "childAllowanceSubtitle": "Mesada {value}",
+  "@childAllowanceSubtitle": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "balanceLabel": "Saldo",
+  "balanceSemantics": "Saldo {value}",
+  "@balanceSemantics": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteChildTitle": "Excluir {name}?",
+  "@deleteChildTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteChildBody": "Isso remove também todos os lançamentos dele.",
+  "childDeleted": "Filho excluído"
 }

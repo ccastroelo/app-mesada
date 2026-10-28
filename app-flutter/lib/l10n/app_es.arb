@@ -74,5 +74,22 @@
   "useSuggestionsAction": "Usar sugerencias",
   "deleteRuleTitle": "¿Eliminar “{name}”?",
   "deleteRuleBody": "Esto elimina los registros de esta regla de todos los hijos.",
-  "ruleDeleted": "Regla eliminada"
+  "ruleDeleted": "Regla eliminada",
+  "childrenEmptyTitle": "Añade a tu primer hijo para empezar",
+  "addChildAction": "Añadir hijo",
+  "newChildTitle": "Nuevo hijo",
+  "editChildTitle": "Editar hijo",
+  "childNameLabel": "Nombre",
+  "childNameRequired": "Escribe el nombre.",
+  "childEmailLabel": "Correo (opcional)",
+  "childEmailInvalid": "Escribe un correo válido o déjalo en blanco.",
+  "childAllowanceLabel": "Paga",
+  "childPhotoAction": "Elegir foto",
+  "childPhotoRemove": "Quitar foto",
+  "childAllowanceSubtitle": "Paga {value}",
+  "balanceLabel": "Saldo",
+  "balanceSemantics": "Saldo {value}",
+  "deleteChildTitle": "¿Eliminar a {name}?",
+  "deleteChildBody": "Esto también elimina todos sus registros.",
+  "childDeleted": "Hijo eliminado"
 }

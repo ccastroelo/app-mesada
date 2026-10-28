@@ -246,6 +246,63 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ruleDeleted => 'Regra excluída';
+
+  @override
+  String get childrenEmptyTitle => 'Adicione o primeiro filho para começar';
+
+  @override
+  String get addChildAction => 'Adicionar filho';
+
+  @override
+  String get newChildTitle => 'Novo filho';
+
+  @override
+  String get editChildTitle => 'Editar filho';
+
+  @override
+  String get childNameLabel => 'Nome';
+
+  @override
+  String get childNameRequired => 'Digite o nome.';
+
+  @override
+  String get childEmailLabel => 'E-mail (opcional)';
+
+  @override
+  String get childEmailInvalid => 'Digite um e-mail válido ou deixe em branco.';
+
+  @override
+  String get childAllowanceLabel => 'Mesada';
+
+  @override
+  String get childPhotoAction => 'Escolher foto';
+
+  @override
+  String get childPhotoRemove => 'Remover foto';
+
+  @override
+  String childAllowanceSubtitle(String value) {
+    return 'Mesada $value';
+  }
+
+  @override
+  String get balanceLabel => 'Saldo';
+
+  @override
+  String balanceSemantics(String value) {
+    return 'Saldo $value';
+  }
+
+  @override
+  String deleteChildTitle(String name) {
+    return 'Excluir $name?';
+  }
+
+  @override
+  String get deleteChildBody => 'Isso remove também todos os lançamentos dele.';
+
+  @override
+  String get childDeleted => 'Filho excluído';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -491,4 +548,62 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get ruleDeleted => 'Regra eliminada';
+
+  @override
+  String get childrenEmptyTitle => 'Adicione o primeiro filho para começar';
+
+  @override
+  String get addChildAction => 'Adicionar filho';
+
+  @override
+  String get newChildTitle => 'Novo filho';
+
+  @override
+  String get editChildTitle => 'Editar filho';
+
+  @override
+  String get childNameLabel => 'Nome';
+
+  @override
+  String get childNameRequired => 'Introduza o nome.';
+
+  @override
+  String get childEmailLabel => 'E-mail (opcional)';
+
+  @override
+  String get childEmailInvalid =>
+      'Introduza um e-mail válido ou deixe em branco.';
+
+  @override
+  String get childAllowanceLabel => 'Mesada';
+
+  @override
+  String get childPhotoAction => 'Escolher fotografia';
+
+  @override
+  String get childPhotoRemove => 'Remover fotografia';
+
+  @override
+  String childAllowanceSubtitle(String value) {
+    return 'Mesada $value';
+  }
+
+  @override
+  String get balanceLabel => 'Saldo';
+
+  @override
+  String balanceSemantics(String value) {
+    return 'Saldo $value';
+  }
+
+  @override
+  String deleteChildTitle(String name) {
+    return 'Eliminar $name?';
+  }
+
+  @override
+  String get deleteChildBody => 'Isto remove também todos os lançamentos dele.';
+
+  @override
+  String get childDeleted => 'Filho eliminado';
 }

@@ -7,6 +7,8 @@ import 'package:mesada/features/auth_family/domain/entities/family.dart';
 import 'package:mesada/features/auth_family/domain/repositories/auth_repository.dart';
 import 'package:mesada/features/auth_family/domain/repositories/family_repository.dart';
 import 'package:mesada/features/auth_family/domain/usecases/invite_code.dart';
+import 'package:mesada/features/children/children.dart';
+import 'package:mesada/features/ledger/ledger.dart';
 import 'package:mesada/features/rules/rules.dart';
 
 const testUser = AppUser(uid: 'u1', email: 'ana@example.com');
@@ -217,4 +219,130 @@ class FakeRulesRepository implements RulesRepository {
     _emit();
     return nextResult;
   }
+}
+
+/// Filhos em memória, na ordem da lista; cada mudança é emitida no stream.
+class FakeChildrenRepository implements ChildrenRepository {
+  FakeChildrenRepository({List<Child> children = const []})
+    : _children = [...children];
+
+  final List<Child> _children;
+  final _changes = StreamController<List<Child>>.broadcast();
+  int _nextId = 1;
+
+  Result<void> nextResult = const Ok(null);
+  List<String>? lastReorder;
+  int deleteCalls = 0;
+
+  List<Child> get children => List.unmodifiable(_children);
+
+  void _emit() => _changes.add(List.unmodifiable(_children));
+
+  @override
+  Stream<List<Child>> watchChildren(String familyId) async* {
+    yield List.unmodifiable(_children);
+    yield* _changes.stream;
+  }
+
+  @override
+  Future<Result<String>> addChild(
+    String familyId, {
+    required String name,
+    required String email,
+    required int allowanceCents,
+  }) async {
+    final failed = nextResult;
+    if (failed is Err) return Err(failed.failure);
+    final id = 'c${_nextId++}';
+    _children.add(
+      Child(
+        id: id,
+        name: name.trim(),
+        email: email.trim(),
+        allowanceCents: allowanceCents,
+      ),
+    );
+    _emit();
+    return Ok(id);
+  }
+
+  @override
+  Future<Result<void>> updateChild(String familyId, Child child) async {
+    if (nextResult is Err) return nextResult;
+    final index = _children.indexWhere((c) => c.id == child.id);
+    if (index >= 0) _children[index] = child;
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> deleteChild(String familyId, String childId) async {
+    deleteCalls++;
+    if (nextResult is Err) return nextResult;
+    _children.removeWhere((c) => c.id == childId);
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> reorder(String familyId, List<String> orderedIds) async {
+    lastReorder = orderedIds;
+    if (nextResult is Err) return nextResult;
+    final byId = {for (final c in _children) c.id: c};
+    _children
+      ..clear()
+      ..addAll([for (final id in orderedIds) byId[id]!]);
+    _emit();
+    return nextResult;
+  }
+}
+
+class FakeLedgerRepository implements LedgerRepository {
+  FakeLedgerRepository({List<Entry> entries = const []})
+    : _entries = [...entries];
+
+  List<Entry> _entries;
+  final _changes = StreamController<List<Entry>>.broadcast();
+
+  set entries(List<Entry> value) {
+    _entries = [...value];
+    _changes.add(List.unmodifiable(_entries));
+  }
+
+  @override
+  Stream<List<Entry>> watchEntries(String familyId) async* {
+    yield List.unmodifiable(_entries);
+    yield* _changes.stream;
+  }
+}
+
+class FakePhotoStore implements ChildPhotoStore {
+  FakePhotoStore({Map<String, String>? paths}) : paths = {...?paths};
+
+  final Map<String, String> paths;
+  final saved = <({String childId, String source})>[];
+  final deleted = <String>[];
+
+  @override
+  Future<String?> photoPath(String childId) async => paths[childId];
+
+  @override
+  Future<void> savePhoto(String childId, String sourcePath) async {
+    saved.add((childId: childId, source: sourcePath));
+    paths[childId] = sourcePath;
+  }
+
+  @override
+  Future<void> deletePhoto(String childId) async {
+    deleted.add(childId);
+    paths.remove(childId);
+  }
+}
+
+class FakePhotoPicker implements PhotoPicker {
+  /// O que a galeria "devolve" na próxima escolha (null = cancelou).
+  String? next;
+
+  @override
+  Future<String?> pickFromGallery() async => next;
 }

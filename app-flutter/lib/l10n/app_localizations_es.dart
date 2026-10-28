@@ -248,4 +248,62 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ruleDeleted => 'Regla eliminada';
+
+  @override
+  String get childrenEmptyTitle => 'Añade a tu primer hijo para empezar';
+
+  @override
+  String get addChildAction => 'Añadir hijo';
+
+  @override
+  String get newChildTitle => 'Nuevo hijo';
+
+  @override
+  String get editChildTitle => 'Editar hijo';
+
+  @override
+  String get childNameLabel => 'Nombre';
+
+  @override
+  String get childNameRequired => 'Escribe el nombre.';
+
+  @override
+  String get childEmailLabel => 'Correo (opcional)';
+
+  @override
+  String get childEmailInvalid =>
+      'Escribe un correo válido o déjalo en blanco.';
+
+  @override
+  String get childAllowanceLabel => 'Paga';
+
+  @override
+  String get childPhotoAction => 'Elegir foto';
+
+  @override
+  String get childPhotoRemove => 'Quitar foto';
+
+  @override
+  String childAllowanceSubtitle(String value) {
+    return 'Paga $value';
+  }
+
+  @override
+  String get balanceLabel => 'Saldo';
+
+  @override
+  String balanceSemantics(String value) {
+    return 'Saldo $value';
+  }
+
+  @override
+  String deleteChildTitle(String name) {
+    return '¿Eliminar a $name?';
+  }
+
+  @override
+  String get deleteChildBody => 'Esto también elimina todos sus registros.';
+
+  @override
+  String get childDeleted => 'Hijo eliminado';
 }

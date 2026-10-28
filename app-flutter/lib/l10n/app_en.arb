@@ -74,5 +74,22 @@
   "useSuggestionsAction": "Use suggestions",
   "deleteRuleTitle": "Delete “{name}”?",
   "deleteRuleBody": "This removes this rule's entries from all children.",
-  "ruleDeleted": "Rule deleted"
+  "ruleDeleted": "Rule deleted",
+  "childrenEmptyTitle": "Add your first child to get started",
+  "addChildAction": "Add child",
+  "newChildTitle": "New child",
+  "editChildTitle": "Edit child",
+  "childNameLabel": "Name",
+  "childNameRequired": "Enter a name.",
+  "childEmailLabel": "Email (optional)",
+  "childEmailInvalid": "Enter a valid email or leave it blank.",
+  "childAllowanceLabel": "Allowance",
+  "childPhotoAction": "Choose photo",
+  "childPhotoRemove": "Remove photo",
+  "childAllowanceSubtitle": "Allowance {value}",
+  "balanceLabel": "Balance",
+  "balanceSemantics": "Balance {value}",
+  "deleteChildTitle": "Delete {name}?",
+  "deleteChildBody": "This also removes all of their entries.",
+  "childDeleted": "Child deleted"
 }

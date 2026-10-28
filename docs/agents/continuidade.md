@@ -10,7 +10,8 @@
 - **M1 (auth_family) com código completo (2026-10-28)**: boas-vindas, entrar/criar conta por e-mail, Google (OAuth do Firebase), escolha de família, criar família (semeia as 20 regras no idioma), entrar com código, convite em Ajustes (copiar/compartilhar), sair. Roteador com guardas (`redirectFor`). `architecture.md` descreve o fluxo. **Falta validar em aparelho/emulador com o Firebase real**: criar conta, criar família, convidar e entrar com a segunda conta, Google. O APK de debug compila.
 - Fora do M1 (ainda não existe): "Entrar com a Apple", sair/trocar de família, tela de introdução (4 cartões), banner offline, redefinição de senha só testada com fake.
 - **M2 (rules) com código completo (2026-10-28)**: aba Regras com lista em Recompensas/Descontos (ícone ▲▼ + sinal), criar/editar (descrição, tipo, valor com máscara de centavos, teto 999,99), excluir com confirmação (apaga também os lançamentos da regra), reordenar (alça de arrastar + Concluir) e "Usar sugestões" quando vazio. Testado com repositório falso, inclusive fonte 1,3× e 2,0× em tela de 360 dp. **Não validado com Firestore real em aparelho.** Sem "Desfazer" ao excluir (o design só prevê desfazer ao zerar).
-- Aba Filhos ainda é só casca.
+- **M3 (children) com código completo (2026-10-28)**: aba Filhos com cartões (foto local ou inicial, nome, mesada, **saldo** calculado ao vivo com regras + lançamentos), criar/editar (nome, e-mail opcional, mesada com máscara, teto 999.999,99, foto da galeria só no aparelho), excluir com confirmação (apaga lançamentos e foto local) e reordenar. 120 testes. O toque no cartão **ainda não abre** os lançamentos (M4); o menu ⋮ só tem Editar e Excluir (Zerar vem no M4, Enviar relatório no M5). Também adicionado `NSPhotoLibraryUsageDescription` no `Info.plist`. Os testes acharam e corrigi um bug de Hero entre os FABs das abas (ver `tech-debt.md`).
+- **Dívida conhecida**: escritas de formulário esperam o servidor (offline o botão fica girando) — `tech-debt.md`.
 - **Domínio puro feito (2026-10-28)**: `Rule`, `Child`, `Entry` (incrementa, decrementa com piso 0, zera, ativa/desativa) e `calculateBalanceCents`, com 11 testes (`features/{rules,children,ledger}/domain`). Falta: contratos de repositório, datasources, estado e telas.
 - **Firebase `mesada-proj`** (criado no Google Cloud pelo usuário; Firebase ativado via CLI em 2026-10-28). `flutterfire configure` rodado para Android e iOS (`br.eti.claudiocastro.mesada`); `Firebase.initializeApp` está no `main.dart`. **Ainda não habilitados**: Authentication (e-mail/senha, Google, Apple) e o banco Firestore — passos do usuário no console, e as regras de segurança só são publicadas com aprovação.
 - **Regras do Firestore** (`app-flutter/firestore.rules`, ADR-0011): escritas, **testadas no emulador (28 testes)** e **publicadas em `mesada-proj` (2026-10-28)**. Mudar as regras = editar, testar e só então `firebase deploy --only firestore:rules`, com OK do usuário. Como rodar os testes: `flutter.md`.
@@ -33,7 +34,7 @@ flutter test
 
 Já tendo o clone: `git pull --tags` na raiz e depois `flutter pub get`. Os arquivos de localização gerados (`app-flutter/lib/l10n/app_localizations*.dart`) são versionados; rode `flutter gen-l10n` só depois de editar um `.arb`.
 
-Resultado esperado: `analyze` sem problemas e 89 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`). Se divergir, registre o baseline em `flutter.md` antes de mexer.
+Resultado esperado: `analyze` sem problemas e 120 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`). Se divergir, registre o baseline em `flutter.md` antes de mexer.
 
 ## Próximos passos (ordem)
 
@@ -41,7 +42,8 @@ Resultado esperado: `analyze` sem problemas e 89 testes passando (mais os 28 das
 2. ~~Domínio de entidades e saldo~~ (feito). Resta sem Firebase: contratos de repositório e casos de uso com regra (zerar com desfazer, semear as 20 regras-padrão por idioma, ativar/desativar regra por filho), usando repositórios falsos nos testes.
 3. **M0 restante**: Firebase init (config fora do repositório quando for segredo; ver `working-agreement.md`), CI mínima, ícone.
 4. ~~M1~~ código pronto; **validar com o Firebase real** (emulador/aparelho Android; ver `flutter-preview`). Criar contas de teste no `mesada-proj` é decisão do usuário.
-5. ~~M2 `rules`~~ código pronto (ver acima). **Próximo: M3 `children`** (lista com saldo, criar/editar com foto local e e-mail, excluir, reordenar, "Zerar" depende do M4). Depois M4 `ledger` (tela do filho com − qtd +, ativar/desativar regra por filho, zerar com desfazer), M5 relatório, M6 PIN, M7 ajuda. M8 (corte) é decisão do usuário.
+5. ~~M2 `rules`~~ e ~~M3 `children`~~ com código pronto (ver acima). **Próximo: M4 `ledger`** — a tela do filho (toque no cartão): linhas − qtd + por regra em Recompensas/Descontos, chip animado do saldo, ativar/desativar regra por filho, zerar um/todos com "Desfazer" por 8 s. **Decidir antes** como gravar sem esperar o servidor (`tech-debt.md`, vira ADR). Depois M5 relatório, M6 PIN, M7 ajuda. M8 (corte) é decisão do usuário.
+6. **Validar M1–M3 com o Firebase real** em emulador/aparelho (cria contas de teste no `mesada-proj`, decisão do usuário). Quanto mais telas sem isso, mais caro achar erro de configuração.
 
 ## Cuidados
 

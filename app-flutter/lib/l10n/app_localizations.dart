@@ -550,6 +550,108 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Regra excluída'**
   String get ruleDeleted;
+
+  /// No description provided for @childrenEmptyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicione o primeiro filho para começar'**
+  String get childrenEmptyTitle;
+
+  /// No description provided for @addChildAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar filho'**
+  String get addChildAction;
+
+  /// No description provided for @newChildTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo filho'**
+  String get newChildTitle;
+
+  /// No description provided for @editChildTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar filho'**
+  String get editChildTitle;
+
+  /// No description provided for @childNameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get childNameLabel;
+
+  /// No description provided for @childNameRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite o nome.'**
+  String get childNameRequired;
+
+  /// No description provided for @childEmailLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail (opcional)'**
+  String get childEmailLabel;
+
+  /// No description provided for @childEmailInvalid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite um e-mail válido ou deixe em branco.'**
+  String get childEmailInvalid;
+
+  /// No description provided for @childAllowanceLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mesada'**
+  String get childAllowanceLabel;
+
+  /// No description provided for @childPhotoAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolher foto'**
+  String get childPhotoAction;
+
+  /// No description provided for @childPhotoRemove.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover foto'**
+  String get childPhotoRemove;
+
+  /// No description provided for @childAllowanceSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mesada {value}'**
+  String childAllowanceSubtitle(String value);
+
+  /// No description provided for @balanceLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo'**
+  String get balanceLabel;
+
+  /// No description provided for @balanceSemantics.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo {value}'**
+  String balanceSemantics(String value);
+
+  /// No description provided for @deleteChildTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir {name}?'**
+  String deleteChildTitle(String name);
+
+  /// No description provided for @deleteChildBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Isso remove também todos os lançamentos dele.'**
+  String get deleteChildBody;
+
+  /// No description provided for @childDeleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filho excluído'**
+  String get childDeleted;
 }
 
 class _AppLocalizationsDelegate

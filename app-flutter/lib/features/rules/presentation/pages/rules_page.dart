@@ -101,6 +101,9 @@ class _RulesPageState extends ConsumerState<RulesPage> {
       floatingActionButton: _reordering
           ? null
           : FloatingActionButton.extended(
+              // As abas ficam vivas juntas (IndexedStack): sem tag única para
+              // não colidir com o botão da aba Filhos na transição de tela.
+              heroTag: null,
               onPressed: () => context.push('/regras/nova'),
               icon: const Icon(Icons.add),
               label: Text(l10n.newRuleAction),

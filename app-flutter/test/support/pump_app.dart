@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mesada/app.dart';
 import 'package:mesada/features/auth_family/data/providers.dart';
+import 'package:mesada/features/children/data/providers.dart';
+import 'package:mesada/features/ledger/data/providers.dart';
 import 'package:mesada/features/rules/data/providers.dart';
 
 import 'fakes.dart';
@@ -13,6 +15,10 @@ Future<void> pumpApp(
   required FakeAuthRepository auth,
   required FakeFamilyRepository family,
   FakeRulesRepository? rules,
+  FakeChildrenRepository? children,
+  FakeLedgerRepository? ledger,
+  FakePhotoStore? photoStore,
+  FakePhotoPicker? photoPicker,
   Locale locale = const Locale('pt', 'BR'),
 }) async {
   tester.platformDispatcher.localesTestValue = [locale];
@@ -25,6 +31,16 @@ Future<void> pumpApp(
         rulesRepositoryProvider.overrideWithValue(
           rules ?? FakeRulesRepository(),
         ),
+        childrenRepositoryProvider.overrideWithValue(
+          children ?? FakeChildrenRepository(),
+        ),
+        ledgerRepositoryProvider.overrideWithValue(
+          ledger ?? FakeLedgerRepository(),
+        ),
+        childPhotoStoreProvider.overrideWithValue(
+          photoStore ?? FakePhotoStore(),
+        ),
+        photoPickerProvider.overrideWithValue(photoPicker ?? FakePhotoPicker()),
       ],
       child: const MesadaApp(),
     ),

@@ -21,8 +21,8 @@ lib/
   features/
     auth_family/       login, família, convite  (fatia-piloto, M1)
     rules/             Regras: lista, criar/editar, excluir, reordenar, sugestões (M2)
-    children/          entidade Child; tela ainda é casca
-    ledger/            Entry + calculateBalanceCents; sem telas ainda
+    children/          Filhos: cartões com saldo, criar/editar (foto local), excluir, reordenar (M3)
+    ledger/            Entry + calculateBalanceCents + leitura dos lançamentos; sem telas ainda
     settings/          Ajustes (família, convite, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
@@ -52,6 +52,14 @@ JoinFamilyPage (presentation/pages)
 - Escritas passam por um `RulesActions` (`ActionController`): `add`, `update`, `delete`, `reorder`, `addSuggestions`. O modo Reordenar trabalha numa cópia local da lista e só grava ao tocar em Concluir.
 - O barrel `rules/rules.dart` expõe só **domínio** (entidade, contrato, `splitRules`, regras-padrão). O estado fica fora dele de propósito: depende de `auth_family`, que importa esse barrel (evita ciclo).
 - Lançamentos nascem sob demanda e a ordem usa inteiros crescentes: ADR-0013.
+
+## Terceiro exemplo: Filhos (M3), uma tela que junta três features
+
+- `childSummariesProvider` combina `childrenProvider` (própria), `rulesProvider` (`rules/rules_providers.dart`) e `entriesProvider` (`ledger/ledger_providers.dart`) e calcula o saldo de cada filho com `calculateBalanceCents` (`ledger/ledger.dart`). Fica em carregando até os três chegarem e em erro se qualquer um falhar. O saldo muda sozinho quando o outro responsável lança.
+- **Dois barris por feature quando há estado**: `x.dart` (só domínio, sem Riverpod) e `x_providers.dart` (estado, depende de `auth_family`). Assim `auth_family` pode importar o domínio de `rules` sem formar ciclo.
+- **Foto local** (ADR-0006): contratos `ChildPhotoStore` e `PhotoPicker` no `domain`; `ChildPhotoStoreImpl` (arquivos em `<pasta do app>/child_photos/<childId>.jpg`) e `ImagePickerPhotoPicker` (galeria, 512 px, JPEG 80) na `data`. O `ChildrenActions` copia a foto depois de criar o filho (precisa do id), remove ao excluir e invalida `childPhotoPathProvider`; a imagem em cache é expulsa com `FileImage.evict`.
+- `ChildAvatar` mostra a foto ou a inicial num círculo de 6 cores fixas (índice estável por id, não `hashCode`).
+- Cada aba tem seu `FloatingActionButton` com `heroTag: null` (ver `tech-debt.md`).
 
 ## O portão de entrada (`gateProvider`)
 
