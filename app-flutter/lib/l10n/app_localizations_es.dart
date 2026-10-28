@@ -169,4 +169,83 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get close => 'Cerrar';
+
+  @override
+  String get cancelAction => 'Cancelar';
+
+  @override
+  String get saveAction => 'Guardar';
+
+  @override
+  String get editAction => 'Editar';
+
+  @override
+  String get deleteAction => 'Eliminar';
+
+  @override
+  String get reorderAction => 'Reordenar';
+
+  @override
+  String get doneAction => 'Listo';
+
+  @override
+  String get rulesRewardsSection => 'Recompensas';
+
+  @override
+  String get rulesDiscountsSection => 'Descuentos';
+
+  @override
+  String get ruleRewardLabel => 'Recompensa';
+
+  @override
+  String get ruleDiscountLabel => 'Descuento';
+
+  @override
+  String ruleSubtitleReward(String value) {
+    return 'Recompensa · $value';
+  }
+
+  @override
+  String ruleSubtitleDiscount(String value) {
+    return 'Descuento · $value';
+  }
+
+  @override
+  String get newRuleAction => 'Nueva regla';
+
+  @override
+  String get newRuleTitle => 'Nueva regla';
+
+  @override
+  String get editRuleTitle => 'Editar regla';
+
+  @override
+  String get ruleDescriptionLabel => 'Descripción';
+
+  @override
+  String get ruleDescriptionRequired => 'Escribe una descripción.';
+
+  @override
+  String get ruleValueLabel => 'Valor';
+
+  @override
+  String get rulesEmptyTitle => 'Aún no hay reglas';
+
+  @override
+  String get rulesEmptyBody => 'Usa las sugerencias o crea tu primera regla.';
+
+  @override
+  String get useSuggestionsAction => 'Usar sugerencias';
+
+  @override
+  String deleteRuleTitle(String name) {
+    return '¿Eliminar “$name”?';
+  }
+
+  @override
+  String get deleteRuleBody =>
+      'Esto elimina los registros de esta regla de todos los hijos.';
+
+  @override
+  String get ruleDeleted => 'Regla eliminada';
 }

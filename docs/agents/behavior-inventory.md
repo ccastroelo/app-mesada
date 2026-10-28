@@ -14,8 +14,8 @@ App com `UITabBarController` de 5 abas (`Base.lproj/Main.storyboard:225-238`).
 | Aba **Mesadas** — lista de filhos ("mesadeiros") | `imMesTableVC.m` | Célula: foto, nome, "Mesada: R$", "Saldo: R$". Botão Editar (reordenar/excluir). Toque abre Lançamentos. Deslizar a linha mostra 4 ações (editar, zerar, e-mail, excluir) via `MSCMoreOptionTableViewCell`. Botão "+" abre cadastro. Estado vazio: tabela vazia (sem mensagem). | pendente |
 | Cadastro/edição de mesadeiro | `imMesCadVC.m` | Nome, e-mail, valor da mesada (máscara monetária, máx. 9 caracteres), foto da galeria (sem recorte). Ordem de foco: nome → e-mail → valor. | pendente |
 | **Lançamentos** de um mesadeiro | `imLanVC.m` | Cabeçalho: nome, "Mesada: R$", "Saldo: R$". Uma linha por regra: descrição, quantidade, "Desconto/Recompensa: R$". **Deslizar p/ direita = +1** (pisca verde, som `clique.aiff`); **p/ esquerda = −1**, nunca abaixo de 0 (pisca vermelho, som). Há 2 linhas-guia com setas (primeira e última). Modo Editar: reordenar e remover a regra deste filho. | pendente |
-| Aba **Regras** — lista de "faltas" | `imFalTableVC.m` | Descrição + "Desconto/Recompensa: R$". Editar (reordenar/excluir), "+" cadastra, toque edita. | pendente |
-| Cadastro/edição de regra | `imFalCadVC.m` | Descrição, valor com máscara (máx. 7 caracteres), segmento **Desconto / Recompensa** que força o sinal. Abre com foco na descrição. | pendente |
+| Aba **Regras** — lista de "faltas" | `imFalTableVC.m` | Descrição + "Desconto/Recompensa: R$". Editar (reordenar/excluir), "+" cadastra, toque edita. | portado, redesenhado (M2, 2026-10-28) |
+| Cadastro/edição de regra | `imFalCadVC.m` | Descrição, valor com máscara (máx. 7 caracteres), segmento **Desconto / Recompensa** que força o sinal. Abre com foco na descrição. | portado, redesenhado (M2, 2026-10-28) |
 | Aba **Senha** | `imSenhaVC.m`, `imSenCadVC.m` | Mostra ATIVADA/DESATIVADA e o texto do botão. Ativar: digita PIN de 4 dígitos + confirmação (rola para o 2º campo). Desativar: digita o PIN atual. Pontos "bola/traço" para os dígitos. Mensagens: "Senha incorreta", "As senhas não coincidem. Tente novamente." | pendente |
 | Tela de bloqueio por PIN | `imLoginVC.m`, `imMesTableVC.m:38-52` | Aparece a cada `applicationDidBecomeActive` se há PIN (notificação `appativa`). 4 dígitos validam automaticamente. Ver §7 sobre o `exit(0)`. | pendente |
 | Aba **Ajuda** | `imAjudaVC.m` | Botão "Iniciar tutorial" (páginas deslizantes `APPViewController`, imagens `tela1..4`, `tela41..44`, localizadas) e e-mail de contato. | pendente |
@@ -27,17 +27,17 @@ App com `UITabBarController` de 5 abas (`Base.lproj/Main.storyboard:225-238`).
 | Regra | Fonte | Status |
 |---|---|---|
 | **Saldo do filho = mesada inicial + Σ(quantidade × valor da regra)**. Descontos têm valor negativo. | `imMesadeiro.m:24-28`, `imGrupoLancamentos.m:238-248` | pendente |
-| Valor ≤ 0 é rotulado "Desconto"; > 0 é "Recompensa" (zero cai em "Desconto"). | `imLanVC.m:98-102`, `imFalTableVC.m:76-80` | pendente |
+| Valor ≤ 0 é rotulado "Desconto"; > 0 é "Recompensa" (zero cai em "Desconto"). | `imLanVC.m:98-102`, `imFalTableVC.m:76-80` | portado (M2, 2026-10-28) |
 | Existe um **lançamento (quantidade) para cada par filho × regra**. Criar filho cria um lançamento por regra existente; criar regra cria um por filho. | `imGrupoLancamentos.m:114-135` | pendente |
 | Excluir filho exclui todos os seus lançamentos; excluir regra exclui os lançamentos dela (em cascata). | `imGrupoMesadeiros.m:77-85`, `imGrupoFaltas.m:74-82` | pendente |
 | Remover uma linha na tela de Lançamentos apaga só o lançamento daquele par (a regra "some" para aquele filho, sem sair das Regras). Não há como trazê-la de volta, exceto recriando. | `imLanVC.m:193-208`, `imGrupoLancamentos.m:196-201` | substituído por ativar/desativar por filho (aprovado em 2026-10-28, ADR-0008) |
 | Quantidade mínima 0 ao decrementar; incremento sem limite. | `imLanVC.m:119` | pendente |
 | "Zerar" coloca quantidade = 0 em todos os lançamentos do filho, ou de todos os filhos (alerta com Cancelar / OK / "Zerar todas Mesadas"). Não altera a mesada inicial. | `imMesTableVC.m:294-343`, `imGrupoLancamentos.m:94-111` | pendente |
-| Máscara monetária: dígitos entram da direita; separador removido; nº de casas decimais vem do locale (`maximumFractionDigits`). Limites de tamanho: regra 7 caracteres, mesada 9. | `imFalCadVC.m:78-131`, `imMesCadVC.m:128-159` | pendente |
-| Segmento Desconto/Recompensa alterna o sinal do valor digitado. | `imFalCadVC.m:134-142` | pendente |
+| Máscara monetária: dígitos entram da direita; separador removido; nº de casas decimais vem do locale (`maximumFractionDigits`). Limites de tamanho: regra 7 caracteres, mesada 9. | `imFalCadVC.m:78-131`, `imMesCadVC.m:128-159` | regras portado (M2, teto 999,99); mesada pendente (M3) |
+| Segmento Desconto/Recompensa alterna o sinal do valor digitado. | `imFalCadVC.m:134-142` | portado (M2, 2026-10-28) |
 | PIN: 4 dígitos, exigido em toda volta ao primeiro plano; guardado no Keychain (serviço `senha2`). | `imSenCadVC.m`, `imLoginVC.m`, `imMesTableVC.m:38-45` | pendente |
 | Moeda exibida com o símbolo do locale + espaço ("R$ 1,50"). | `imLanVC.m:33-35` e demais | pendente |
-| Regras-padrão do primeiro uso (20 regras, por idioma: pt, pt-PT, en, es). Ex.: "Arrumar a cama" +0,50; "Tirar nota 10" +1,50; "Mentir" −1,00. Lista completa em `*/faltas.plist`. Não há filhos nem lançamentos de fábrica. | `*.lproj/faltas.plist`; `imGrupoFaltas.m:117-126` | pendente |
+| Regras-padrão do primeiro uso (20 regras, por idioma: pt, pt-PT, en, es). Ex.: "Arrumar a cama" +0,50; "Tirar nota 10" +1,50; "Mentir" −1,00. Lista completa em `*/faltas.plist`. Não há filhos nem lançamentos de fábrica. | `*.lproj/faltas.plist`; `imGrupoFaltas.m:117-126` | portado (M1, 2026-10-28) |
 | IDs: `maiorId + 1` por tabela (colisão possível com dois aparelhos escrevendo — o novo usa ID gerado). | `imGrupo*.m` | pendente |
 
 ## 3. Contratos de API

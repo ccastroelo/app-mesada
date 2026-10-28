@@ -406,6 +406,150 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Fechar'**
   String get close;
+
+  /// No description provided for @cancelAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar'**
+  String get cancelAction;
+
+  /// No description provided for @saveAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar'**
+  String get saveAction;
+
+  /// No description provided for @editAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar'**
+  String get editAction;
+
+  /// No description provided for @deleteAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir'**
+  String get deleteAction;
+
+  /// No description provided for @reorderAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Reordenar'**
+  String get reorderAction;
+
+  /// No description provided for @doneAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluir'**
+  String get doneAction;
+
+  /// No description provided for @rulesRewardsSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recompensas'**
+  String get rulesRewardsSection;
+
+  /// No description provided for @rulesDiscountsSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descontos'**
+  String get rulesDiscountsSection;
+
+  /// No description provided for @ruleRewardLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recompensa'**
+  String get ruleRewardLabel;
+
+  /// No description provided for @ruleDiscountLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desconto'**
+  String get ruleDiscountLabel;
+
+  /// No description provided for @ruleSubtitleReward.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recompensa · {value}'**
+  String ruleSubtitleReward(String value);
+
+  /// No description provided for @ruleSubtitleDiscount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desconto · {value}'**
+  String ruleSubtitleDiscount(String value);
+
+  /// No description provided for @newRuleAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova regra'**
+  String get newRuleAction;
+
+  /// No description provided for @newRuleTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova regra'**
+  String get newRuleTitle;
+
+  /// No description provided for @editRuleTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar regra'**
+  String get editRuleTitle;
+
+  /// No description provided for @ruleDescriptionLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição'**
+  String get ruleDescriptionLabel;
+
+  /// No description provided for @ruleDescriptionRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite uma descrição.'**
+  String get ruleDescriptionRequired;
+
+  /// No description provided for @ruleValueLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor'**
+  String get ruleValueLabel;
+
+  /// No description provided for @rulesEmptyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma regra ainda'**
+  String get rulesEmptyTitle;
+
+  /// No description provided for @rulesEmptyBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use as sugestões ou crie a sua primeira regra.'**
+  String get rulesEmptyBody;
+
+  /// No description provided for @useSuggestionsAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar sugestões'**
+  String get useSuggestionsAction;
+
+  /// No description provided for @deleteRuleTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir “{name}”?'**
+  String deleteRuleTitle(String name);
+
+  /// No description provided for @deleteRuleBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Isso remove os lançamentos dessa regra de todos os filhos.'**
+  String get deleteRuleBody;
+
+  /// No description provided for @ruleDeleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Regra excluída'**
+  String get ruleDeleted;
 }
 
 class _AppLocalizationsDelegate

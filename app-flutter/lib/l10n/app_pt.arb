@@ -57,5 +57,50 @@
       }
     }
   },
-  "close": "Fechar"
+  "close": "Fechar",
+  "cancelAction": "Cancelar",
+  "saveAction": "Salvar",
+  "editAction": "Editar",
+  "deleteAction": "Excluir",
+  "reorderAction": "Reordenar",
+  "doneAction": "Concluir",
+  "rulesRewardsSection": "Recompensas",
+  "rulesDiscountsSection": "Descontos",
+  "ruleRewardLabel": "Recompensa",
+  "ruleDiscountLabel": "Desconto",
+  "ruleSubtitleReward": "Recompensa · {value}",
+  "@ruleSubtitleReward": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "ruleSubtitleDiscount": "Desconto · {value}",
+  "@ruleSubtitleDiscount": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "newRuleAction": "Nova regra",
+  "newRuleTitle": "Nova regra",
+  "editRuleTitle": "Editar regra",
+  "ruleDescriptionLabel": "Descrição",
+  "ruleDescriptionRequired": "Digite uma descrição.",
+  "ruleValueLabel": "Valor",
+  "rulesEmptyTitle": "Nenhuma regra ainda",
+  "rulesEmptyBody": "Use as sugestões ou crie a sua primeira regra.",
+  "useSuggestionsAction": "Usar sugestões",
+  "deleteRuleTitle": "Excluir “{name}”?",
+  "@deleteRuleTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteRuleBody": "Isso remove os lançamentos dessa regra de todos os filhos.",
+  "ruleDeleted": "Regra excluída"
 }

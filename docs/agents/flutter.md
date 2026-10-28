@@ -23,7 +23,7 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | 58 testes passando (dinheiro, saldo, regras-padrão, código de convite, falhas do Firebase, repositório de família com datasource falso, redirecionamento, fluxo de entrada e casca em 4 idiomas) — atualizado em 2026-10-28 |
+| `flutter test` | 89 testes passando (dinheiro e máscara de centavos, saldo, regras-padrão, código de convite, falhas do Firebase, repositórios de família e de regras com datasource falso, redirecionamento, fluxo de entrada, fluxo de Regras com fonte 1,3×/2,0× e casca em 4 idiomas) — atualizado em 2026-10-28 |
 | `flutter build apk --debug` | compila (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |
 | Executado em aparelho/emulador | **não** — só testes de widget e compilação |

@@ -168,4 +168,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get close => 'Close';
+
+  @override
+  String get cancelAction => 'Cancel';
+
+  @override
+  String get saveAction => 'Save';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get reorderAction => 'Reorder';
+
+  @override
+  String get doneAction => 'Done';
+
+  @override
+  String get rulesRewardsSection => 'Rewards';
+
+  @override
+  String get rulesDiscountsSection => 'Deductions';
+
+  @override
+  String get ruleRewardLabel => 'Reward';
+
+  @override
+  String get ruleDiscountLabel => 'Deduction';
+
+  @override
+  String ruleSubtitleReward(String value) {
+    return 'Reward · $value';
+  }
+
+  @override
+  String ruleSubtitleDiscount(String value) {
+    return 'Deduction · $value';
+  }
+
+  @override
+  String get newRuleAction => 'New rule';
+
+  @override
+  String get newRuleTitle => 'New rule';
+
+  @override
+  String get editRuleTitle => 'Edit rule';
+
+  @override
+  String get ruleDescriptionLabel => 'Description';
+
+  @override
+  String get ruleDescriptionRequired => 'Enter a description.';
+
+  @override
+  String get ruleValueLabel => 'Amount';
+
+  @override
+  String get rulesEmptyTitle => 'No rules yet';
+
+  @override
+  String get rulesEmptyBody => 'Use the suggestions or create your first rule.';
+
+  @override
+  String get useSuggestionsAction => 'Use suggestions';
+
+  @override
+  String deleteRuleTitle(String name) {
+    return 'Delete “$name”?';
+  }
+
+  @override
+  String get deleteRuleBody =>
+      'This removes this rule\'s entries from all children.';
+
+  @override
+  String get ruleDeleted => 'Rule deleted';
 }

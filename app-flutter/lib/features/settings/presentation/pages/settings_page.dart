@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth_family/auth_family.dart';
 
@@ -17,7 +18,7 @@ class SettingsPage extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.navSettings)),
       body: ListView(
         children: [
-          _Section(l10n.settingsFamilySection),
+          SectionHeader(l10n.settingsFamilySection),
           if (ready != null)
             ListTile(
               leading: const Icon(Icons.home_outlined),
@@ -28,7 +29,7 @@ class SettingsPage extends ConsumerWidget {
             title: Text(l10n.settingsInviteTile),
             onTap: ready == null ? null : () => showInviteDialog(context),
           ),
-          _Section(l10n.settingsAccountSection),
+          SectionHeader(l10n.settingsAccountSection),
           if (ready != null)
             ListTile(
               leading: const Icon(Icons.account_circle_outlined),
@@ -40,28 +41,6 @@ class SettingsPage extends ConsumerWidget {
             onTap: () => ref.read(signOutControllerProvider.notifier).signOut(),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  const _Section(this.title);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 4),
-      child: Semantics(
-        header: true,
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
       ),
     );
   }

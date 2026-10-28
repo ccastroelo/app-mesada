@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth_family/auth_family.dart';
 import '../../features/children/presentation/pages/children_page.dart';
+import '../../features/rules/presentation/pages/rule_edit_page.dart';
 import '../../features/rules/presentation/pages/rules_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import 'app_shell.dart';
@@ -58,6 +59,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: 'nova', builder: (_, _) => const CreateFamilyPage()),
           GoRoute(path: 'entrar', builder: (_, _) => const JoinFamilyPage()),
         ],
+      ),
+      GoRoute(path: '/regras/nova', builder: (_, _) => const RuleEditPage()),
+      GoRoute(
+        path: '/regras/:id/editar',
+        builder: (_, state) => RuleEditPage(ruleId: state.pathParameters['id']),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>

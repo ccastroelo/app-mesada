@@ -55,7 +55,7 @@ app-flutter/lib/
 | D | **Design**: `design.md` com navegação, telas, gestos, paleta, textos, fluxo de convite — proposta do Claude, aprovação do usuário | usuário aprovou | **aprovado em 2026-10-28** |
 | M0 | Bootstrap `app-flutter/`: `flutter create`, `core/` (tema por tokens, rotas `go_router`, `Failure/Result`), l10n pt-BR/pt-PT/en/es, lints, Firebase init, CI `analyze`+`test` | app abre, `analyze` limpo, baseline em `flutter.md` | **parcial (2026-10-28)**: feito tema, rotas (3 abas), erro, dinheiro, l10n, lints e testes; falta Firebase init, CI e ícone |
 | M1 | **Fatia-piloto**: `auth_family` ponta a ponta (login, criar família, convidar o 2º pai, entrar por código) | dois aparelhos/contas na mesma família; vira modelo no `architecture.md` | **código pronto (2026-10-28)**, 58 testes + 28 das regras; `architecture.md` criado; **falta validar com Firebase real em aparelho** |
-| M2 | `rules` (CRUD, ordem, regras-padrão por idioma, máscara monetária) | paridade §2 ligada a regras | pendente |
+| M2 | `rules` (CRUD, ordem, regras-padrão por idioma, máscara monetária) | paridade §2 ligada a regras | **código pronto (2026-10-28)**, 89 testes no total; falta validar com Firestore real em aparelho |
 | M3 | `children` (CRUD, ordem, foto local, e-mail) | idem | pendente |
 | M4 | `ledger`: lançamentos ±1 com som/feedback, saldo, zerar um/todos, cascatas, tempo real entre os pais, teste de concorrência | idem; dois pais lançando ao mesmo tempo sem perda | pendente |
 | M5 | Relatório por e-mail (HTML equivalente) | idem | pendente |

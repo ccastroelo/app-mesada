@@ -1,48 +1,14 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../../../core/error/result.dart';
+import '../../../../core/state/action_controller.dart';
 import '../../../rules/rules.dart';
 import '../../data/providers.dart';
 import '../../domain/entities/app_user.dart';
 import 'gate.dart';
 
-@immutable
-class ActionState {
-  const ActionState({this.loading = false, this.failure});
-
-  final bool loading;
-  final Failure? failure;
-}
-
-/// Base das ações de tela (entrar, criar família...): enquanto roda mostra
-/// carregando; ao falhar guarda a [Failure] para a tela traduzir em texto.
-abstract class ActionController extends Notifier<ActionState> {
-  @override
-  ActionState build() => const ActionState();
-
-  /// Devolve true se a ação deu certo.
-  Future<bool> run(Future<Result<void>> Function() action) async {
-    state = const ActionState(loading: true);
-    final result = await action();
-    // Ao dar certo o roteador pode já ter trocado de tela e descartado este
-    // controlador.
-    if (!ref.mounted) return result is Ok;
-    switch (result) {
-      case Ok():
-        state = const ActionState();
-        return true;
-      case Err(:final failure):
-        state = ActionState(failure: failure);
-        return false;
-    }
-  }
-
-  void clearFailure() => state = const ActionState();
-
-  AppUser? get _user => ref.read(authUserProvider).value;
-}
+AppUser? _currentUser(Ref ref) => ref.read(authUserProvider).value;
 
 class SignInController extends ActionController {
   Future<bool> signIn(String email, String password) => run(
@@ -68,7 +34,7 @@ class SignInController extends ActionController {
 class CreateFamilyController extends ActionController {
   /// [languageCode] escolhe as regras-padrão (pt, en, es).
   Future<bool> create(String name, String languageCode) => run(() async {
-    final user = _user;
+    final user = _currentUser(ref);
     if (user == null) return const Err(Unexpected());
     return ref
         .read(familyRepositoryProvider)
@@ -82,7 +48,7 @@ class CreateFamilyController extends ActionController {
 
 class JoinFamilyController extends ActionController {
   Future<bool> join(String code) => run(() async {
-    final user = _user;
+    final user = _currentUser(ref);
     if (user == null) return const Err(Unexpected());
     return ref
         .read(familyRepositoryProvider)

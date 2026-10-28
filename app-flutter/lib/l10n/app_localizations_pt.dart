@@ -167,6 +167,85 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get close => 'Fechar';
+
+  @override
+  String get cancelAction => 'Cancelar';
+
+  @override
+  String get saveAction => 'Salvar';
+
+  @override
+  String get editAction => 'Editar';
+
+  @override
+  String get deleteAction => 'Excluir';
+
+  @override
+  String get reorderAction => 'Reordenar';
+
+  @override
+  String get doneAction => 'Concluir';
+
+  @override
+  String get rulesRewardsSection => 'Recompensas';
+
+  @override
+  String get rulesDiscountsSection => 'Descontos';
+
+  @override
+  String get ruleRewardLabel => 'Recompensa';
+
+  @override
+  String get ruleDiscountLabel => 'Desconto';
+
+  @override
+  String ruleSubtitleReward(String value) {
+    return 'Recompensa · $value';
+  }
+
+  @override
+  String ruleSubtitleDiscount(String value) {
+    return 'Desconto · $value';
+  }
+
+  @override
+  String get newRuleAction => 'Nova regra';
+
+  @override
+  String get newRuleTitle => 'Nova regra';
+
+  @override
+  String get editRuleTitle => 'Editar regra';
+
+  @override
+  String get ruleDescriptionLabel => 'Descrição';
+
+  @override
+  String get ruleDescriptionRequired => 'Digite uma descrição.';
+
+  @override
+  String get ruleValueLabel => 'Valor';
+
+  @override
+  String get rulesEmptyTitle => 'Nenhuma regra ainda';
+
+  @override
+  String get rulesEmptyBody => 'Use as sugestões ou crie a sua primeira regra.';
+
+  @override
+  String get useSuggestionsAction => 'Usar sugestões';
+
+  @override
+  String deleteRuleTitle(String name) {
+    return 'Excluir “$name”?';
+  }
+
+  @override
+  String get deleteRuleBody =>
+      'Isso remove os lançamentos dessa regra de todos os filhos.';
+
+  @override
+  String get ruleDeleted => 'Regra excluída';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -333,4 +412,83 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get close => 'Fechar';
+
+  @override
+  String get cancelAction => 'Cancelar';
+
+  @override
+  String get saveAction => 'Guardar';
+
+  @override
+  String get editAction => 'Editar';
+
+  @override
+  String get deleteAction => 'Eliminar';
+
+  @override
+  String get reorderAction => 'Reordenar';
+
+  @override
+  String get doneAction => 'Concluir';
+
+  @override
+  String get rulesRewardsSection => 'Recompensas';
+
+  @override
+  String get rulesDiscountsSection => 'Descontos';
+
+  @override
+  String get ruleRewardLabel => 'Recompensa';
+
+  @override
+  String get ruleDiscountLabel => 'Desconto';
+
+  @override
+  String ruleSubtitleReward(String value) {
+    return 'Recompensa · $value';
+  }
+
+  @override
+  String ruleSubtitleDiscount(String value) {
+    return 'Desconto · $value';
+  }
+
+  @override
+  String get newRuleAction => 'Nova regra';
+
+  @override
+  String get newRuleTitle => 'Nova regra';
+
+  @override
+  String get editRuleTitle => 'Editar regra';
+
+  @override
+  String get ruleDescriptionLabel => 'Descrição';
+
+  @override
+  String get ruleDescriptionRequired => 'Introduza uma descrição.';
+
+  @override
+  String get ruleValueLabel => 'Valor';
+
+  @override
+  String get rulesEmptyTitle => 'Ainda não há regras';
+
+  @override
+  String get rulesEmptyBody => 'Use as sugestões ou crie a sua primeira regra.';
+
+  @override
+  String get useSuggestionsAction => 'Usar sugestões';
+
+  @override
+  String deleteRuleTitle(String name) {
+    return 'Eliminar “$name”?';
+  }
+
+  @override
+  String get deleteRuleBody =>
+      'Isto remove os lançamentos desta regra de todos os filhos.';
+
+  @override
+  String get ruleDeleted => 'Regra eliminada';
 }

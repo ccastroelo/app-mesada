@@ -14,11 +14,13 @@ lib/
     router/            go_router + guardas (redirectFor) + casca de 3 abas
     error/             Failure (selada) e Result<T> = Ok | Err
     firebase/          failureFromFirebase: exceção do SDK -> Failure (só a camada data usa)
-    widgets/           PageBody, FailureText/failureMessage
-    utils/             formatCents (dinheiro em centavos)
+    state/             ActionState + ActionController (base das ações de tela: carregando/falha)
+    widgets/           PageBody, FailureText/failureMessage, EmptyState, ErrorState,
+                       SectionHeader, MoneyField (máscara de centavos)
+    utils/             formatCents / formatCentsPlain / centsFromMaskedText (dinheiro em centavos)
   features/
     auth_family/       login, família, convite  (fatia-piloto, M1)
-    rules/             entidade Rule + regras-padrão por idioma; telas ainda são casca
+    rules/             Regras: lista, criar/editar, excluir, reordenar, sugestões (M2)
     children/          entidade Child; tela ainda é casca
     ledger/            Entry + calculateBalanceCents; sem telas ainda
     settings/          Ajustes (família, convite, conta/sair)
@@ -43,6 +45,13 @@ JoinFamilyPage (presentation/pages)
 - O resultado volta como `Result<void>`: `Ok`, ou `Err(Failure)`. O repositório converte exceção do SDK em `Failure` (`failureFromFirebase`); a UI converte `Failure` em texto (`failureMessage`, usa o `.arb`).
 - `ActionController.run` guarda `ActionState(loading, failure)`; a tela mostra carregando, o erro abaixo do botão e desabilita o botão.
 - Quando o lote grava, o stream `users/{uid}` muda e o `gateProvider` passa de `GateNeedsFamily` para `GateReady`; o `redirectFor` do roteador leva a `/filhos`. A tela não navega sozinha.
+
+## Segundo exemplo: Regras (M2), uma feature que depende da família
+
+- `rulesProvider` (StreamProvider) lê o `familyId` do `gateProvider` da `auth_family` pelo barrel e assina `RulesRepository.watchRules`. As telas só desenham os estados: carregando, erro (`ErrorState` com "Tentar de novo"), vazio (`EmptyState` + "Usar sugestões") e dado (lista em seções Recompensas/Descontos, por `splitRules`).
+- Escritas passam por um `RulesActions` (`ActionController`): `add`, `update`, `delete`, `reorder`, `addSuggestions`. O modo Reordenar trabalha numa cópia local da lista e só grava ao tocar em Concluir.
+- O barrel `rules/rules.dart` expõe só **domínio** (entidade, contrato, `splitRules`, regras-padrão). O estado fica fora dele de propósito: depende de `auth_family`, que importa esse barrel (evita ciclo).
+- Lançamentos nascem sob demanda e a ordem usa inteiros crescentes: ADR-0013.
 
 ## O portão de entrada (`gateProvider`)
 

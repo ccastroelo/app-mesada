@@ -4,6 +4,13 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0013 — Lançamentos criados sob demanda; ordem das regras por inteiro crescente
+- Data: 2026-10-28 · Status: aceita · Escopo: Firestore (`entries`, `rules`), features `rules` e `ledger`
+- Contexto: o legado criava um lançamento para cada par filho × regra ao cadastrar filho ou regra (`imGrupoLancamentos.m:114-135`). Isso exige escrever em vários documentos a cada cadastro e dá corrida entre dois responsáveis.
+- Decisão: um `entries/{childId}_{ruleId}` **ausente equivale a quantidade 0 e regra ativada**. O documento só é criado no primeiro toque em +, ou ao desativar a regra para o filho. Criar filho ou regra **não** escreve lançamentos; excluir uma regra apaga os lançamentos dela (`deleteRule`). A ordem de exibição é o campo `order` da regra: a semeadura e "Reordenar" gravam 0..n-1; regra nova usa o relógio em milissegundos (sempre maior), então entra no fim sem ler a lista (funciona offline).
+- Alternativas descartadas: criar todos os pares (mais escrita e corrida); `order = max+1` (exige leitura antes de gravar).
+- Consequências: a tela do filho (M4) monta as linhas a partir das **regras** e junta com os lançamentos existentes; `calculateBalanceCents` já só soma lançamentos existentes. Dois aparelhos criando regras ao mesmo tempo podem empatar no `order` só se no mesmo milissegundo (desempate indefinido, aceitável). Reordenar sobrescreve para 0..n-1.
+
 ### ADR-0012 — Login com Google pelo fluxo OAuth do Firebase; uma família por conta
 - Data: 2026-10-28 · Status: aceita · Escopo: feature `auth_family`
 - Contexto: o login com Google nativo (`google_sign_in`) exige SHA-1 por computador no Android e configuração extra no iOS.

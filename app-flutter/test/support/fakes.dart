@@ -127,3 +127,94 @@ class FakeFamilyRepository implements FamilyRepository {
     return const Ok(null);
   }
 }
+
+/// Regras em memória, na ordem da lista; cada mudança é emitida no stream.
+class FakeRulesRepository implements RulesRepository {
+  FakeRulesRepository({List<Rule> rules = const []}) : _rules = [...rules];
+
+  final List<Rule> _rules;
+  final _changes = StreamController<List<Rule>>.broadcast();
+  int _nextId = 1;
+
+  /// Resultado devolvido por todas as escritas (para simular falha).
+  Result<void> nextResult = const Ok(null);
+  List<String>? lastReorder;
+  int deleteCalls = 0;
+
+  List<Rule> get rules => List.unmodifiable(_rules);
+
+  void _emit() => _changes.add(List.unmodifiable(_rules));
+
+  @override
+  Stream<List<Rule>> watchRules(String familyId) async* {
+    yield List.unmodifiable(_rules);
+    yield* _changes.stream;
+  }
+
+  @override
+  Future<Result<void>> addRule(
+    String familyId, {
+    required String description,
+    required int valueCents,
+  }) async {
+    if (nextResult is Err) return nextResult;
+    _rules.add(
+      Rule(
+        id: 'n${_nextId++}',
+        description: description.trim(),
+        valueCents: valueCents,
+      ),
+    );
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> updateRule(String familyId, Rule rule) async {
+    if (nextResult is Err) return nextResult;
+    final index = _rules.indexWhere((r) => r.id == rule.id);
+    if (index >= 0) _rules[index] = rule;
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> deleteRule(String familyId, String ruleId) async {
+    deleteCalls++;
+    if (nextResult is Err) return nextResult;
+    _rules.removeWhere((r) => r.id == ruleId);
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> reorder(String familyId, List<String> orderedIds) async {
+    lastReorder = orderedIds;
+    if (nextResult is Err) return nextResult;
+    final byId = {for (final r in _rules) r.id: r};
+    _rules
+      ..clear()
+      ..addAll([for (final id in orderedIds) byId[id]!]);
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> addSuggestions(
+    String familyId,
+    List<RuleSeed> seeds,
+  ) async {
+    if (nextResult is Err) return nextResult;
+    for (final seed in seeds) {
+      _rules.add(
+        Rule(
+          id: 'n${_nextId++}',
+          description: seed.description,
+          valueCents: seed.valueCents,
+        ),
+      );
+    }
+    _emit();
+    return nextResult;
+  }
+}
