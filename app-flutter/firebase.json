@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"mesada-proj","appId":"1:373838290148:android:0624fee109e181fd61a0f1","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"mesada-proj","configurations":{"android":"1:373838290148:android:0624fee109e181fd61a0f1","ios":"1:373838290148:ios:75fa01d25ec2c82d61a0f1"}}}}}}

@@ -4,6 +4,13 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0010 — Arquivos de configuração do Firebase entram no Git
+- Data: 2026-10-28 · Status: aceita · Escopo: `app-flutter/`
+- Contexto: `flutterfire configure` gera `lib/firebase_options.dart`, `android/app/google-services.json` e `firebase.json`, com identificadores e chaves de API **de cliente** do projeto `mesada-proj`. O repositório no GitHub é privado.
+- Decisão: versionar os três arquivos. As chaves de cliente do Firebase não são segredo; a proteção está nas regras do Firestore e na restrição das chaves no console do Google Cloud. Vantagem: em outro computador basta `git pull` e `flutter pub get`.
+- Alternativas: ignorar no Git e rodar `flutterfire configure` em cada computador (mais seguro se o repositório virar público, mais um passo por máquina).
+- Consequências: se o repositório um dia ficar público, restringir as chaves por app no Google Cloud antes. Chaves de servidor, contas de serviço e `.env` nunca entram no Git.
+
 ### ADR-0009 — Design aprovado (`design.md`)
 - Data: 2026-10-28 · Status: aceita · Escopo: toda a UI
 - Contexto: marco D do plano.

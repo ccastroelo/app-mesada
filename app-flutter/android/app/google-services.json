@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "373838290148",
+    "project_id": "mesada-proj",
+    "storage_bucket": "mesada-proj.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373838290148:android:0624fee109e181fd61a0f1",
+        "android_client_info": {
+          "package_name": "br.eti.claudiocastro.mesada"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCerMqlyQeK3duwawMh07GrBPhnR8BwR2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

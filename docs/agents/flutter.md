@@ -23,9 +23,9 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | 6 testes passando (formatação de dinheiro e casca de navegação em 4 idiomas) |
+| `flutter test` | 17 testes passando (dinheiro, casca de navegação em 4 idiomas, saldo e lançamentos) — atualizado em 2026-10-28 |
 | Executado em aparelho/emulador | **não** — só testes de widget |
-| Firebase | **não configurado** (aguarda projeto criado pelo usuário) |
+| Firebase | projeto `mesada-proj`; apps Android e iOS registrados; `firebase_core` inicializado no `main.dart`. Auth e Firestore ainda não habilitados. Não rodado em aparelho. |
 
 ## Pendências que o código ainda não resolve
 
