@@ -142,5 +142,54 @@
     }
   },
   "deleteChildBody": "Isso remove também todos os lançamentos dele.",
-  "childDeleted": "Filho excluído"
+  "childDeleted": "Filho excluído",
+  "childLedgerZeroMenu": "Zerar lançamentos",
+  "childLedgerZeroAllMenu": "Zerar lançamentos de todos",
+  "childRulesMenu": "Regras deste filho",
+  "childRulesSubtitle": "Desativar guarda a quantidade, fora do saldo.",
+  "zeroChildTitle": "Zerar lançamentos de {name}?",
+  "@zeroChildTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "zeroAllTitle": "Zerar lançamentos de todos os filhos?",
+  "zeroBody": "As quantidades voltam a zero. A mesada não muda.",
+  "zeroAction": "Zerar",
+  "entriesZeroed": "Lançamentos zerados",
+  "undoAction": "Desfazer",
+  "increaseSemantics": "Aumentar {description}, quantidade {quantity}",
+  "@increaseSemantics": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "decreaseSemantics": "Diminuir {description}, quantidade {quantity}",
+  "@decreaseSemantics": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "childLedgerEmptyTitle": "Nenhuma regra para lançar",
+  "childLedgerEmptyBody": "Crie regras na aba Regras para começar a lançar.",
+  "childLedgerAllOffTitle": "Todas as regras estão desativadas para {name}",
+  "@childLedgerAllOffTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -6,6 +6,7 @@
 
 - **Mudança de requisito (2026-11-03)**: o app guarda os dados **no aparelho** por padrão, sem conta e sem Firebase; compartilhar com o outro responsável é a assinatura **Família**, que é da família (o convidado não paga) e só então pede conta. ADR-0014 e ADR-0015; `design.md` §13. Preço e período seguem em aberto.
 - **M1.5 (modo local) pronto no código (2026-11-03)**: `LocalStore` grava um `mesada.json` atômico na pasta do app e publica cada mudança; `RulesLocalRepository`, `ChildrenLocalRepository` e `LedgerLocalRepository` servem as abas sem rede; a família nasce local (sem nome, a tela mostra "Minha família"); o portão (`gateProvider`) tem caminho local e caminho nuvem, com `GateReady.user` nulo no local; `main.dart` **não** inicializa o Firebase; Ajustes esconde conta, sair e convidar sem conta. `analyze` limpo e **142 testes**. Telas de login/convite seguem no código, desligadas, para o M4.5. **Nunca rodou em aparelho/emulador.**
+- **M4 (ledger) pronto no código (2026-11-03)**: a tela do filho (toque no cartão) com linhas `− qtd +` em Recompensas/Descontos, chip do último lançamento junto ao saldo, retorno tátil, "Regras deste filho" com switches (desativar guarda a quantidade), zerar um filho ou todos com "Desfazer" por 8 s. Escritas novas no `LedgerRepository` (local e Firestore, este com `FieldValue.increment`). 168 testes, `analyze` limpo. Pendências de propósito (som, seções recolhíveis, animação do saldo): `tech-debt.md`. **Não validado em aparelho.**
 - Modo: **reescrita**. Design **aprovado** (ADR-0009). Marco **M0 parcial**: tema, rotas das 3 abas, `Result/Failure`, dinheiro em centavos, l10n (4 idiomas), lints e 6 testes. `analyze` limpo. Nunca rodou em aparelho/emulador.
 - Falta do M0: CI (`analyze` + `test`) e ícone. A inicialização do Firebase saiu do M0 e virou parte do M4.5 (ADR-0014).
 - Tag `legacy/1.2` marca o app iOS antigo (commit `a61a69e`).
@@ -36,17 +37,17 @@ flutter test
 
 Já tendo o clone: `git pull --tags` na raiz e depois `flutter pub get`. Os arquivos de localização gerados (`app-flutter/lib/l10n/app_localizations*.dart`) são versionados; rode `flutter gen-l10n` só depois de editar um `.arb`.
 
-Resultado esperado: `analyze` sem problemas e 142 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`, que só valem para o modo nuvem). Se divergir, registre o baseline em `flutter.md` antes de mexer.
+Resultado esperado: `analyze` sem problemas e 168 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`, que só valem para o modo nuvem). Se divergir, registre o baseline em `flutter.md` antes de mexer.
 
 ## Próximos passos (ordem)
 
-> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015).
+> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015). M1.5 e M4 com código pronto.
 
-1. **M4 `ledger`** — a tela do filho (toque no cartão): linhas − qtd + por regra em Recompensas/Descontos, chip animado do saldo, ativar/desativar regra por filho, zerar um/todos com "Desfazer" por 8 s. Contra o `LocalStore` a escrita é imediata, então a dívida de "esperar o servidor" não existe no grátis (`tech-debt.md`). As escritas de lançamento entram no `LedgerRepository` (hoje só leitura) e na versão local e na do Firestore.
-2. **Rodar em aparelho/emulador** (`flutter-preview`): o app nunca abriu fora dos testes, e agora dá para fazer isso **sem nenhuma configuração de Firebase**. Vale antes de empilhar mais telas.
-3. **M0 restante**: CI mínima (`analyze` + `test`) e ícone.
-4. **M4.5 Família (assinatura)**: tela do recurso, `in_app_purchase`, restaurar compras, conta no momento de compartilhar, envio inicial do local para o Firestore e troca do `appModeProvider`. **Só aqui** voltam a ser necessários o Auth e o Firestore habilitados no console e a validação com o Firebase real.
-5. Depois: M5 relatório, M6 PIN, M7 ajuda. M8 (corte) é decisão do usuário.
+1. **Rodar em aparelho/emulador** (`flutter-preview`): o app nunca abriu fora dos testes, e agora dá para abrir **sem nenhuma configuração de Firebase**. É o passo mais barato antes de empilhar mais telas — e a tela de lançamentos é de uso diário, vale sentir o toque, o chip e o retorno tátil.
+2. **M0 restante**: CI mínima (`analyze` + `test`) e ícone.
+3. **M5 relatório por e-mail** (a barra inferior da tela do filho nasce aqui, com "Enviar relatório"), depois **M6 PIN** e **M7 ajuda**.
+4. **M4.5 Família (assinatura)**: tela do recurso, `in_app_purchase`, restaurar compras, conta no momento de compartilhar, envio inicial do local para o Firestore e troca do `appModeProvider`. **Só aqui** voltam a ser necessários o Auth e o Firestore habilitados no console, e só aqui dá para exercitar de verdade dois responsáveis lançando ao mesmo tempo.
+5. M8 (corte) é decisão do usuário.
 6. **Do usuário, quando quiser**: revogar a chave/secret do Dropbox e a do Flurry do app antigo (estão no histórico do git; ver `behavior-inventory.md` §5); definir versão/build de release (> 1.2, build > 9); **definir preço e período da Família**.
 
 ## Cuidados

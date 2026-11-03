@@ -93,5 +93,20 @@
   "balanceSemantics": "Saldo {value}",
   "deleteChildTitle": "Eliminar {name}?",
   "deleteChildBody": "Isto remove também todos os lançamentos dele.",
-  "childDeleted": "Filho eliminado"
+  "childDeleted": "Filho eliminado",
+  "childLedgerZeroMenu": "Zerar lançamentos",
+  "childLedgerZeroAllMenu": "Zerar lançamentos de todos",
+  "childRulesMenu": "Regras deste filho",
+  "childRulesSubtitle": "Desativar guarda a quantidade, fora do saldo.",
+  "zeroChildTitle": "Zerar lançamentos de {name}?",
+  "zeroAllTitle": "Zerar lançamentos de todos os filhos?",
+  "zeroBody": "As quantidades voltam a zero. A mesada não muda.",
+  "zeroAction": "Zerar",
+  "entriesZeroed": "Lançamentos zerados",
+  "undoAction": "Desfazer",
+  "increaseSemantics": "Aumentar {description}, quantidade {quantity}",
+  "decreaseSemantics": "Diminuir {description}, quantidade {quantity}",
+  "childLedgerEmptyTitle": "Nenhuma regra para lançar",
+  "childLedgerEmptyBody": "Crie regras no separador Regras para começar a lançar.",
+  "childLedgerAllOffTitle": "Todas as regras estão desativadas para {name}"
 }

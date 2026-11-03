@@ -28,15 +28,15 @@ App com `UITabBarController` de 5 abas (`Base.lproj/Main.storyboard:225-238`).
 |---|---|---|
 | **Saldo do filho = mesada inicial + Σ(quantidade × valor da regra)**. Descontos têm valor negativo. | `imMesadeiro.m:24-28`, `imGrupoLancamentos.m:238-248` | portado (M3, 2026-10-28) — exibido nos cartões |
 | Valor ≤ 0 é rotulado "Desconto"; > 0 é "Recompensa" (zero cai em "Desconto"). | `imLanVC.m:98-102`, `imFalTableVC.m:76-80` | portado (M2, 2026-10-28) |
-| Existe um **lançamento (quantidade) para cada par filho × regra**. Criar filho cria um lançamento por regra existente; criar regra cria um por filho. | `imGrupoLancamentos.m:114-135` | pendente |
-| Excluir filho exclui todos os seus lançamentos; excluir regra exclui os lançamentos dela (em cascata). | `imGrupoMesadeiros.m:77-85`, `imGrupoFaltas.m:74-82` | pendente |
+| Existe um **lançamento (quantidade) para cada par filho × regra**. Criar filho cria um lançamento por regra existente; criar regra cria um por filho. | `imGrupoLancamentos.m:114-135` | substituído (ADR-0013): o par nasce no primeiro toque; ausente = 0 e ativada (M4, 2026-11-03) |
+| Excluir filho exclui todos os seus lançamentos; excluir regra exclui os lançamentos dela (em cascata). | `imGrupoMesadeiros.m:77-85`, `imGrupoFaltas.m:74-82` | portado (M2 e M3, 2026-10-28) |
 | Remover uma linha na tela de Lançamentos apaga só o lançamento daquele par (a regra "some" para aquele filho, sem sair das Regras). Não há como trazê-la de volta, exceto recriando. | `imLanVC.m:193-208`, `imGrupoLancamentos.m:196-201` | substituído por ativar/desativar por filho (aprovado em 2026-10-28, ADR-0008) |
-| Quantidade mínima 0 ao decrementar; incremento sem limite. | `imLanVC.m:119` | pendente |
-| "Zerar" coloca quantidade = 0 em todos os lançamentos do filho, ou de todos os filhos (alerta com Cancelar / OK / "Zerar todas Mesadas"). Não altera a mesada inicial. | `imMesTableVC.m:294-343`, `imGrupoLancamentos.m:94-111` | pendente |
+| Quantidade mínima 0 ao decrementar; incremento sem limite. | `imLanVC.m:119` | portado (M4, 2026-11-03): piso no domínio, no repositório e no botão desabilitado |
+| "Zerar" coloca quantidade = 0 em todos os lançamentos do filho, ou de todos os filhos (alerta com Cancelar / OK / "Zerar todas Mesadas"). Não altera a mesada inicial. | `imMesTableVC.m:294-343`, `imGrupoLancamentos.m:94-111` | portado (M4, 2026-11-03), com "Desfazer" por 8 s |
 | Máscara monetária: dígitos entram da direita; separador removido; nº de casas decimais vem do locale (`maximumFractionDigits`). Limites de tamanho: regra 7 caracteres, mesada 9. | `imFalCadVC.m:78-131`, `imMesCadVC.m:128-159` | portado: regras (M2, teto 999,99) e mesada (M3, teto 999.999,99) |
 | Segmento Desconto/Recompensa alterna o sinal do valor digitado. | `imFalCadVC.m:134-142` | portado (M2, 2026-10-28) |
 | PIN: 4 dígitos, exigido em toda volta ao primeiro plano; guardado no Keychain (serviço `senha2`). | `imSenCadVC.m`, `imLoginVC.m`, `imMesTableVC.m:38-45` | pendente |
-| Moeda exibida com o símbolo do locale + espaço ("R$ 1,50"). | `imLanVC.m:33-35` e demais | pendente |
+| Moeda exibida com o símbolo do locale + espaço ("R$ 1,50"). | `imLanVC.m:33-35` e demais | portado (M2 a M4): `formatCents` com o locale do aparelho |
 | Regras-padrão do primeiro uso (20 regras, por idioma: pt, pt-PT, en, es). Ex.: "Arrumar a cama" +0,50; "Tirar nota 10" +1,50; "Mentir" −1,00. Lista completa em `*/faltas.plist`. Não há filhos nem lançamentos de fábrica. | `*.lproj/faltas.plist`; `imGrupoFaltas.m:117-126` | portado (M1, 2026-10-28) |
 | IDs: `maiorId + 1` por tabela (colisão possível com dois aparelhos escrevendo — o novo usa ID gerado). | `imGrupo*.m` | pendente |
 

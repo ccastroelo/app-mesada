@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth_family/auth_family.dart';
 import '../../features/children/presentation/pages/child_edit_page.dart';
+import '../../features/children/presentation/pages/child_ledger_page.dart';
+import '../../features/children/presentation/pages/child_rules_page.dart';
 import '../../features/children/presentation/pages/children_page.dart';
 import '../../features/rules/presentation/pages/rule_edit_page.dart';
 import '../../features/rules/presentation/pages/rules_page.dart';
@@ -66,6 +68,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/filhos/:id/editar',
         builder: (_, state) =>
             ChildEditPage(childId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: '/filhos/:id/regras',
+        builder: (_, state) =>
+            ChildRulesPage(childId: state.pathParameters['id']!),
+      ),
+      // Depois das rotas mais específicas: `:id` casaria com "novo".
+      GoRoute(
+        path: '/filhos/:id',
+        builder: (_, state) =>
+            ChildLedgerPage(childId: state.pathParameters['id']!),
       ),
       GoRoute(path: '/regras/nova', builder: (_, _) => const RuleEditPage()),
       GoRoute(

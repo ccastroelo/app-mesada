@@ -25,8 +25,9 @@ lib/
   features/
     auth_family/       login, família, convite  (fatia-piloto, M1)
     rules/             Regras: lista, criar/editar, excluir, reordenar, sugestões (M2)
-    children/          Filhos: cartões com saldo, criar/editar (foto local), excluir, reordenar (M3)
-    ledger/            Entry + calculateBalanceCents + leitura dos lançamentos; sem telas ainda
+    children/          Filhos: cartões com saldo, CRUD, foto local (M3); tela do filho com os
+                       lançamentos ± e as regras do filho (M4)
+    ledger/            Lançamentos: Entry, saldo e as escritas (±, ativar/desativar, zerar) (M4)
     settings/          Ajustes (família, convite, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
@@ -81,6 +82,16 @@ JoinFamilyPage (presentation/pages)
 - **Foto local** (ADR-0006): contratos `ChildPhotoStore` e `PhotoPicker` no `domain`; `ChildPhotoStoreImpl` (arquivos em `<pasta do app>/child_photos/<childId>.jpg`) e `ImagePickerPhotoPicker` (galeria, 512 px, JPEG 80) na `data`. O `ChildrenActions` copia a foto depois de criar o filho (precisa do id), remove ao excluir e invalida `childPhotoPathProvider`; a imagem em cache é expulsa com `FileImage.evict`.
 - `ChildAvatar` mostra a foto ou a inicial num círculo de 6 cores fixas (índice estável por id, não `hashCode`).
 - Cada aba tem seu `FloatingActionButton` com `heroTag: null` (ver `tech-debt.md`).
+
+
+## Quarto exemplo: lançar ± (M4), e por que a tela do filho vive em `children`
+
+- As telas são `children/presentation/pages/child_ledger_page.dart` (a mais usada do app) e `child_rules_page.dart`; o estado é o `childLedgerProvider` (`children/presentation/state/child_ledger_state.dart`), que junta **filho + regras + lançamentos** e monta `ChildLedger` com uma `LedgerRow` por regra (quantidade e `enabled`) e o saldo.
+- **Por que em `children` e não em `ledger`**: a tela precisa de `childrenProvider`, `rulesProvider` e `entriesProvider`. A feature `children` já depende de `rules` e de `ledger` (M3); o caminho contrário faria ciclo. A `ledger` fica com domínio, dados e as **escritas**.
+- As escritas são o `ledgerActionsProvider` (`ledger/presentation/state/ledger_state.dart`, exposto por `ledger_providers.dart`): `increment`, `decrement`, `setEnabled`, `zero` e `restore`. `zero` devolve as quantidades que havia (nulo se falhar), e é a tela que as guarda para o "Desfazer" de 8 s.
+- O lançamento **nasce no primeiro toque** (ADR-0013). No modo local a conta é feita no arquivo, com piso 0. Na nuvem, ± vira `FieldValue.increment(±1)` com `merge`: a soma acontece no servidor, então dois responsáveis lançando junto não perdem toque e a fila do SDK cobre o offline. O piso 0 do − fica com a tela (botão desabilitado em 0) e com as regras de segurança, que rejeitam negativo.
+- Zerar não mexe em `enabled` nem na mesada. Desativar uma regra para o filho preserva a quantidade e só a tira do saldo (ADR-0008); a linha desativada não aparece nos lançamentos.
+- Acessibilidade da linha: o `tooltip` do botão é o rótulo do leitor de tela ("Aumentar Arrumar a cama, quantidade 2"), o saldo é anunciado após cada lançamento (`SemanticsService.sendAnnouncement`) e, a partir de 1,3× de escala de texto, o stepper desce para uma segunda linha.
 
 ## O portão de entrada (`gateProvider`)
 

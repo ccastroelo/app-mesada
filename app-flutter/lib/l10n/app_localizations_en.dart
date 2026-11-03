@@ -310,4 +310,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get childDeleted => 'Child deleted';
+
+  @override
+  String get childLedgerZeroMenu => 'Reset entries';
+
+  @override
+  String get childLedgerZeroAllMenu => 'Reset everyone\'s entries';
+
+  @override
+  String get childRulesMenu => 'Rules for this child';
+
+  @override
+  String get childRulesSubtitle =>
+      'Turning a rule off keeps its quantity, out of the balance.';
+
+  @override
+  String zeroChildTitle(String name) {
+    return 'Reset $name\'s entries?';
+  }
+
+  @override
+  String get zeroAllTitle => 'Reset the entries of every child?';
+
+  @override
+  String get zeroBody =>
+      'Quantities go back to zero. The allowance stays the same.';
+
+  @override
+  String get zeroAction => 'Reset';
+
+  @override
+  String get entriesZeroed => 'Entries reset';
+
+  @override
+  String get undoAction => 'Undo';
+
+  @override
+  String increaseSemantics(String description, int quantity) {
+    return 'Increase $description, quantity $quantity';
+  }
+
+  @override
+  String decreaseSemantics(String description, int quantity) {
+    return 'Decrease $description, quantity $quantity';
+  }
+
+  @override
+  String get childLedgerEmptyTitle => 'No rules to use yet';
+
+  @override
+  String get childLedgerEmptyBody =>
+      'Create rules on the Rules tab to start adding entries.';
+
+  @override
+  String childLedgerAllOffTitle(String name) {
+    return 'Every rule is off for $name';
+  }
 }

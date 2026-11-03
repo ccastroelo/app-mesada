@@ -23,7 +23,7 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | **142 testes passando** (os 120 de antes mais: `LocalStore` — criar, gravar atômico, reler, fila de escritas, erro de disco, arquivo ilegível, campo com tipo errado —, repositórios locais de regras e filhos, e a entrada sem conta no modo local) — atualizado em 2026-11-03 |
+| `flutter test` | **168 testes passando** (os 142 do M1.5 mais 26 do M4: lançamentos no repositório local e no do Firestore com datasource falso, e a tela do filho — abrir pelo cartão, ±, piso 0, regra desativada, switches, zerar com Desfazer, zerar de todos e fonte 1,3×/2,0× em tela de 360 dp) — atualizado em 2026-11-03 |
 | `flutter build apk --debug` | compilava em 2026-10-28; **não refeito** depois de tirar o Firebase do `main.dart` (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |
 | Executado em aparelho/emulador | **não** — só testes de widget e compilação |

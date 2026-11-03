@@ -93,5 +93,20 @@
   "balanceSemantics": "Saldo {value}",
   "deleteChildTitle": "¿Eliminar a {name}?",
   "deleteChildBody": "Esto también elimina todos sus registros.",
-  "childDeleted": "Hijo eliminado"
+  "childDeleted": "Hijo eliminado",
+  "childLedgerZeroMenu": "Poner a cero",
+  "childLedgerZeroAllMenu": "Poner a cero todos",
+  "childRulesMenu": "Reglas de este hijo",
+  "childRulesSubtitle": "Desactivar una regla guarda su cantidad, fuera del saldo.",
+  "zeroChildTitle": "¿Poner a cero los registros de {name}?",
+  "zeroAllTitle": "¿Poner a cero los registros de todos los hijos?",
+  "zeroBody": "Las cantidades vuelven a cero. La mesada no cambia.",
+  "zeroAction": "Poner a cero",
+  "entriesZeroed": "Registros puestos a cero",
+  "undoAction": "Deshacer",
+  "increaseSemantics": "Aumentar {description}, cantidad {quantity}",
+  "decreaseSemantics": "Disminuir {description}, cantidad {quantity}",
+  "childLedgerEmptyTitle": "Todavía no hay reglas",
+  "childLedgerEmptyBody": "Crea reglas en la pestaña Reglas para empezar a registrar.",
+  "childLedgerAllOffTitle": "Todas las reglas están desactivadas para {name}"
 }

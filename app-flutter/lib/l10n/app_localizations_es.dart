@@ -312,4 +312,59 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get childDeleted => 'Hijo eliminado';
+
+  @override
+  String get childLedgerZeroMenu => 'Poner a cero';
+
+  @override
+  String get childLedgerZeroAllMenu => 'Poner a cero todos';
+
+  @override
+  String get childRulesMenu => 'Reglas de este hijo';
+
+  @override
+  String get childRulesSubtitle =>
+      'Desactivar una regla guarda su cantidad, fuera del saldo.';
+
+  @override
+  String zeroChildTitle(String name) {
+    return '¿Poner a cero los registros de $name?';
+  }
+
+  @override
+  String get zeroAllTitle => '¿Poner a cero los registros de todos los hijos?';
+
+  @override
+  String get zeroBody => 'Las cantidades vuelven a cero. La mesada no cambia.';
+
+  @override
+  String get zeroAction => 'Poner a cero';
+
+  @override
+  String get entriesZeroed => 'Registros puestos a cero';
+
+  @override
+  String get undoAction => 'Deshacer';
+
+  @override
+  String increaseSemantics(String description, int quantity) {
+    return 'Aumentar $description, cantidad $quantity';
+  }
+
+  @override
+  String decreaseSemantics(String description, int quantity) {
+    return 'Disminuir $description, cantidad $quantity';
+  }
+
+  @override
+  String get childLedgerEmptyTitle => 'Todavía no hay reglas';
+
+  @override
+  String get childLedgerEmptyBody =>
+      'Crea reglas en la pestaña Reglas para empezar a registrar.';
+
+  @override
+  String childLedgerAllOffTitle(String name) {
+    return 'Todas las reglas están desactivadas para $name';
+  }
 }

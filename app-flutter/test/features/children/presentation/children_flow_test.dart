@@ -197,7 +197,13 @@ void main() {
     testWidgets('editar abre preenchido e atualiza no lugar', (tester) async {
       await openChildren(tester, children: [_lucas, _ana]);
 
-      await tester.tap(find.byIcon(Icons.more_vert).last);
+      // O menu do cartão de Ana, não o da barra superior (zerar de todos).
+      await tester.tap(
+        find.descendant(
+          of: find.ancestor(of: find.text('Ana'), matching: find.byType(Card)),
+          matching: find.byIcon(Icons.more_vert),
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text('Editar'));
       await tester.pumpAndSettle();

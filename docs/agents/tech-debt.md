@@ -39,3 +39,13 @@ Lista viva de armadilhas conhecidas. Cada item diz onde dói e o que fazer; nada
 
 - No grátis a família nasce sem nome e a tela mostra o padrão do idioma ("Minha família"). O campo de nome só aparece ao criar a família **com conta** (fluxo da assinatura).
 - Se incomodar antes do M4.5, basta um campo de edição em Ajustes › Família gravando `family['name']` pelo `LocalStore`.
+
+## Pendências que o M4 deixou de propósito
+
+Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que ficaram para depois, para não inflar o marco.
+
+- **Som do lançamento** (design §2 e §4.8): não existe. Tocar um som curto pede uma dependência nova (`audioplayers` ou similar) e a opção de ligar/desligar vive em Ajustes › Preferências, que é de outro marco. Hoje há só o retorno tátil (`HapticFeedback`, sem dependência).
+- **Seções recolhíveis** (design §4.4): Recompensas e Descontos aparecem sempre abertas.
+- **Barra inferior da tela do filho** (design §4.4): o menu está na barra de cima. A barra inferior ganha sentido no M5, junto com "Enviar relatório".
+- **Animação do saldo** (design §6): o chip do último lançamento aparece e some, mas o número do saldo troca sem transição.
+- **Filho excluído com a tela aberta** (só acontece com assinatura, quando o outro responsável exclui): a tela do filho mostra o estado de erro em vez de voltar sozinha para a lista.

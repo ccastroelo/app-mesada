@@ -297,6 +297,8 @@ class FakeChildrenRepository implements ChildrenRepository {
   }
 }
 
+/// Lançamentos em memória, com as mesmas regras do repositório de verdade:
+/// o par filho × regra nasce no primeiro toque e a quantidade tem piso 0.
 class FakeLedgerRepository implements LedgerRepository {
   FakeLedgerRepository({List<Entry> entries = const []})
     : _entries = [...entries];
@@ -304,15 +306,115 @@ class FakeLedgerRepository implements LedgerRepository {
   List<Entry> _entries;
   final _changes = StreamController<List<Entry>>.broadcast();
 
+  /// Resultado devolvido por todas as escritas (para simular falha).
+  Result<void> nextResult = const Ok(null);
+  final calls = <String>[];
+
+  List<Entry> get entries => List.unmodifiable(_entries);
+
   set entries(List<Entry> value) {
     _entries = [...value];
-    _changes.add(List.unmodifiable(_entries));
+    _emit();
   }
+
+  void _emit() => _changes.add(List.unmodifiable(_entries));
 
   @override
   Stream<List<Entry>> watchEntries(String familyId) async* {
     yield List.unmodifiable(_entries);
     yield* _changes.stream;
+  }
+
+  Future<Result<void>> _change(
+    String call,
+    String childId,
+    String ruleId,
+    Entry Function(Entry) change,
+  ) async {
+    calls.add(call);
+    if (nextResult is Err) return nextResult;
+    final index = _entries.indexWhere(
+      (entry) => entry.childId == childId && entry.ruleId == ruleId,
+    );
+    final current = index >= 0
+        ? _entries[index]
+        : Entry(childId: childId, ruleId: ruleId);
+    final next = change(current);
+    if (index >= 0) {
+      _entries[index] = next;
+    } else {
+      _entries.add(next);
+    }
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> increment(
+    String familyId, {
+    required String childId,
+    required String ruleId,
+  }) => _change(
+    'increment:${childId}_$ruleId',
+    childId,
+    ruleId,
+    (entry) => entry.increment(),
+  );
+
+  @override
+  Future<Result<void>> decrement(
+    String familyId, {
+    required String childId,
+    required String ruleId,
+  }) => _change(
+    'decrement:${childId}_$ruleId',
+    childId,
+    ruleId,
+    (entry) => entry.decrement(),
+  );
+
+  @override
+  Future<Result<void>> setEnabled(
+    String familyId, {
+    required String childId,
+    required String ruleId,
+    required bool enabled,
+  }) => _change(
+    'setEnabled:${childId}_$ruleId:$enabled',
+    childId,
+    ruleId,
+    (entry) => entry.copyWith(enabled: enabled),
+  );
+
+  @override
+  Future<Result<void>> zero(String familyId, {String? childId}) async {
+    calls.add('zero:${childId ?? 'todos'}');
+    if (nextResult is Err) return nextResult;
+    _entries = [
+      for (final entry in _entries)
+        if (childId == null || entry.childId == childId)
+          entry.zeroed()
+        else
+          entry,
+    ];
+    _emit();
+    return nextResult;
+  }
+
+  @override
+  Future<Result<void>> restore(String familyId, Iterable<Entry> entries) async {
+    calls.add('restore:${entries.length}');
+    if (nextResult is Err) return nextResult;
+    final byId = {for (final entry in entries) entry.id: entry};
+    _entries = [
+      for (final entry in _entries)
+        if (byId[entry.id] case final previous?)
+          entry.copyWith(quantity: previous.quantity)
+        else
+          entry,
+    ];
+    _emit();
+    return nextResult;
   }
 }
 

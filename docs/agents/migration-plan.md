@@ -73,7 +73,7 @@ app-flutter/lib/
 | M1.5 | **Armazenamento local e entrada sem conta** (ADR-0014/0015): repositórios locais com o arquivo JSON, família local no primeiro uso, `redirectFor` sem exigir login, Firebase não inicializado no grátis | app completo sem conta e sem rede; os testes de M2/M3 passam contra o repositório local | **código pronto (2026-11-03)**, 142 testes; falta rodar em aparelho/emulador |
 | M2 | `rules` (CRUD, ordem, regras-padrão por idioma, máscara monetária) | paridade §2 ligada a regras | **código pronto (2026-10-28)**, 89 testes no total; falta validar com Firestore real em aparelho |
 | M3 | `children` (CRUD, ordem, foto local, e-mail) | idem | **código pronto (2026-10-28)**, 120 testes no total; falta validar com Firestore real em aparelho |
-| M4 | `ledger`: lançamentos ±1 com som/feedback, saldo, zerar um/todos, cascatas, tempo real entre os pais, teste de concorrência | idem; dois pais lançando ao mesmo tempo sem perda | pendente |
+| M4 | `ledger`: lançamentos ±1 com feedback, saldo, zerar um/todos, cascatas, tempo real entre os pais | idem; dois pais lançando ao mesmo tempo sem perda | **código pronto (2026-11-03)**, 168 testes; som e seções recolhíveis ficaram para depois (`tech-debt.md`); concorrência real só dá para exercitar no M4.5 |
 | M4.5 | **Família** (assinatura): tela do recurso, compra com `in_app_purchase`, restaurar, conta no momento de compartilhar, envio inicial do local para o Firestore, troca da fonte de verdade e volta ao local ao cancelar | dois aparelhos na mesma família com assinatura ativa; cancelar não perde dado | pendente |
 | M5 | Relatório por e-mail (HTML equivalente) | idem | pendente |
 | M6 | `app_lock`: PIN 4 dígitos ao voltar ao app, bloqueio temporário em vez de `exit(0)` | idem | pendente |

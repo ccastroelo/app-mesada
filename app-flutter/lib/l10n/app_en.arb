@@ -93,5 +93,20 @@
   "balanceSemantics": "Balance {value}",
   "deleteChildTitle": "Delete {name}?",
   "deleteChildBody": "This also removes all of their entries.",
-  "childDeleted": "Child deleted"
+  "childDeleted": "Child deleted",
+  "childLedgerZeroMenu": "Reset entries",
+  "childLedgerZeroAllMenu": "Reset everyone's entries",
+  "childRulesMenu": "Rules for this child",
+  "childRulesSubtitle": "Turning a rule off keeps its quantity, out of the balance.",
+  "zeroChildTitle": "Reset {name}'s entries?",
+  "zeroAllTitle": "Reset the entries of every child?",
+  "zeroBody": "Quantities go back to zero. The allowance stays the same.",
+  "zeroAction": "Reset",
+  "entriesZeroed": "Entries reset",
+  "undoAction": "Undo",
+  "increaseSemantics": "Increase {description}, quantity {quantity}",
+  "decreaseSemantics": "Decrease {description}, quantity {quantity}",
+  "childLedgerEmptyTitle": "No rules to use yet",
+  "childLedgerEmptyBody": "Create rules on the Rules tab to start adding entries.",
+  "childLedgerAllOffTitle": "Every rule is off for {name}"
 }

@@ -664,6 +664,96 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Filho excluído'**
   String get childDeleted;
+
+  /// No description provided for @childLedgerZeroMenu.
+  ///
+  /// In pt, this message translates to:
+  /// **'Zerar lançamentos'**
+  String get childLedgerZeroMenu;
+
+  /// No description provided for @childLedgerZeroAllMenu.
+  ///
+  /// In pt, this message translates to:
+  /// **'Zerar lançamentos de todos'**
+  String get childLedgerZeroAllMenu;
+
+  /// No description provided for @childRulesMenu.
+  ///
+  /// In pt, this message translates to:
+  /// **'Regras deste filho'**
+  String get childRulesMenu;
+
+  /// No description provided for @childRulesSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desativar guarda a quantidade, fora do saldo.'**
+  String get childRulesSubtitle;
+
+  /// No description provided for @zeroChildTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Zerar lançamentos de {name}?'**
+  String zeroChildTitle(String name);
+
+  /// No description provided for @zeroAllTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Zerar lançamentos de todos os filhos?'**
+  String get zeroAllTitle;
+
+  /// No description provided for @zeroBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'As quantidades voltam a zero. A mesada não muda.'**
+  String get zeroBody;
+
+  /// No description provided for @zeroAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Zerar'**
+  String get zeroAction;
+
+  /// No description provided for @entriesZeroed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lançamentos zerados'**
+  String get entriesZeroed;
+
+  /// No description provided for @undoAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desfazer'**
+  String get undoAction;
+
+  /// No description provided for @increaseSemantics.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aumentar {description}, quantidade {quantity}'**
+  String increaseSemantics(String description, int quantity);
+
+  /// No description provided for @decreaseSemantics.
+  ///
+  /// In pt, this message translates to:
+  /// **'Diminuir {description}, quantidade {quantity}'**
+  String decreaseSemantics(String description, int quantity);
+
+  /// No description provided for @childLedgerEmptyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma regra para lançar'**
+  String get childLedgerEmptyTitle;
+
+  /// No description provided for @childLedgerEmptyBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Crie regras na aba Regras para começar a lançar.'**
+  String get childLedgerEmptyBody;
+
+  /// No description provided for @childLedgerAllOffTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todas as regras estão desativadas para {name}'**
+  String childLedgerAllOffTitle(String name);
 }
 
 class _AppLocalizationsDelegate

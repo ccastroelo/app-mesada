@@ -9,11 +9,15 @@ import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/error_state.dart';
 import '../../../../core/widgets/failure_message.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../ledger/ledger_providers.dart';
 import '../../domain/entities/child.dart';
 import '../state/children_state.dart';
 import '../widgets/child_avatar.dart';
+import 'child_ledger_page.dart';
 
-enum _ChildMenu { edit, delete }
+enum _ChildMenu { edit, zero, delete }
+
+enum _ChildrenMenu { zeroAll }
 
 class ChildrenPage extends ConsumerStatefulWidget {
   const ChildrenPage({super.key});
@@ -72,11 +76,43 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
     }
   }
 
+  /// Zera os lançamentos de um filho, ou de todos quando [child] é nulo
+  /// (design.md §5: confirma e oferece "Desfazer" por 8 s).
+  Future<void> _confirmZero({Child? child}) async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          child == null ? l10n.zeroAllTitle : l10n.zeroChildTitle(child.name),
+        ),
+        content: Text(l10n.zeroBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancelAction),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.zeroAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    final actions = ref.read(ledgerActionsProvider.notifier);
+    final previous = await actions.zero(childId: child?.id);
+    if (previous == null || !mounted) return;
+    showZeroedSnackBar(context, previous: previous, actions: actions);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final summaries = ref.watch(childSummariesProvider);
     final action = ref.watch(childrenActionsProvider);
+    final ledgerAction = ref.watch(ledgerActionsProvider);
+    final failure = action.failure ?? ledgerAction.failure;
     final list = summaries.value;
 
     return Scaffold(
@@ -98,6 +134,18 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
                       () => _working = [for (final s in list) s.child],
                     ),
                   ),
+          if (list != null && list.isNotEmpty && !_reordering)
+            PopupMenuButton<_ChildrenMenu>(
+              onSelected: (item) => switch (item) {
+                _ChildrenMenu.zeroAll => _confirmZero(),
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: _ChildrenMenu.zeroAll,
+                  child: Text(l10n.childLedgerZeroAllMenu),
+                ),
+              ],
+            ),
         ],
       ),
       floatingActionButton: _reordering
@@ -129,10 +177,10 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
           }
           return Column(
             children: [
-              if (action.failure != null)
+              if (failure != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Space.lg),
-                  child: FailureText(action.failure),
+                  child: FailureText(failure),
                 ),
               Expanded(
                 child: _reordering
@@ -151,8 +199,11 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
                         itemCount: data.length,
                         itemBuilder: (context, index) => _ChildCard(
                           summary: data[index],
+                          onOpen: (child) =>
+                              context.push('/filhos/${child.id}'),
                           onEdit: (child) =>
                               context.push('/filhos/${child.id}/editar'),
+                          onZero: (child) => _confirmZero(child: child),
                           onDelete: _confirmDelete,
                         ),
                       ),
@@ -168,12 +219,16 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
 class _ChildCard extends StatelessWidget {
   const _ChildCard({
     required this.summary,
+    required this.onOpen,
     required this.onEdit,
+    required this.onZero,
     required this.onDelete,
   });
 
   final ChildSummary summary;
+  final void Function(Child) onOpen;
   final void Function(Child) onEdit;
+  final void Function(Child) onZero;
   final void Function(Child) onDelete;
 
   @override
@@ -189,83 +244,93 @@ class _ChildCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: Space.md),
-      child: Padding(
-        padding: const EdgeInsets.all(Space.md),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ChildAvatar(childId: child.id, name: child.name, radius: 28),
-            const SizedBox(width: Space.md),
-            Expanded(
-              // Um só item para o leitor de tela: nome, mesada e saldo.
-              child: Semantics(
-                container: true,
-                label:
-                    '${child.name}, ${l10n.childAllowanceSubtitle(allowance)}, '
-                    '${l10n.balanceSemantics(balance)}',
-                excludeSemantics: true,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(child.name, style: theme.textTheme.titleMedium),
-                    Text(
-                      l10n.childAllowanceSubtitle(allowance),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: Space.sm),
-                    Text(
-                      l10n.balanceLabel,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          negative ? Icons.trending_down : Icons.trending_up,
-                          size: 20,
-                          color: negative ? colors.negative : colors.positive,
+      // O cartão inteiro abre os lançamentos do filho (design.md §4.3).
+      child: InkWell(
+        onTap: () => onOpen(child),
+        borderRadius: BorderRadius.circular(Radii.card),
+        child: Padding(
+          padding: const EdgeInsets.all(Space.md),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ChildAvatar(childId: child.id, name: child.name, radius: 28),
+              const SizedBox(width: Space.md),
+              Expanded(
+                // Um só item para o leitor de tela: nome, mesada e saldo.
+                child: Semantics(
+                  container: true,
+                  label:
+                      '${child.name}, ${l10n.childAllowanceSubtitle(allowance)}, '
+                      '${l10n.balanceSemantics(balance)}',
+                  excludeSemantics: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(child.name, style: theme.textTheme.titleMedium),
+                      Text(
+                        l10n.childAllowanceSubtitle(allowance),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
-                        const SizedBox(width: Space.xs),
-                        Flexible(
-                          child: Text(
-                            balance,
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: negative
-                                  ? colors.negative
-                                  : colors.positive,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
+                      ),
+                      const SizedBox(height: Space.sm),
+                      Text(
+                        l10n.balanceLabel,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            negative ? Icons.trending_down : Icons.trending_up,
+                            size: 20,
+                            color: negative ? colors.negative : colors.positive,
+                          ),
+                          const SizedBox(width: Space.xs),
+                          Flexible(
+                            child: Text(
+                              balance,
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: negative
+                                    ? colors.negative
+                                    : colors.positive,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            PopupMenuButton<_ChildMenu>(
-              onSelected: (item) => switch (item) {
-                _ChildMenu.edit => onEdit(child),
-                _ChildMenu.delete => onDelete(child),
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: _ChildMenu.edit,
-                  child: Text(l10n.editAction),
-                ),
-                PopupMenuItem(
-                  value: _ChildMenu.delete,
-                  child: Text(l10n.deleteAction),
-                ),
-              ],
-            ),
-          ],
+              PopupMenuButton<_ChildMenu>(
+                onSelected: (item) => switch (item) {
+                  _ChildMenu.edit => onEdit(child),
+                  _ChildMenu.zero => onZero(child),
+                  _ChildMenu.delete => onDelete(child),
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: _ChildMenu.edit,
+                    child: Text(l10n.editAction),
+                  ),
+                  PopupMenuItem(
+                    value: _ChildMenu.zero,
+                    child: Text(l10n.childLedgerZeroMenu),
+                  ),
+                  PopupMenuItem(
+                    value: _ChildMenu.delete,
+                    child: Text(l10n.deleteAction),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -309,6 +309,61 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get childDeleted => 'Filho excluído';
+
+  @override
+  String get childLedgerZeroMenu => 'Zerar lançamentos';
+
+  @override
+  String get childLedgerZeroAllMenu => 'Zerar lançamentos de todos';
+
+  @override
+  String get childRulesMenu => 'Regras deste filho';
+
+  @override
+  String get childRulesSubtitle =>
+      'Desativar guarda a quantidade, fora do saldo.';
+
+  @override
+  String zeroChildTitle(String name) {
+    return 'Zerar lançamentos de $name?';
+  }
+
+  @override
+  String get zeroAllTitle => 'Zerar lançamentos de todos os filhos?';
+
+  @override
+  String get zeroBody => 'As quantidades voltam a zero. A mesada não muda.';
+
+  @override
+  String get zeroAction => 'Zerar';
+
+  @override
+  String get entriesZeroed => 'Lançamentos zerados';
+
+  @override
+  String get undoAction => 'Desfazer';
+
+  @override
+  String increaseSemantics(String description, int quantity) {
+    return 'Aumentar $description, quantidade $quantity';
+  }
+
+  @override
+  String decreaseSemantics(String description, int quantity) {
+    return 'Diminuir $description, quantidade $quantity';
+  }
+
+  @override
+  String get childLedgerEmptyTitle => 'Nenhuma regra para lançar';
+
+  @override
+  String get childLedgerEmptyBody =>
+      'Crie regras na aba Regras para começar a lançar.';
+
+  @override
+  String childLedgerAllOffTitle(String name) {
+    return 'Todas as regras estão desativadas para $name';
+  }
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -618,4 +673,59 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get childDeleted => 'Filho eliminado';
+
+  @override
+  String get childLedgerZeroMenu => 'Zerar lançamentos';
+
+  @override
+  String get childLedgerZeroAllMenu => 'Zerar lançamentos de todos';
+
+  @override
+  String get childRulesMenu => 'Regras deste filho';
+
+  @override
+  String get childRulesSubtitle =>
+      'Desativar guarda a quantidade, fora do saldo.';
+
+  @override
+  String zeroChildTitle(String name) {
+    return 'Zerar lançamentos de $name?';
+  }
+
+  @override
+  String get zeroAllTitle => 'Zerar lançamentos de todos os filhos?';
+
+  @override
+  String get zeroBody => 'As quantidades voltam a zero. A mesada não muda.';
+
+  @override
+  String get zeroAction => 'Zerar';
+
+  @override
+  String get entriesZeroed => 'Lançamentos zerados';
+
+  @override
+  String get undoAction => 'Desfazer';
+
+  @override
+  String increaseSemantics(String description, int quantity) {
+    return 'Aumentar $description, quantidade $quantity';
+  }
+
+  @override
+  String decreaseSemantics(String description, int quantity) {
+    return 'Diminuir $description, quantidade $quantity';
+  }
+
+  @override
+  String get childLedgerEmptyTitle => 'Nenhuma regra para lançar';
+
+  @override
+  String get childLedgerEmptyBody =>
+      'Crie regras no separador Regras para começar a lançar.';
+
+  @override
+  String childLedgerAllOffTitle(String name) {
+    return 'Todas as regras estão desativadas para $name';
+  }
 }
