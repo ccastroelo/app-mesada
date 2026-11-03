@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../app_lock/app_lock_providers.dart';
 import '../../../auth_family/auth_family.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -39,6 +41,17 @@ class SettingsPage extends ConsumerWidget {
               title: Text(l10n.settingsInviteTile),
               onTap: () => showInviteDialog(context),
             ),
+          SectionHeader(l10n.settingsSecuritySection),
+          ListTile(
+            leading: const Icon(Icons.lock_outline),
+            title: Text(l10n.pinSectionTitle),
+            subtitle: Text(
+              ref.watch(appLockProvider) is LockOff
+                  ? l10n.pinStatusOff
+                  : l10n.pinStatusOn,
+            ),
+            onTap: () => context.push('/ajustes/seguranca'),
+          ),
           if (user != null) ...[
             SectionHeader(l10n.settingsAccountSection),
             ListTile(

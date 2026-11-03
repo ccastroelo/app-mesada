@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mesada/app.dart';
 import 'package:mesada/core/storage/local_store.dart';
 import 'package:mesada/core/storage/providers.dart';
+import 'package:mesada/features/app_lock/app_lock_providers.dart';
+import 'package:mesada/features/app_lock/data/providers.dart';
 import 'package:mesada/features/auth_family/data/providers.dart';
 import 'package:mesada/features/children/data/providers.dart';
 import 'package:mesada/features/ledger/data/providers.dart';
@@ -30,6 +32,8 @@ Future<void> pumpApp(
   FakePhotoStore? photoStore,
   FakePhotoPicker? photoPicker,
   FakeReportSharer? reportSharer,
+  FakePinStore? pinStore,
+  DateTime Function()? clock,
   LocalStore? store,
   Locale locale = const Locale('pt', 'BR'),
 }) async {
@@ -40,6 +44,9 @@ Future<void> pumpApp(
     ProviderScope(
       overrides: [
         appModeProvider.overrideWithValue(mode),
+        // Sem PIN por padrão: o bloqueio não entra no caminho dos outros testes.
+        pinStoreProvider.overrideWithValue(pinStore ?? FakePinStore()),
+        if (clock != null) clockProvider.overrideWithValue(clock),
         localStoreProvider.overrideWithValue(store ?? temporaryStore()),
         authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),
         familyRepositoryProvider.overrideWithValue(

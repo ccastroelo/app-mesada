@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/app_lock/app_lock_providers.dart';
+import '../../features/app_lock/presentation/pages/lock_page.dart';
+import '../../features/app_lock/presentation/pages/security_page.dart';
 import '../../features/auth_family/auth_family.dart';
 import '../../features/children/presentation/pages/child_edit_page.dart';
 import '../../features/children/presentation/pages/child_ledger_page.dart';
@@ -17,13 +20,32 @@ const _welcome = '/boas-vindas';
 const _signIn = '/entrar';
 const _family = '/familia';
 const _home = '/filhos';
+const _lock = '/bloqueio';
 
 /// Para onde a pessoa deve ir dado o ponto da entrada em que está (null = fica).
-/// Guardas do design.md §3: sem login → boas-vindas; sem família → escolha.
+/// Guardas do design.md §3: sem login → boas-vindas; sem família → escolha;
+/// PIN pedido → bloqueio.
 @visibleForTesting
-String? redirectFor(Gate gate, String location) {
+String? redirectFor(
+  Gate gate,
+  String location, {
+  LockState lock = const LockOff(),
+}) {
   bool inFamilyFlow() =>
       location == _family || location.startsWith('$_family/');
+
+  // O PIN vem antes de tudo: enquanto não se sabe se existe, nem o conteúdo
+  // nem a tela de entrada aparecem (design.md §4.11).
+  switch (lock) {
+    case LockLoading():
+      return location == _loading ? null : _loading;
+    case LockClosed():
+      return location == _lock ? null : _lock;
+    case LockOff() || LockOpen():
+      // Acabou de destravar: a tela do PIN não é lugar para ficar.
+      if (location == _lock) return _home;
+  }
+
   switch (gate) {
     case GateLoading() || GateError():
       return location == _loading ? null : _loading;
@@ -45,14 +67,23 @@ String? redirectFor(Gate gate, String location) {
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
   ref.listen(gateProvider, (_, _) => refresh.value++);
+  ref.listen(appLockProvider, (_, _) => refresh.value++);
 
   final router = GoRouter(
     initialLocation: _loading,
     refreshListenable: refresh,
-    redirect: (context, state) =>
-        redirectFor(ref.read(gateProvider), state.uri.path),
+    redirect: (context, state) => redirectFor(
+      ref.read(gateProvider),
+      state.uri.path,
+      lock: ref.read(appLockProvider),
+    ),
     routes: [
       GoRoute(path: _loading, builder: (_, _) => const GatePage()),
+      GoRoute(path: _lock, builder: (_, _) => const LockPage()),
+      GoRoute(
+        path: '/ajustes/seguranca',
+        builder: (_, _) => const SecurityPage(),
+      ),
       GoRoute(path: _welcome, builder: (_, _) => const WelcomePage()),
       GoRoute(path: _signIn, builder: (_, _) => const SignInPage()),
       GoRoute(

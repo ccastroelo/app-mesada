@@ -397,6 +397,62 @@ class AppLocalizationsPt extends AppLocalizations {
   String reportSummary(String name, String allowance, String balance) {
     return '$name — mesada $allowance, saldo $balance.';
   }
+
+  @override
+  String get settingsSecuritySection => 'Segurança';
+
+  @override
+  String get securityExplanation =>
+      'O PIN fica só neste aparelho e é pedido quando o app passa 30 segundos fechado.';
+
+  @override
+  String get pinSectionTitle => 'PIN';
+
+  @override
+  String get pinStatusOn => 'PIN ativado';
+
+  @override
+  String get pinStatusOff => 'PIN desativado';
+
+  @override
+  String get pinEnableAction => 'Ativar PIN';
+
+  @override
+  String get pinChangeAction => 'Alterar PIN';
+
+  @override
+  String get pinDisableAction => 'Desativar PIN';
+
+  @override
+  String get pinEnterCurrent => 'Digite o PIN atual';
+
+  @override
+  String get pinEnterNew => 'Escolha um PIN de 4 dígitos';
+
+  @override
+  String get pinConfirmNew => 'Digite o PIN de novo';
+
+  @override
+  String get pinMismatch => 'Os PINs não coincidem. Tente de novo.';
+
+  @override
+  String get pinWrong => 'PIN incorreto';
+
+  @override
+  String get pinLockMessage => 'Digite seu PIN';
+
+  @override
+  String pinWaitMessage(String time) {
+    return 'Tente de novo em $time';
+  }
+
+  @override
+  String get pinEraseAction => 'Apagar';
+
+  @override
+  String pinDotsSemantics(int typed, int total) {
+    return '$typed de $total dígitos';
+  }
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -793,5 +849,61 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   @override
   String reportSummary(String name, String allowance, String balance) {
     return '$name — mesada $allowance, saldo $balance.';
+  }
+
+  @override
+  String get settingsSecuritySection => 'Segurança';
+
+  @override
+  String get securityExplanation =>
+      'O PIN fica só neste aparelho e é pedido quando a aplicação passa 30 segundos fechada.';
+
+  @override
+  String get pinSectionTitle => 'PIN';
+
+  @override
+  String get pinStatusOn => 'PIN ativado';
+
+  @override
+  String get pinStatusOff => 'PIN desativado';
+
+  @override
+  String get pinEnableAction => 'Ativar PIN';
+
+  @override
+  String get pinChangeAction => 'Alterar PIN';
+
+  @override
+  String get pinDisableAction => 'Desativar PIN';
+
+  @override
+  String get pinEnterCurrent => 'Introduza o PIN atual';
+
+  @override
+  String get pinEnterNew => 'Escolha um PIN de 4 dígitos';
+
+  @override
+  String get pinConfirmNew => 'Introduza o PIN outra vez';
+
+  @override
+  String get pinMismatch => 'Os PIN não coincidem. Tente outra vez.';
+
+  @override
+  String get pinWrong => 'PIN incorreto';
+
+  @override
+  String get pinLockMessage => 'Introduza o seu PIN';
+
+  @override
+  String pinWaitMessage(String time) {
+    return 'Tente outra vez em $time';
+  }
+
+  @override
+  String get pinEraseAction => 'Apagar';
+
+  @override
+  String pinDotsSemantics(int typed, int total) {
+    return '$typed de $total dígitos';
   }
 }

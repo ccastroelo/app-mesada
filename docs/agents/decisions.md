@@ -4,6 +4,13 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0017 — PIN guardado no aparelho como hash, sem armazenamento seguro
+- Data: 2026-11-03 · Status: aceita · Escopo: feature `app_lock` (M6)
+- Contexto: o legado guardava o PIN no Keychain do iOS (serviço `senha2`). A alternativa em Flutter seria `flutter_secure_storage` (Keychain/Keystore), uma dependência nova. O usuário definiu o alvo em 2026-11-03: **"é só para evitar que o filho pegue e mexa"** — proteção fraca basta, não é defesa contra atacante.
+- Decisão: o PIN mora em `<pasta do app>/device.json`, **separado do `mesada.json`**, como **SHA-256 com sal** (pacote `crypto`, que já estava na árvore como transitiva). Sem `flutter_secure_storage`. Dois motivos para o arquivo próprio: é ajuste **do aparelho**, não da família (cada responsável tem o seu PIN), e assim ele nunca sobe junto com os dados no envio da assinatura (M4.5). Arquivo ilegível, ausente ou sem as chaves conta como **sem PIN**: trancar o app sem poder destravar seria pior que não trancar.
+- Alternativas descartadas: `flutter_secure_storage` (mais forte, mas dependência nova para um segredo de 10 mil combinações); PIN em texto puro no arquivo (apareceria legível num backup do aparelho, e gente reusa o PIN do cartão); PIN dentro do `mesada.json` (iria para a nuvem na assinatura).
+- Consequências: contra quem tem o aparelho desbloqueado e paciência, 4 dígitos não param ninguém — e não é esse o alvo. Reabrir se o app passar a guardar algo mais sensível. Trocar de aparelho perde o PIN (basta ativar de novo). **Esquecer o PIN não tem saída dentro do app** — ver `tech-debt.md`.
+
 ### ADR-0016 — Relatório em PDF compartilhado, no lugar do corpo em HTML
 - Data: 2026-11-03 · Status: aceita · Escopo: feature `ledger` (M5); muda `design.md` §4.10 e §11
 - Contexto: o design previa o corpo do e-mail em HTML, como no legado (que usava o `MFMailComposeViewController` do iOS com `isHTML`). Em Flutter, `mailto:` (via `url_launcher`) carrega **só texto puro**, por especificação; HTML no corpo exigiria `flutter_email_sender` ou código nativo em cada plataforma.

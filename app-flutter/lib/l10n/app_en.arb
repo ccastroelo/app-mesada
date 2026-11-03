@@ -117,5 +117,22 @@
   "reportQuantityColumn": "Qty",
   "reportTotalColumn": "Total",
   "reportEmpty": "No entries yet.",
-  "reportSummary": "{name} — allowance {allowance}, balance {balance}."
+  "reportSummary": "{name} — allowance {allowance}, balance {balance}.",
+  "settingsSecuritySection": "Security",
+  "securityExplanation": "The PIN stays on this device only, and is asked for when the app has been closed for 30 seconds.",
+  "pinSectionTitle": "PIN",
+  "pinStatusOn": "PIN on",
+  "pinStatusOff": "PIN off",
+  "pinEnableAction": "Turn on PIN",
+  "pinChangeAction": "Change PIN",
+  "pinDisableAction": "Turn off PIN",
+  "pinEnterCurrent": "Enter the current PIN",
+  "pinEnterNew": "Pick a 4-digit PIN",
+  "pinConfirmNew": "Enter the PIN again",
+  "pinMismatch": "The PINs don't match. Try again.",
+  "pinWrong": "Wrong PIN",
+  "pinLockMessage": "Enter your PIN",
+  "pinWaitMessage": "Try again in {time}",
+  "pinEraseAction": "Delete",
+  "pinDotsSemantics": "{typed} of {total} digits"
 }

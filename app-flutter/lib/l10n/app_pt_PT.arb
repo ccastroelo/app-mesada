@@ -117,5 +117,22 @@
   "reportQuantityColumn": "Qtd",
   "reportTotalColumn": "Total",
   "reportEmpty": "Nenhum lançamento até agora.",
-  "reportSummary": "{name} — mesada {allowance}, saldo {balance}."
+  "reportSummary": "{name} — mesada {allowance}, saldo {balance}.",
+  "settingsSecuritySection": "Segurança",
+  "securityExplanation": "O PIN fica só neste aparelho e é pedido quando a aplicação passa 30 segundos fechada.",
+  "pinSectionTitle": "PIN",
+  "pinStatusOn": "PIN ativado",
+  "pinStatusOff": "PIN desativado",
+  "pinEnableAction": "Ativar PIN",
+  "pinChangeAction": "Alterar PIN",
+  "pinDisableAction": "Desativar PIN",
+  "pinEnterCurrent": "Introduza o PIN atual",
+  "pinEnterNew": "Escolha um PIN de 4 dígitos",
+  "pinConfirmNew": "Introduza o PIN outra vez",
+  "pinMismatch": "Os PIN não coincidem. Tente outra vez.",
+  "pinWrong": "PIN incorreto",
+  "pinLockMessage": "Introduza o seu PIN",
+  "pinWaitMessage": "Tente outra vez em {time}",
+  "pinEraseAction": "Apagar",
+  "pinDotsSemantics": "{typed} de {total} dígitos"
 }

@@ -29,7 +29,8 @@ lib/
                        lançamentos ± e as regras do filho (M4)
     ledger/            Lançamentos: Entry, saldo, escritas (±, ativar/desativar, zerar) (M4)
                        e o relatório em PDF compartilhado (M5)
-    settings/          Ajustes (família, convite, conta/sair)
+    app_lock/          PIN local: bloqueio, Ajustes › Segurança, espera por erros (M6)
+    settings/          Ajustes (família, convite, segurança, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
 ```
@@ -103,6 +104,16 @@ O roteador decide a tela só pelo `Gate` selado (`GateLoading | GateError | Gate
 - **nuvem**: `authUserProvider` → `familyIdProvider` → `familyProvider`, como antes. Logado sem família só alcança `/familia/*`; com família sai das telas de entrada.
 
 `GateReady.user` é **nulo no modo local** (ADR-0015): quem precisa de identidade confere (o convite devolve `Err` sem conta, e Ajustes esconde conta, sair e convidar). O `redirectFor` não mudou: no modo local o portão simplesmente nunca fica em `GateSignedOut`.
+
+
+## O bloqueio por PIN (M6, ADR-0017)
+
+- `appLockProvider` (`app_lock/presentation/state/app_lock_state.dart`) é um `LockState` selado: `LockLoading | LockOff | LockOpen | LockClosed(wrongAttempts, waitUntil)`. O roteador recebe isso em `redirectFor(gate, location, lock:)` e o PIN vem **antes do portão**: enquanto não se sabe se existe PIN, nem o conteúdo nem a tela de entrada aparecem — é a tela de espera.
+- O PIN mora em `device.json`, **fora do `mesada.json`** (ADR-0017): é ajuste do aparelho e não pode subir com os dados da família no M4.5. Guarda-se sal + SHA-256, nunca o PIN.
+- As regras puras ficam em `domain/usecases/pin_lock_rules.dart`: 4 dígitos, sal novo, hash, e a espera que dobra a cada 3 erros (30 s → 15 min de teto). O app **não** se fecha, ao contrário do `exit(0)` do legado.
+- O relógio é injetado (`clockProvider`), e é o que deixa os 30 s fora do app e a contagem regressiva testáveis sem esperar de verdade.
+- O ciclo de vida é observado em `app.dart` com `AppLifecycleListener`: `hidden`/`paused` marcam a saída, `resumed` decide se pede o PIN. Vale o **primeiro** aviso de saída, porque a volta passa por estados intermediários e um segundo registro zeraria o tempo fora.
+- `PinPad` (teclado, 4 pontos, mensagem e erro) é compartilhado pela tela de bloqueio e por Ajustes › Segurança, que usa o mesmo widget em três passos (PIN atual → novo → confirmar).
 
 ## Composição e testes
 

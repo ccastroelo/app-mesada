@@ -76,7 +76,7 @@ app-flutter/lib/
 | M4 | `ledger`: lançamentos ±1 com feedback, saldo, zerar um/todos, cascatas, tempo real entre os pais | idem; dois pais lançando ao mesmo tempo sem perda | **código pronto (2026-11-03)**, 168 testes; som e seções recolhíveis ficaram para depois (`tech-debt.md`); concorrência real só dá para exercitar no M4.5 |
 | M4.5 | **Família** (assinatura): tela do recurso, compra com `in_app_purchase`, restaurar, conta no momento de compartilhar, envio inicial do local para o Firestore, troca da fonte de verdade e volta ao local ao cancelar | dois aparelhos na mesma família com assinatura ativa; cancelar não perde dado | pendente |
 | M5 | Relatório: **PDF compartilhado** com resumo em texto, no lugar do corpo em HTML (ADR-0016) | idem | **código pronto (2026-11-03)**, 178 testes; sem destinatário preenchido (ADR-0016) |
-| M6 | `app_lock`: PIN 4 dígitos ao voltar ao app, bloqueio temporário em vez de `exit(0)` | idem | pendente |
+| M6 | `app_lock`: PIN de 4 dígitos após 30 s fora do app, bloqueio temporário em vez de `exit(0)` | idem | **código pronto (2026-11-03)**, 212 testes; PIN em hash num arquivo do aparelho (ADR-0017); sem saída para "esqueci o PIN" (`tech-debt.md`) |
 | M7 | `help`: tutorial (4 idiomas) e contato | idem | pendente |
 | M8 | Corte: beta/lado a lado, inventário todo `portado`/`descartado (aprovado)`; publicar regras finais do Firestore; só então proponho arquivar o legado em `legacy/1.2` e remover `mesada/` da árvore | **decisão do usuário** | pendente |
 

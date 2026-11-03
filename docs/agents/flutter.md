@@ -9,6 +9,7 @@ Comandos e baseline do projeto Flutter em `app-flutter/` (rode tudo a partir des
 - `applicationId` / bundle id: `br.eti.claudiocastro.mesada` (ADR-0007)
 - Estado: Riverpod · rotas: `go_router` · l10n: `gen-l10n` (pt, pt_PT, en, es; `lib/l10n/`)
 - Relatório: `pdf` (Dart puro) gerando o documento e `share_plus` entregando ao sistema (ADR-0016)
+- PIN: `crypto` (SHA-256 com sal) num arquivo do aparelho; sem `flutter_secure_storage` (ADR-0017)
 
 ## Comandos
 
@@ -24,7 +25,7 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | **178 testes passando** (os 168 do M4 mais 10 do M5: montagem do relatório, geração do PDF e o compartilhamento pelas duas entradas — barra inferior e menu do cartão) — atualizado em 2026-11-03 |
+| `flutter test` | **212 testes passando** (os 178 do M5 mais 34 do M6: espera crescente, hash e sal do PIN, `device.json`, controlador com relógio controlado — inclusive os 30 s fora do app — e os fluxos da tela de bloqueio e de Ajustes › Segurança) — atualizado em 2026-11-03 |
 | `flutter build apk --debug` | compilava em 2026-10-28; **não refeito** depois de tirar o Firebase do `main.dart` (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
 | CI (GitHub Actions) | `.github/workflows/ci.yml`: `flutter pub get`, `analyze` e `test` em `app-flutter/` a cada push em `main` e em todo PR. Flutter fixo em 3.44.4. **Nunca executou** — só roda depois do primeiro push. |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |

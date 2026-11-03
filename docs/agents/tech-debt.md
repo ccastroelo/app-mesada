@@ -54,3 +54,10 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 - **Onde**: `ledger/data/report/child_report_pdf.dart` (M5). A fonte que vem no pacote `pdf` cobre Latin-1, o que atende pt/en/es. O gerador já troca o "−" (U+2212) do formato de moeda por hífen.
 - **O que dói**: nome de filho ou descrição de regra com caractere fora do Latin-1 (alfabeto cirílico, japonês, emoji) sai vazio ou errado **no documento** — na tela está certo.
 - **O que fazer**: embutir uma fonte TrueType (Roboto, ~170 KB como asset) e usá-la no `pw.ThemeData`. Só vale quando aparecer um caso real.
+
+## Esquecer o PIN não tem saída dentro do app
+
+- **Onde**: feature `app_lock` (M6, ADR-0017). A tela de bloqueio só aceita o PIN certo; não há "esqueci o PIN".
+- **Por que dói mais aqui**: com os dados no aparelho (ADR-0014), reinstalar o app para destravar **apaga a mesada da família**. No modo assinante o dado volta da nuvem; no grátis, não volta.
+- **O que fazer**: decidir um caminho de saída e implementar — por exemplo, um aviso claro na tela de bloqueio ("esqueceu? reinstalar apaga os dados deste aparelho") e, melhor ainda, exportar/compartilhar os dados antes. Enquanto não houver, vale avisar no texto de Ajustes › Segurança ao ativar o PIN.
+- O gatilho de 30 s fora do app usa `AppLifecycleListener` e **não foi exercitado em aparelho**: os testes chamam `onAway`/`onBack` direto no controlador.

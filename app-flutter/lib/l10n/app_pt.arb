@@ -227,5 +227,39 @@
         "type": "String"
       }
     }
+  },
+  "settingsSecuritySection": "Segurança",
+  "securityExplanation": "O PIN fica só neste aparelho e é pedido quando o app passa 30 segundos fechado.",
+  "pinSectionTitle": "PIN",
+  "pinStatusOn": "PIN ativado",
+  "pinStatusOff": "PIN desativado",
+  "pinEnableAction": "Ativar PIN",
+  "pinChangeAction": "Alterar PIN",
+  "pinDisableAction": "Desativar PIN",
+  "pinEnterCurrent": "Digite o PIN atual",
+  "pinEnterNew": "Escolha um PIN de 4 dígitos",
+  "pinConfirmNew": "Digite o PIN de novo",
+  "pinMismatch": "Os PINs não coincidem. Tente de novo.",
+  "pinWrong": "PIN incorreto",
+  "pinLockMessage": "Digite seu PIN",
+  "pinWaitMessage": "Tente de novo em {time}",
+  "@pinWaitMessage": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pinEraseAction": "Apagar",
+  "pinDotsSemantics": "{typed} de {total} dígitos",
+  "@pinDotsSemantics": {
+    "placeholders": {
+      "typed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }

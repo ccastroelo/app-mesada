@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:mesada/core/error/failure.dart';
 import 'package:mesada/core/error/result.dart';
+import 'package:mesada/features/app_lock/app_lock.dart';
 import 'package:mesada/features/auth_family/domain/entities/app_user.dart';
 import 'package:mesada/features/auth_family/domain/entities/family.dart';
 import 'package:mesada/features/auth_family/domain/repositories/auth_repository.dart';
@@ -461,4 +462,18 @@ class FakePhotoPicker implements PhotoPicker {
 
   @override
   Future<String?> pickFromGallery() async => next;
+}
+
+/// PIN em memória, com acesso ao que foi guardado.
+class FakePinStore implements PinStore {
+  PinCredential? credential;
+
+  @override
+  Future<PinCredential?> read() async => credential;
+
+  @override
+  Future<void> save(PinCredential value) async => credential = value;
+
+  @override
+  Future<void> clear() async => credential = null;
 }

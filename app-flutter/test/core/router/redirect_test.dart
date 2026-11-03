@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mesada/core/router/app_router.dart';
+import 'package:mesada/features/app_lock/app_lock_providers.dart';
 import 'package:mesada/features/auth_family/auth_family.dart';
 
 import '../../support/fakes.dart';
@@ -45,5 +46,36 @@ void main() {
     expect(redirectFor(ready, '/filhos'), isNull);
     expect(redirectFor(ready, '/regras'), isNull);
     expect(redirectFor(ready, '/ajustes'), isNull);
+  });
+
+  group('bloqueio por PIN', () {
+    test('enquanto não se sabe se há PIN, só a tela de espera', () {
+      expect(
+        redirectFor(ready, '/filhos', lock: const LockLoading()),
+        '/carregando',
+      );
+      expect(
+        redirectFor(ready, '/carregando', lock: const LockLoading()),
+        isNull,
+      );
+    });
+
+    test('PIN pedido: nada além do bloqueio, nem a entrada', () {
+      const closed = LockClosed();
+      expect(redirectFor(ready, '/filhos', lock: closed), '/bloqueio');
+      expect(redirectFor(ready, '/ajustes', lock: closed), '/bloqueio');
+      expect(redirectFor(signedOut, '/boas-vindas', lock: closed), '/bloqueio');
+      expect(redirectFor(loading, '/carregando', lock: closed), '/bloqueio');
+      expect(redirectFor(ready, '/bloqueio', lock: closed), isNull);
+    });
+
+    test('destravado, a tela do PIN não é lugar para ficar', () {
+      expect(
+        redirectFor(ready, '/bloqueio', lock: const LockOpen()),
+        '/filhos',
+      );
+      expect(redirectFor(ready, '/bloqueio'), '/filhos');
+      expect(redirectFor(ready, '/filhos', lock: const LockOpen()), isNull);
+    });
   });
 }

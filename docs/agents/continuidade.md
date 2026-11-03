@@ -9,6 +9,7 @@
 - **M1.5 (modo local) pronto no código (2026-11-03)**: `LocalStore` grava um `mesada.json` atômico na pasta do app e publica cada mudança; `RulesLocalRepository`, `ChildrenLocalRepository` e `LedgerLocalRepository` servem as abas sem rede; a família nasce local (sem nome, a tela mostra "Minha família"); o portão (`gateProvider`) tem caminho local e caminho nuvem, com `GateReady.user` nulo no local; `main.dart` **não** inicializa o Firebase; Ajustes esconde conta, sair e convidar sem conta. `analyze` limpo e **142 testes**. Telas de login/convite seguem no código, desligadas, para o M4.5.
 - **M4 (ledger) pronto no código (2026-11-03)**: a tela do filho (toque no cartão) com linhas `− qtd +` em Recompensas/Descontos, chip do último lançamento junto ao saldo, retorno tátil, "Regras deste filho" com switches (desativar guarda a quantidade), zerar um filho ou todos com "Desfazer" por 8 s. Escritas novas no `LedgerRepository` (local e Firestore, este com `FieldValue.increment`). 168 testes, `analyze` limpo. Pendências de propósito (som, seções recolhíveis, animação do saldo): `tech-debt.md`.
 - **M5 (relatório) pronto no código (2026-11-03)**: "Enviar relatório" na barra inferior da tela do filho e no menu ⋮ do cartão gera um **PDF** no aparelho (pacote `pdf`, Dart puro) e abre a folha de compartilhamento com um resumo em texto (ADR-0016, que substitui o corpo em HTML do design — `mailto:` não carrega HTML). Entram só as regras ativas com quantidade > 0. **O destinatário não vem preenchido**; o e-mail do filho vai no texto. 178 testes.
+- **M6 (PIN) pronto no código (2026-11-03)**: Ajustes › Segurança com ativar (digitar + confirmar), alterar e desativar, todos exigindo o PIN atual; tela de bloqueio com teclado próprio, 4 pontos, vibração e contagem regressiva; trava depois de **30 s fora do app** (design §10) e, a cada 3 erros, espera que dobra (30 s → teto de 15 min), sem fechar o app. O PIN fica em `device.json`, separado do `mesada.json`, como hash com sal (ADR-0017) — sem `flutter_secure_storage`, porque o alvo é o filho curioso. 212 testes. **Esquecer o PIN não tem saída no app** (`tech-debt.md`).
 - Modo: **reescrita**. Design **aprovado** (ADR-0009). Marco **M0 parcial**: tema, rotas das 3 abas, `Result/Failure`, dinheiro em centavos, l10n (4 idiomas), lints e 6 testes. `analyze` limpo.
 - Falta do M0: **só o ícone**. A CI mínima entrou em 2026-11-03 (`.github/workflows/ci.yml`, `analyze` + `test`); ela ainda não executou, porque depende do primeiro push. A inicialização do Firebase saiu do M0 e virou parte do M4.5 (ADR-0014).
 - Tag `legacy/1.2` marca o app iOS antigo (commit `a61a69e`).
@@ -39,18 +40,18 @@ flutter test
 
 Já tendo o clone: `git pull --tags` na raiz e depois `flutter pub get`. Os arquivos de localização gerados (`app-flutter/lib/l10n/app_localizations*.dart`) são versionados; rode `flutter gen-l10n` só depois de editar um `.arb`.
 
-Resultado esperado: `analyze` sem problemas e 168 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`, que só valem para o modo nuvem). Se divergir, registre o baseline em `flutter.md` antes de mexer.
+Resultado esperado: `analyze` sem problemas e 212 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`, que só valem para o modo nuvem). Se divergir, registre o baseline em `flutter.md` antes de mexer.
 
 ## Próximos passos (ordem)
 
-> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015). M1.5, M4 e M5 com código pronto; o app já rodou no aparelho.
+> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015). M1.5, M4, M5 e M6 com código pronto; o app já rodou no aparelho.
 
-1. **Ícone** (fecha o M0). Precisa de duas decisões do usuário: a dependência `flutter_launcher_icons` e o desenho em si (conceito no `design.md` §9). O gerador consome **PNG**, não SVG, então alguém precisa rasterizar.
-2. **M6 PIN** (`app_lock`): PIN de 4 dígitos, trava após 30 s fora do app, bloqueio temporário crescente após 3 erros (ADR-0008, `design.md` §4.11). Guardar o PIN pede `flutter_secure_storage` — dependência nova, pedir OK.
-3. **M7 ajuda**: introdução em 4 cartões (reabrível em Ajustes) e contato.
+1. **M7 ajuda**: introdução em 4 cartões (reabrível em Ajustes › Ajuda), "Falar com a gente" e "Sobre" com a versão. É a última peça de paridade com o legado.
+2. **Ícone** (fecha o M0). Precisa de duas decisões do usuário: a dependência `flutter_launcher_icons` e o desenho em si (conceito no `design.md` §9). O gerador consome **PNG**, não SVG, então alguém precisa rasterizar.
+3. **Conferir as telas em aparelho** com `flutter-preview`: 1,0×/1,3×/2,0×, claro e escuro. Vale especialmente para a tela de lançamentos (uso diário), o PDF do relatório aberto num leitor e o teclado do PIN.
 4. **M4.5 Família (assinatura)**: tela do recurso, `in_app_purchase`, restaurar compras, conta no momento de compartilhar, envio inicial do local para o Firestore e troca do `appModeProvider`. **Só aqui** voltam a ser necessários o Auth e o Firestore habilitados no console.
 5. M8 (corte) é decisão do usuário.
-6. **Do usuário, quando quiser**: `git push` (o remoto `ccastroelo/app-mesada` ainda está no M3; M1.5, M4, a CI e o M5 só existem localmente, e a CI só roda depois do primeiro push); revogar a chave/secret do Dropbox e a do Flurry do app antigo (ver `behavior-inventory.md` §5); definir versão/build de release (> 1.2, build > 9); **definir preço e período da Família**.
+6. **Do usuário, quando quiser**: decidir a saída para "esqueci o PIN" (`tech-debt.md` — reinstalar apaga os dados locais); revogar a chave/secret do Dropbox e a do Flurry do app antigo (ver `behavior-inventory.md` §5); definir versão/build de release (> 1.2, build > 9); **definir preço e período da Família**.
 
 ## Cuidados
 

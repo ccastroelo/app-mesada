@@ -808,6 +808,108 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'{name} — mesada {allowance}, saldo {balance}.'**
   String reportSummary(String name, String allowance, String balance);
+
+  /// No description provided for @settingsSecuritySection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Segurança'**
+  String get settingsSecuritySection;
+
+  /// No description provided for @securityExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'O PIN fica só neste aparelho e é pedido quando o app passa 30 segundos fechado.'**
+  String get securityExplanation;
+
+  /// No description provided for @pinSectionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'PIN'**
+  String get pinSectionTitle;
+
+  /// No description provided for @pinStatusOn.
+  ///
+  /// In pt, this message translates to:
+  /// **'PIN ativado'**
+  String get pinStatusOn;
+
+  /// No description provided for @pinStatusOff.
+  ///
+  /// In pt, this message translates to:
+  /// **'PIN desativado'**
+  String get pinStatusOff;
+
+  /// No description provided for @pinEnableAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativar PIN'**
+  String get pinEnableAction;
+
+  /// No description provided for @pinChangeAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alterar PIN'**
+  String get pinChangeAction;
+
+  /// No description provided for @pinDisableAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desativar PIN'**
+  String get pinDisableAction;
+
+  /// No description provided for @pinEnterCurrent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite o PIN atual'**
+  String get pinEnterCurrent;
+
+  /// No description provided for @pinEnterNew.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha um PIN de 4 dígitos'**
+  String get pinEnterNew;
+
+  /// No description provided for @pinConfirmNew.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite o PIN de novo'**
+  String get pinConfirmNew;
+
+  /// No description provided for @pinMismatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os PINs não coincidem. Tente de novo.'**
+  String get pinMismatch;
+
+  /// No description provided for @pinWrong.
+  ///
+  /// In pt, this message translates to:
+  /// **'PIN incorreto'**
+  String get pinWrong;
+
+  /// No description provided for @pinLockMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite seu PIN'**
+  String get pinLockMessage;
+
+  /// No description provided for @pinWaitMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tente de novo em {time}'**
+  String pinWaitMessage(String time);
+
+  /// No description provided for @pinEraseAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apagar'**
+  String get pinEraseAction;
+
+  /// No description provided for @pinDotsSemantics.
+  ///
+  /// In pt, this message translates to:
+  /// **'{typed} de {total} dígitos'**
+  String pinDotsSemantics(int typed, int total);
 }
 
 class _AppLocalizationsDelegate

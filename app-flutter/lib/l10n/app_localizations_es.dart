@@ -400,4 +400,60 @@ class AppLocalizationsEs extends AppLocalizations {
   String reportSummary(String name, String allowance, String balance) {
     return '$name — mesada $allowance, saldo $balance.';
   }
+
+  @override
+  String get settingsSecuritySection => 'Seguridad';
+
+  @override
+  String get securityExplanation =>
+      'El PIN se queda solo en este dispositivo y se pide cuando la app pasa 30 segundos cerrada.';
+
+  @override
+  String get pinSectionTitle => 'PIN';
+
+  @override
+  String get pinStatusOn => 'PIN activado';
+
+  @override
+  String get pinStatusOff => 'PIN desactivado';
+
+  @override
+  String get pinEnableAction => 'Activar el PIN';
+
+  @override
+  String get pinChangeAction => 'Cambiar el PIN';
+
+  @override
+  String get pinDisableAction => 'Desactivar el PIN';
+
+  @override
+  String get pinEnterCurrent => 'Escribe el PIN actual';
+
+  @override
+  String get pinEnterNew => 'Elige un PIN de 4 dígitos';
+
+  @override
+  String get pinConfirmNew => 'Escribe el PIN otra vez';
+
+  @override
+  String get pinMismatch => 'Los PIN no coinciden. Inténtalo otra vez.';
+
+  @override
+  String get pinWrong => 'PIN incorrecto';
+
+  @override
+  String get pinLockMessage => 'Escribe tu PIN';
+
+  @override
+  String pinWaitMessage(String time) {
+    return 'Inténtalo otra vez en $time';
+  }
+
+  @override
+  String get pinEraseAction => 'Borrar';
+
+  @override
+  String pinDotsSemantics(int typed, int total) {
+    return '$typed de $total dígitos';
+  }
 }
