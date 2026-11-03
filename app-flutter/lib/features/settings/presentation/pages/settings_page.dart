@@ -13,33 +13,45 @@ class SettingsPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final gate = ref.watch(gateProvider);
     final ready = gate is GateReady ? gate : null;
+    // Sem conta = modo local (ADR-0015): compartilhar e sair só aparecem com
+    // conta, que chega com a assinatura Família.
+    final user = ready?.user;
+    final family = ready?.family;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navSettings)),
       body: ListView(
         children: [
           SectionHeader(l10n.settingsFamilySection),
-          if (ready != null)
+          if (family != null)
             ListTile(
               leading: const Icon(Icons.home_outlined),
-              title: Text(ready.family.name),
+              title: Text(
+                family.name.isEmpty ? l10n.familyDefaultName : family.name,
+              ),
+              subtitle: user == null
+                  ? Text(l10n.settingsFamilyLocalOnly)
+                  : null,
             ),
-          ListTile(
-            leading: const Icon(Icons.person_add_alt_outlined),
-            title: Text(l10n.settingsInviteTile),
-            onTap: ready == null ? null : () => showInviteDialog(context),
-          ),
-          SectionHeader(l10n.settingsAccountSection),
-          if (ready != null)
+          if (user != null)
+            ListTile(
+              leading: const Icon(Icons.person_add_alt_outlined),
+              title: Text(l10n.settingsInviteTile),
+              onTap: () => showInviteDialog(context),
+            ),
+          if (user != null) ...[
+            SectionHeader(l10n.settingsAccountSection),
             ListTile(
               leading: const Icon(Icons.account_circle_outlined),
-              title: Text(ready.user.email),
+              title: Text(user.email),
             ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: Text(l10n.signOutAction),
-            onTap: () => ref.read(signOutControllerProvider.notifier).signOut(),
-          ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: Text(l10n.signOutAction),
+              onTap: () =>
+                  ref.read(signOutControllerProvider.notifier).signOut(),
+            ),
+          ],
         ],
       ),
     );

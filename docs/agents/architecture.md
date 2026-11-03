@@ -1,12 +1,14 @@
 # Arquitetura — Mesada (app-flutter)
 
-Descreve o que **existe** em `app-flutter/lib`. Regras completas e justificativas: `~/.claude/skills/project-docs/reference/target-architecture.md` (feature-first `data / domain / presentation`). Estado: Riverpod (ADR-0004). Backend: Firebase Auth + Firestore (ADR-0002, ADR-0011).
+Descreve o que **existe** em `app-flutter/lib`. Regras completas e justificativas: `~/.claude/skills/project-docs/reference/target-architecture.md` (feature-first `data / domain / presentation`). Estado: Riverpod (ADR-0004). Armazenamento: **arquivo local por padrão**; Firebase Auth + Firestore só com a assinatura Família (ADR-0014, ADR-0015, ADR-0011).
+
+> **Modo local em uso desde o M1.5 (2026-11-03)**: o app roda sem conta e sem Firebase, com os dados num arquivo JSON do aparelho (ADR-0014). A nuvem (login, convite, Firestore) continua no código, desligada, à espera da assinatura Família no M4.5 (ADR-0015).
 
 ## Estrutura
 
 ```
 lib/
-  main.dart            Firebase.initializeApp + ProviderScope (sem retentativa automática)
+  main.dart            ProviderScope (sem retentativa automática); sem Firebase no modo local
   app.dart             MaterialApp.router, tema, l10n
   firebase_options.dart  gerado pelo flutterfire (versionado, ADR-0010)
   core/
@@ -14,10 +16,12 @@ lib/
     router/            go_router + guardas (redirectFor) + casca de 3 abas
     error/             Failure (selada) e Result<T> = Ok | Err
     firebase/          failureFromFirebase: exceção do SDK -> Failure (só a camada data usa)
+    storage/           LocalStore (arquivo JSON atômico) + LocalDocument + AppMode/providers
     state/             ActionState + ActionController (base das ações de tela: carregando/falha)
     widgets/           PageBody, FailureText/failureMessage, EmptyState, ErrorState,
                        SectionHeader, MoneyField (máscara de centavos)
-    utils/             formatCents / formatCentsPlain / centsFromMaskedText (dinheiro em centavos)
+    utils/             formatCents / formatCentsPlain / centsFromMaskedText (dinheiro em centavos),
+                       newLocalId (id de documento criado no aparelho)
   features/
     auth_family/       login, família, convite  (fatia-piloto, M1)
     rules/             Regras: lista, criar/editar, excluir, reordenar, sugestões (M2)
@@ -29,6 +33,23 @@ test/                  espelha lib/; test/support tem fakes e pumpApp
 ```
 
 Regras que valem aqui: `domain` é Dart puro; só `data/datasources` toca Firebase; entity ≠ DTO; uma feature só usa outra pelo arquivo-barril (`rules/rules.dart`, `children/children.dart`, `auth_family/auth_family.dart`); dinheiro sempre em centavos inteiros.
+
+## Dois modos, uma fonte de verdade por vez (ADR-0014)
+
+`core/storage/providers.dart` tem o `appModeProvider` (`AppMode.local` | `AppMode.cloud`). Hoje ele é fixo em `local`; a assinatura Família vai trocá-lo no M4.5. Cada raiz de composição escolhe pela mesma chave:
+
+```
+rulesRepositoryProvider      local -> RulesLocalRepository(LocalStore)
+                             cloud -> RulesRepositoryImpl(RulesFirestoreDataSource)
+childrenRepositoryProvider   idem (ChildrenLocalRepository)
+ledgerRepositoryProvider     idem (LedgerLocalRepository)
+```
+
+- `LocalStore` é o único ponto que toca o disco — o papel que o datasource do Firestore tem na nuvem. Guarda **um** arquivo (`<pasta do app>/mesada.json`), publica cada mudança por stream e grava de forma atômica (escreve `.tmp` e renomeia). A mudança vale **em memória antes do disco**, então a tela reage no mesmo quadro; falha de gravação volta como `Err(Unexpected)` e o que está na tela continua valendo. Escritas disparadas juntas entram numa fila, na ordem de chegada.
+- `LocalDocument` guarda as fatias (`family`, `children`, `rules`, `entries`) em JSON cru, com **os mesmos campos do Firestore**, para o envio na assinatura ser tradução direta. Quem traduz para entidade é a camada `data` de cada feature, pelos DTOs que já existiam (`RuleDto`, `ChildDto`, `FamilyDto`). Arquivo é borda: campo ausente ou com tipo errado cai no padrão.
+- A ordem de exibição continua no campo `order` (ADR-0013). O que no Firestore era `orderBy('order')` é ordenação no repositório local, com o id desempatando (dois itens podem cair no mesmo milissegundo e `List.sort` não é estável).
+- Ids de documento criados no aparelho vêm de `newLocalId()` (relógio em base 36 + 4 caracteres sorteados).
+- Arquivo ilegível vira **erro no stream** (o portão mostra a tela de erro) em vez de começar vazio: melhor avisar que dar os dados por perdidos. Ainda não há saída dessa tela — ver `tech-debt.md`.
 
 ## Fluxo de exemplo: entrar com código de convite
 
@@ -63,12 +84,19 @@ JoinFamilyPage (presentation/pages)
 
 ## O portão de entrada (`gateProvider`)
 
-`authUserProvider` → `familyIdProvider` → `familyProvider` compõem um `Gate` selado: `GateLoading | GateError | GateSignedOut | GateNeedsFamily | GateReady`. O roteador usa só isso (`redirectFor(gate, location)`, função pura testada). Logado sem família só alcança `/familia/*`; com família sai das telas de entrada.
+O roteador decide a tela só pelo `Gate` selado (`GateLoading | GateError | GateSignedOut | GateNeedsFamily | GateReady`), por `redirectFor(gate, location)` — função pura testada. Quem monta o `Gate` depende do modo:
+
+- **local**: `localFamilyProvider` (a família do arquivo, via `LocalFamilySource`) → carregando, erro, ou `GateReady` **sem usuário**. Não há login a esperar, então a primeira abertura cai direto em `/filhos`.
+- **nuvem**: `authUserProvider` → `familyIdProvider` → `familyProvider`, como antes. Logado sem família só alcança `/familia/*`; com família sai das telas de entrada.
+
+`GateReady.user` é **nulo no modo local** (ADR-0015): quem precisa de identidade confere (o convite devolve `Err` sem conta, e Ajustes esconde conta, sair e convidar). O `redirectFor` não mudou: no modo local o portão simplesmente nunca fica em `GateSignedOut`.
 
 ## Composição e testes
 
 - `auth_family/data/providers.dart` é a raiz de composição: `authRepositoryProvider` e `familyRepositoryProvider` criam as implementações com `FirebaseAuth.instance` / `FirebaseFirestore.instance`.
 - Testes substituem esses dois providers por `FakeAuthRepository` / `FakeFamilyRepository` (`test/support/fakes.dart`) e abrem o app inteiro com `pumpApp`. Os repositórios são testados com datasource falso; as regras de segurança, no emulador (`app-flutter/firebase-tests`).
+- `pumpApp` recebe o modo. O padrão nos testes é `cloud` (exercita a composição da assinatura, com conta e família falsas); em `local` os repositórios que **não** recebem falso são os de verdade, sobre um `LocalStore` numa pasta temporária — é assim que `local_entry_test.dart` cobre o caminho padrão do app.
+- Cuidado em teste de widget: I/O começado fora de `tester.runAsync` **não** completa, então a gravação em disco se prova nos testes do `LocalStore` e dos repositórios locais, não no de fluxo.
 
 ## Convenções
 

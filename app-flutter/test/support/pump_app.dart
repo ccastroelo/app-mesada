@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mesada/app.dart';
+import 'package:mesada/core/storage/local_store.dart';
+import 'package:mesada/core/storage/providers.dart';
 import 'package:mesada/features/auth_family/data/providers.dart';
 import 'package:mesada/features/children/data/providers.dart';
 import 'package:mesada/features/ledger/data/providers.dart';
@@ -9,41 +13,63 @@ import 'package:mesada/features/rules/data/providers.dart';
 
 import 'fakes.dart';
 
-/// Abre o app inteiro com repositórios falsos (nada do Firebase é tocado).
+/// Abre o app inteiro sem tocar no Firebase.
+///
+/// [mode] escolhe o portão: `cloud` (padrão aqui) exercita a composição da
+/// assinatura, com conta e família falsas. `local` é o padrão do app de
+/// verdade (ADR-0014): aí os repositórios que **não** receberem um falso são
+/// os de verdade, sobre um arquivo numa pasta temporária.
 Future<void> pumpApp(
   WidgetTester tester, {
-  required FakeAuthRepository auth,
-  required FakeFamilyRepository family,
+  AppMode mode = AppMode.cloud,
+  FakeAuthRepository? auth,
+  FakeFamilyRepository? family,
   FakeRulesRepository? rules,
   FakeChildrenRepository? children,
   FakeLedgerRepository? ledger,
   FakePhotoStore? photoStore,
   FakePhotoPicker? photoPicker,
+  LocalStore? store,
   Locale locale = const Locale('pt', 'BR'),
 }) async {
+  final local = mode == AppMode.local;
   tester.platformDispatcher.localesTestValue = [locale];
   addTearDown(tester.platformDispatcher.clearLocalesTestValue);
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        authRepositoryProvider.overrideWithValue(auth),
-        familyRepositoryProvider.overrideWithValue(family),
-        rulesRepositoryProvider.overrideWithValue(
-          rules ?? FakeRulesRepository(),
-        ),
-        childrenRepositoryProvider.overrideWithValue(
-          children ?? FakeChildrenRepository(),
-        ),
-        ledgerRepositoryProvider.overrideWithValue(
-          ledger ?? FakeLedgerRepository(),
+        appModeProvider.overrideWithValue(mode),
+        localStoreProvider.overrideWithValue(store ?? temporaryStore()),
+        authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),
+        familyRepositoryProvider.overrideWithValue(
+          family ?? FakeFamilyRepository(),
         ),
         childPhotoStoreProvider.overrideWithValue(
           photoStore ?? FakePhotoStore(),
         ),
         photoPickerProvider.overrideWithValue(photoPicker ?? FakePhotoPicker()),
+        if (rules != null || !local)
+          rulesRepositoryProvider.overrideWithValue(
+            rules ?? FakeRulesRepository(),
+          ),
+        if (children != null || !local)
+          childrenRepositoryProvider.overrideWithValue(
+            children ?? FakeChildrenRepository(),
+          ),
+        if (ledger != null || !local)
+          ledgerRepositoryProvider.overrideWithValue(
+            ledger ?? FakeLedgerRepository(),
+          ),
       ],
       child: const MesadaApp(),
     ),
   );
   await tester.pumpAndSettle();
+}
+
+/// Armazenamento local sobre uma pasta temporária, apagada no fim do teste.
+LocalStore temporaryStore() {
+  final directory = Directory.systemTemp.createTempSync('mesada_store_');
+  addTearDown(() => directory.deleteSync(recursive: true));
+  return LocalStore(() async => directory);
 }

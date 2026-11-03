@@ -4,6 +4,31 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0015 — Conta só ao assinar; assinatura por família
+- Data: 2026-11-03 · Status: aceita · Escopo: feature `auth_family`, nova feature de assinatura, roteador
+- Contexto: com os dados locais (ADR-0014), exigir login na primeira abertura só adiciona atrito e cria usuários no Auth sem receita. Compartilhar, porém, exige identidade: as regras do Firestore (ADR-0011) precisam de um `uid` para saber quem é membro.
+- Decisão:
+  1. **No grátis não existe conta**: a primeira abertura cria uma família **local** (só o nome) e vai direto para Filhos. O roteador deixa de exigir login (`redirectFor` muda).
+  2. **A conta aparece no momento de compartilhar**: Ajustes › Família → tela da assinatura → compra na loja → **então** entrar/criar conta (e-mail/senha, Google, Apple — ADR-0008). O M1 continua como está; muda **quando** é chamado.
+  3. **A assinatura é da família, não da pessoa**: o direito fica em `families/{id}`, gravado por quem comprou. O segundo responsável entra com conta própria e **não paga**. O convite por código de 6 caracteres (ADR-0003) segue sendo o mecanismo.
+  4. **Nome do recurso: "Família"** (escolhido pelo usuário em 2026-11-03), nas 4 línguas.
+  5. **A compra pertence à conta da loja** (Apple ID / Google Play), não ao login do app: "Restaurar compras" é obrigatório e o vínculo correto é compra → família.
+  6. **Assinatura vencida não tranca nada**: para de sincronizar; nada é apagado nem fica somente-leitura.
+  7. **Acesso do filho fica fora da v1**: o relatório por e-mail (M5) cobre mostrar o saldo. Depois, se quiser, convite de leitura com papel `child` (a subcoleção de membros do ADR-0011 já suporta) — evita conta de menor e o que vem com ela (LGPD/COPPA).
+  8. **Cobrança com `in_app_purchase`**, sem servidor: quem tem o direito é afirmado pelo aparelho e as regras do Firestore confiam nesse campo.
+- Alternativas descartadas: login na primeira abertura (atrito e usuários sem receita); sincronizar por código com login anônimo (perder o aparelho perde o acesso; amarrar a compra fica frágil); assinatura por pessoa (cobraria do convidado justamente o recurso vendido); RevenueCat (mais uma dependência e mais uma conta); validar recibo em Cloud Functions (exige o plano Blaze antes da primeira venda).
+- Consequências: quem burlar o cliente sincroniza de graça — não vaza dado de ninguém, e endurecer exige servidor. Preço e período (mensal, anual ou compra única) seguem **em aberto**. Importação dos dados do legado segue descartada (ADR-0001, reconfirmado em 2026-11-03).
+
+### ADR-0014 — Dados locais por padrão; nuvem só com a assinatura "Família"
+- Data: 2026-11-03 · Status: aceita · Escopo: projeto todo — **substitui em parte o ADR-0002**
+- Contexto: o ADR-0002 punha o Firestore como base de todo mundo, o que gera custo desde o primeiro usuário, sem receita. Um responsável num aparelho não precisa de nuvem nenhuma; compartilhar com o outro responsável é o que vale ser pago.
+- Decisão: **uma fonte de verdade por vez**, nunca as duas.
+  - **Grátis**: um único arquivo JSON na pasta do app (escrita atômica — grava `.tmp` e renomeia — e campo `schemaVersion`), carregado em memória e publicado por streams. O Firebase **não** é inicializado.
+  - **Assinante**: o Firestore é a fonte de verdade naquele aparelho, aproveitando o cache offline e a fila de escrita do próprio SDK.
+  - A troca acontece **uma vez e em mão única**: ao assinar, sobe o conteúdo local num lote; ao cancelar, baixa um retrato para o arquivo local. Nunca se escreve nos dois.
+- Alternativas descartadas: escrever nos dois lados e casar as versões (exigiria um motor de sincronização próprio, com relógio e conflito, para um app de dezenas de documentos); `sqflite`/`drift` (não há consulta a fazer e o volume é de ~200 documentos no pior caso); só nuvem (ADR-0002: custo sem receita).
+- Consequências: `RulesRepository`, `ChildrenRepository` e `LedgerRepository` ganham implementação local com `familyId` fixo (`"local"`); domínio, telas e os testes com repositório falso não mudam. A dívida "escritas esperam o servidor" (`tech-debt.md`) deixa de existir no grátis. O Firestore e as regras do ADR-0011 passam a servir **só assinantes**. Sem assinatura, trocar de aparelho perde os dados (como no legado) — e nenhum dado sai do aparelho.
+
 ### ADR-0013 — Lançamentos criados sob demanda; ordem das regras por inteiro crescente
 - Data: 2026-10-28 · Status: aceita · Escopo: Firestore (`entries`, `rules`), features `rules` e `ledger`
 - Contexto: o legado criava um lançamento para cada par filho × regra ao cadastrar filho ou regra (`imGrupoLancamentos.m:114-135`). Isso exige escrever em vários documentos a cada cadastro e dá corrida entre dois responsáveis.
@@ -87,7 +112,7 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 - Alternativas descartadas: login único compartilhado (não identifica quem lançou, não revoga acesso individual).
 - Consequências: dá para registrar quem fez cada lançamento (opcional). Regras do Firestore e criação do projeto Firebase exigem aprovação do usuário (toca produção).
 
-### ADR-0002 — Backend: Firebase Auth + Cloud Firestore
+### ADR-0002 — Backend: Firebase Auth + Cloud Firestore (substituído em parte pelo ADR-0014)
 - Data: 2026-10-28 · Status: aceita · Escopo: projeto todo
 - Contexto: o Dropbox Datastore usado no legado foi descontinuado em 2016; é preciso base compartilhada entre os pais, com offline.
 - Decisão: Firebase Auth + Cloud Firestore (persistência offline nativa, tempo real). Lançamentos usam `FieldValue.increment` / transação para não perder toque de dois pais ao mesmo tempo.

@@ -1,8 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/storage/providers.dart';
 import '../../data/providers.dart';
 import '../../domain/entities/app_user.dart';
 import '../../domain/entities/family.dart';
+
+/// Família do aparelho (modo local, ADR-0014): existe sempre, sem conta.
+final localFamilyProvider = StreamProvider<Family>(
+  (ref) => ref.watch(localFamilySourceProvider).watchFamily(),
+);
 
 final authUserProvider = StreamProvider<AppUser?>(
   (ref) => ref.watch(authRepositoryProvider).authStateChanges(),
@@ -45,14 +51,32 @@ final class GateNeedsFamily extends Gate {
   final AppUser user;
 }
 
+/// Pronto para usar o app. [user] é nulo no modo local, onde não há conta
+/// (ADR-0015): quem precisa de identidade (convite) checa isso.
 final class GateReady extends Gate {
-  const GateReady(this.user, this.family);
+  const GateReady(this.family, {this.user});
 
-  final AppUser user;
   final Family family;
+  final AppUser? user;
 }
 
+/// No modo local a família vem do arquivo e não há login a esperar; no modo
+/// nuvem (assinatura) vale a composição auth → família (ADR-0014).
 final gateProvider = Provider<Gate>((ref) {
+  return switch (ref.watch(appModeProvider)) {
+    AppMode.local => _localGate(ref),
+    AppMode.cloud => _cloudGate(ref),
+  };
+});
+
+Gate _localGate(Ref ref) {
+  final family = ref.watch(localFamilyProvider);
+  if (family.hasError) return GateError(family.error!);
+  if (family.isLoading || !family.hasValue) return const GateLoading();
+  return GateReady(family.value!);
+}
+
+Gate _cloudGate(Ref ref) {
   final auth = ref.watch(authUserProvider);
   if (auth.hasError) return GateError(auth.error!);
   if (auth.isLoading || !auth.hasValue) return const GateLoading();
@@ -69,5 +93,5 @@ final gateProvider = Provider<Gate>((ref) {
   if (family.isLoading || !family.hasValue) return const GateLoading();
   final value = family.value;
   if (value == null) return GateNeedsFamily(user);
-  return GateReady(user, value);
-});
+  return GateReady(value, user: user);
+}

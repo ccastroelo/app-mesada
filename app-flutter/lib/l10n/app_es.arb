@@ -42,6 +42,8 @@
   "tryAgain": "Intentar de nuevo",
   "signOutAction": "Salir",
   "settingsFamilySection": "Familia",
+  "familyDefaultName": "Mi familia",
+  "settingsFamilyLocalOnly": "Solo en este dispositivo",
   "settingsInviteTile": "Invitar al otro responsable",
   "settingsAccountSection": "Cuenta",
   "inviteDialogTitle": "Código de invitación",

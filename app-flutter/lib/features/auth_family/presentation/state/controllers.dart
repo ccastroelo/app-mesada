@@ -88,7 +88,9 @@ final inviteCodeProvider = FutureProvider.autoDispose<Result<String>>((
 ) async {
   final gate = ref.read(gateProvider);
   if (gate is! GateReady) return const Err(Unexpected());
+  final user = gate.user;
+  if (user == null) return const Err(Unexpected());
   return ref
       .read(familyRepositoryProvider)
-      .createInvite(user: gate.user, family: gate.family);
+      .createInvite(user: user, family: gate.family);
 });

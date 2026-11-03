@@ -2,10 +2,12 @@
 
 > Este arquivo é lido no início de toda sessão. **Atualize-o ao fim de cada sessão** (estado, próximo passo, pendências) e commite junto com o trabalho. Sem caminhos absolutos nem comandos exclusivos de um sistema.
 
-## Estado atual (atualizado em 2026-10-28)
+## Estado atual (atualizado em 2026-11-03)
 
+- **Mudança de requisito (2026-11-03)**: o app guarda os dados **no aparelho** por padrão, sem conta e sem Firebase; compartilhar com o outro responsável é a assinatura **Família**, que é da família (o convidado não paga) e só então pede conta. ADR-0014 e ADR-0015; `design.md` §13. Preço e período seguem em aberto.
+- **M1.5 (modo local) pronto no código (2026-11-03)**: `LocalStore` grava um `mesada.json` atômico na pasta do app e publica cada mudança; `RulesLocalRepository`, `ChildrenLocalRepository` e `LedgerLocalRepository` servem as abas sem rede; a família nasce local (sem nome, a tela mostra "Minha família"); o portão (`gateProvider`) tem caminho local e caminho nuvem, com `GateReady.user` nulo no local; `main.dart` **não** inicializa o Firebase; Ajustes esconde conta, sair e convidar sem conta. `analyze` limpo e **142 testes**. Telas de login/convite seguem no código, desligadas, para o M4.5. **Nunca rodou em aparelho/emulador.**
 - Modo: **reescrita**. Design **aprovado** (ADR-0009). Marco **M0 parcial**: tema, rotas das 3 abas, `Result/Failure`, dinheiro em centavos, l10n (4 idiomas), lints e 6 testes. `analyze` limpo. Nunca rodou em aparelho/emulador.
-- Falta do M0: inicialização do Firebase, CI (`analyze` + `test`) e ícone.
+- Falta do M0: CI (`analyze` + `test`) e ícone. A inicialização do Firebase saiu do M0 e virou parte do M4.5 (ADR-0014).
 - Tag `legacy/1.2` marca o app iOS antigo (commit `a61a69e`).
 - **M1 (auth_family) com código completo (2026-10-28)**: boas-vindas, entrar/criar conta por e-mail, Google (OAuth do Firebase), escolha de família, criar família (semeia as 20 regras no idioma), entrar com código, convite em Ajustes (copiar/compartilhar), sair. Roteador com guardas (`redirectFor`). `architecture.md` descreve o fluxo. **Falta validar em aparelho/emulador com o Firebase real**: criar conta, criar família, convidar e entrar com a segunda conta, Google. O APK de debug compila.
 - Fora do M1 (ainda não existe): "Entrar com a Apple", sair/trocar de família, tela de introdução (4 cartões), banner offline, redefinição de senha só testada com fake.
@@ -34,16 +36,18 @@ flutter test
 
 Já tendo o clone: `git pull --tags` na raiz e depois `flutter pub get`. Os arquivos de localização gerados (`app-flutter/lib/l10n/app_localizations*.dart`) são versionados; rode `flutter gen-l10n` só depois de editar um `.arb`.
 
-Resultado esperado: `analyze` sem problemas e 120 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`). Se divergir, registre o baseline em `flutter.md` antes de mexer.
+Resultado esperado: `analyze` sem problemas e 142 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`, que só valem para o modo nuvem). Se divergir, registre o baseline em `flutter.md` antes de mexer.
 
 ## Próximos passos (ordem)
 
-1. **P0** (do usuário): criar o projeto Firebase (Auth com e-mail/senha, Google e Apple; Firestore) e decidir versão/build de release (> 1.2, build > 9). Revogar a chave/secret do Dropbox e a do Flurry do app antigo (estão no histórico do git; ver `behavior-inventory.md` §5).
-2. ~~Domínio de entidades e saldo~~ (feito). Resta sem Firebase: contratos de repositório e casos de uso com regra (zerar com desfazer, semear as 20 regras-padrão por idioma, ativar/desativar regra por filho), usando repositórios falsos nos testes.
-3. **M0 restante**: Firebase init (config fora do repositório quando for segredo; ver `working-agreement.md`), CI mínima, ícone.
-4. ~~M1~~ código pronto; **validar com o Firebase real** (emulador/aparelho Android; ver `flutter-preview`). Criar contas de teste no `mesada-proj` é decisão do usuário.
-5. ~~M2 `rules`~~ e ~~M3 `children`~~ com código pronto (ver acima). **Próximo: M4 `ledger`** — a tela do filho (toque no cartão): linhas − qtd + por regra em Recompensas/Descontos, chip animado do saldo, ativar/desativar regra por filho, zerar um/todos com "Desfazer" por 8 s. **Decidir antes** como gravar sem esperar o servidor (`tech-debt.md`, vira ADR). Depois M5 relatório, M6 PIN, M7 ajuda. M8 (corte) é decisão do usuário.
-6. **Validar M1–M3 com o Firebase real** em emulador/aparelho (cria contas de teste no `mesada-proj`, decisão do usuário). Quanto mais telas sem isso, mais caro achar erro de configuração.
+> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015).
+
+1. **M4 `ledger`** — a tela do filho (toque no cartão): linhas − qtd + por regra em Recompensas/Descontos, chip animado do saldo, ativar/desativar regra por filho, zerar um/todos com "Desfazer" por 8 s. Contra o `LocalStore` a escrita é imediata, então a dívida de "esperar o servidor" não existe no grátis (`tech-debt.md`). As escritas de lançamento entram no `LedgerRepository` (hoje só leitura) e na versão local e na do Firestore.
+2. **Rodar em aparelho/emulador** (`flutter-preview`): o app nunca abriu fora dos testes, e agora dá para fazer isso **sem nenhuma configuração de Firebase**. Vale antes de empilhar mais telas.
+3. **M0 restante**: CI mínima (`analyze` + `test`) e ícone.
+4. **M4.5 Família (assinatura)**: tela do recurso, `in_app_purchase`, restaurar compras, conta no momento de compartilhar, envio inicial do local para o Firestore e troca do `appModeProvider`. **Só aqui** voltam a ser necessários o Auth e o Firestore habilitados no console e a validação com o Firebase real.
+5. Depois: M5 relatório, M6 PIN, M7 ajuda. M8 (corte) é decisão do usuário.
+6. **Do usuário, quando quiser**: revogar a chave/secret do Dropbox e a do Flurry do app antigo (estão no histórico do git; ver `behavior-inventory.md` §5); definir versão/build de release (> 1.2, build > 9); **definir preço e período da Família**.
 
 ## Cuidados
 

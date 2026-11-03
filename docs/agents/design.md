@@ -1,6 +1,6 @@
 # Design — Mesada (proposta para aprovação)
 
-> **Status: APROVADO em 2026-10-28** (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
+> **Status: APROVADO em 2026-10-28** · **emenda em 2026-11-03 na §13** (Família por assinatura, entrada sem conta) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
 > Escopo do redesenho: visual **e** fluxo (ADR-0005). O app é de uso diário, em pé, com uma mão: a ação mais frequente (lançar ±1) precisa ser a mais fácil.
 
 ## 1. Princípios
@@ -190,3 +190,15 @@ Histórico de quem lançou o quê; biometria no lugar do PIN; vários grupos de 
 5. Convite por código de 6 caracteres, 48 h, uso único (sem link).
 6. Desfazer ao zerar (§5).
 7. Conceito do ícone (§9).
+
+## 13. Emenda de 2026-11-03 — Família (assinatura) e entrada sem conta
+
+Decidido depois da aprovação (ADR-0014 e ADR-0015); onde conflitar com as seções acima, vale esta.
+
+- **A primeira abertura não pede conta.** Em vez de `/boas-vindas`, o app cria uma família local (só o nome) e vai direto para **Filhos**. As telas de §4.1 e §4.2 continuam existindo, mas só aparecem no fluxo da assinatura. As guardas de §3 deixam de exigir login; o PIN (§4.11) segue valendo.
+- **Compartilhar é o recurso pago, chamado "Família".** Em Ajustes (§4.8), *Família* passa a ser: no grátis, um convite para assinar, explicando o que muda ("os dois responsáveis veem os mesmos números, em tempo real"); com assinatura ativa, os membros, *Convidar outro responsável* e *Sair da família*, como já descrito. Entra também **Restaurar compras**.
+- **A assinatura é da família.** Quem compra libera o recurso para a família; o segundo responsável entra com conta própria, de graça, pelo código de 6 caracteres (§5).
+- **Vencer não tranca nada**: o app volta a trabalhar só no aparelho, com os dados que já tem, e avisa numa linha em Ajustes. Nada fica somente-leitura.
+- **Princípio 4 de §1** ("dois pais, uma base") passa a valer só com a assinatura. Sem ela, não há nada a sincronizar — e o indicador de offline (§4) só aparece no modo assinante.
+- **Introdução (§4.9)**: o 4º cartão ("Convide o outro responsável") passa a apresentar a Família como recurso da assinatura, sem forçar a compra.
+- **Acesso do filho** continua **fora do escopo** (§11): mostrar o saldo ao filho é o relatório por e-mail (§4.10).

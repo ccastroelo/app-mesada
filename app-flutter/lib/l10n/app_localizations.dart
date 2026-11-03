@@ -353,6 +353,18 @@ abstract class AppLocalizations {
   /// **'Família'**
   String get settingsFamilySection;
 
+  /// No description provided for @familyDefaultName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Minha família'**
+  String get familyDefaultName;
+
+  /// No description provided for @settingsFamilyLocalOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Só neste aparelho'**
+  String get settingsFamilyLocalOnly;
+
   /// No description provided for @settingsInviteTile.
   ///
   /// In pt, this message translates to:

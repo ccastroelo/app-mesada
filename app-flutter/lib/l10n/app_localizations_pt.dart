@@ -139,6 +139,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settingsFamilySection => 'Família';
 
   @override
+  String get familyDefaultName => 'Minha família';
+
+  @override
+  String get settingsFamilyLocalOnly => 'Só neste aparelho';
+
+  @override
   String get settingsInviteTile => 'Convidar outro responsável';
 
   @override
@@ -439,6 +445,12 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get settingsFamilySection => 'Família';
+
+  @override
+  String get familyDefaultName => 'A minha família';
+
+  @override
+  String get settingsFamilyLocalOnly => 'Só neste aparelho';
 
   @override
   String get settingsInviteTile => 'Convidar outro responsável';

@@ -18,16 +18,16 @@ flutter analyze
 flutter test
 ```
 
-## Baseline do M0 (código novo, sem legado)
+## Baseline (código novo, sem legado) — atualizado em 2026-11-03
 
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | 120 testes passando (dinheiro e máscara de centavos, saldo, regras-padrão, código de convite, falhas do Firebase, repositórios de família, regras e filhos com datasource falso, armazenamento de foto em pasta temporária, redirecionamento, fluxos de entrada, Regras e Filhos com fonte 1,3×/2,0× e casca em 4 idiomas) — atualizado em 2026-10-28 |
-| `flutter build apk --debug` | compila (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
+| `flutter test` | **142 testes passando** (os 120 de antes mais: `LocalStore` — criar, gravar atômico, reler, fila de escritas, erro de disco, arquivo ilegível, campo com tipo errado —, repositórios locais de regras e filhos, e a entrada sem conta no modo local) — atualizado em 2026-11-03 |
+| `flutter build apk --debug` | compilava em 2026-10-28; **não refeito** depois de tirar o Firebase do `main.dart` (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |
 | Executado em aparelho/emulador | **não** — só testes de widget e compilação |
-| Firebase | projeto `mesada-proj`; apps Android e iOS registrados; `firebase_core` inicializado no `main.dart`. Auth e Firestore ainda não habilitados. Não rodado em aparelho. |
+| Firebase | projeto `mesada-proj`; apps Android e iOS registrados. **Não é mais inicializado** no `main.dart`: o modo local não usa Firebase (ADR-0014). Auth e Firestore seguem desabilitados no console — passam a ser pré-requisito do M4.5. |
 
 ## Testes das regras do Firestore (emulador local)
 

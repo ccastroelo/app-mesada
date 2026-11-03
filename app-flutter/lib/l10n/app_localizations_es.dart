@@ -141,6 +141,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsFamilySection => 'Familia';
 
   @override
+  String get familyDefaultName => 'Mi familia';
+
+  @override
+  String get settingsFamilyLocalOnly => 'Solo en este dispositivo';
+
+  @override
   String get settingsInviteTile => 'Invitar al otro responsable';
 
   @override

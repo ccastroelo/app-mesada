@@ -10,7 +10,7 @@ void main() {
   final error = GateError(StateError('x'));
   const signedOut = GateSignedOut();
   const needsFamily = GateNeedsFamily(testUser);
-  const ready = GateReady(testUser, family);
+  const ready = GateReady(family, user: testUser);
 
   test('carregando ou com erro: tela de espera', () {
     expect(redirectFor(loading, '/filhos'), '/carregando');

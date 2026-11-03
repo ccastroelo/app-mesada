@@ -140,6 +140,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsFamilySection => 'Family';
 
   @override
+  String get familyDefaultName => 'My family';
+
+  @override
+  String get settingsFamilyLocalOnly => 'On this device only';
+
+  @override
   String get settingsInviteTile => 'Invite the other parent';
 
   @override
