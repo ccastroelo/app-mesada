@@ -364,6 +364,39 @@ class AppLocalizationsPt extends AppLocalizations {
   String childLedgerAllOffTitle(String name) {
     return 'Todas as regras estão desativadas para $name';
   }
+
+  @override
+  String get sendReportAction => 'Enviar relatório';
+
+  @override
+  String reportTitle(String name) {
+    return 'Mesada de $name';
+  }
+
+  @override
+  String reportGeneratedAt(String date) {
+    return 'Gerado em $date';
+  }
+
+  @override
+  String get reportRuleColumn => 'Regra';
+
+  @override
+  String get reportValueColumn => 'Valor';
+
+  @override
+  String get reportQuantityColumn => 'Qtd';
+
+  @override
+  String get reportTotalColumn => 'Total';
+
+  @override
+  String get reportEmpty => 'Nenhum lançamento até agora.';
+
+  @override
+  String reportSummary(String name, String allowance, String balance) {
+    return '$name — mesada $allowance, saldo $balance.';
+  }
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -727,5 +760,38 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   @override
   String childLedgerAllOffTitle(String name) {
     return 'Todas as regras estão desativadas para $name';
+  }
+
+  @override
+  String get sendReportAction => 'Enviar relatório';
+
+  @override
+  String reportTitle(String name) {
+    return 'Mesada de $name';
+  }
+
+  @override
+  String reportGeneratedAt(String date) {
+    return 'Gerado em $date';
+  }
+
+  @override
+  String get reportRuleColumn => 'Regra';
+
+  @override
+  String get reportValueColumn => 'Valor';
+
+  @override
+  String get reportQuantityColumn => 'Qtd';
+
+  @override
+  String get reportTotalColumn => 'Total';
+
+  @override
+  String get reportEmpty => 'Nenhum lançamento até agora.';
+
+  @override
+  String reportSummary(String name, String allowance, String balance) {
+    return '$name — mesada $allowance, saldo $balance.';
   }
 }

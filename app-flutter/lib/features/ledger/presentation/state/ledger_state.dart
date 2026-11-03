@@ -6,6 +6,7 @@ import '../../../../core/state/action_controller.dart';
 import '../../../auth_family/auth_family.dart';
 import '../../data/providers.dart';
 import '../../domain/entities/entry.dart';
+import '../../domain/repositories/report_sharer.dart';
 
 /// Id da família atual; null enquanto a entrada não terminou.
 final _familyIdProvider = Provider<String?>((ref) {
@@ -72,6 +73,11 @@ class LedgerActions extends ActionController {
   Future<bool> restore(Iterable<Entry> entries) => _withFamily(
     (familyId) => ref.read(ledgerRepositoryProvider).restore(familyId, entries),
   );
+
+  /// Gera o PDF e abre a folha de compartilhamento (ADR-0016). O documento
+  /// chega pronto da tela, que é quem sabe o idioma e o formato da moeda.
+  Future<bool> shareReport(ReportDocument document) =>
+      run(() => ref.read(reportSharerProvider).share(document));
 
   Future<bool> _withFamily(
     Future<Result<void>> Function(String familyId) action,

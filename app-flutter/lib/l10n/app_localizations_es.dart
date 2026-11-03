@@ -367,4 +367,37 @@ class AppLocalizationsEs extends AppLocalizations {
   String childLedgerAllOffTitle(String name) {
     return 'Todas las reglas están desactivadas para $name';
   }
+
+  @override
+  String get sendReportAction => 'Enviar informe';
+
+  @override
+  String reportTitle(String name) {
+    return 'Mesada de $name';
+  }
+
+  @override
+  String reportGeneratedAt(String date) {
+    return 'Generado el $date';
+  }
+
+  @override
+  String get reportRuleColumn => 'Regla';
+
+  @override
+  String get reportValueColumn => 'Valor';
+
+  @override
+  String get reportQuantityColumn => 'Cant.';
+
+  @override
+  String get reportTotalColumn => 'Total';
+
+  @override
+  String get reportEmpty => 'Todavía no hay registros.';
+
+  @override
+  String reportSummary(String name, String allowance, String balance) {
+    return '$name — mesada $allowance, saldo $balance.';
+  }
 }

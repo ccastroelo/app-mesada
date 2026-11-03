@@ -46,6 +46,11 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 
 - **Som do lançamento** (design §2 e §4.8): não existe. Tocar um som curto pede uma dependência nova (`audioplayers` ou similar) e a opção de ligar/desligar vive em Ajustes › Preferências, que é de outro marco. Hoje há só o retorno tátil (`HapticFeedback`, sem dependência).
 - **Seções recolhíveis** (design §4.4): Recompensas e Descontos aparecem sempre abertas.
-- **Barra inferior da tela do filho** (design §4.4): o menu está na barra de cima. A barra inferior ganha sentido no M5, junto com "Enviar relatório".
 - **Animação do saldo** (design §6): o chip do último lançamento aparece e some, mas o número do saldo troca sem transição.
 - **Filho excluído com a tela aberta** (só acontece com assinatura, quando o outro responsável exclui): a tela do filho mostra o estado de erro em vez de voltar sozinha para a lista.
+
+## O PDF do relatório usa a fonte Helvetica embutida (Latin-1)
+
+- **Onde**: `ledger/data/report/child_report_pdf.dart` (M5). A fonte que vem no pacote `pdf` cobre Latin-1, o que atende pt/en/es. O gerador já troca o "−" (U+2212) do formato de moeda por hífen.
+- **O que dói**: nome de filho ou descrição de regra com caractere fora do Latin-1 (alfabeto cirílico, japonês, emoji) sai vazio ou errado **no documento** — na tela está certo.
+- **O que fazer**: embutir uma fonte TrueType (Roboto, ~170 KB como asset) e usá-la no `pw.ThemeData`. Só vale quando aparecer um caso real.

@@ -108,5 +108,14 @@
   "decreaseSemantics": "Decrease {description}, quantity {quantity}",
   "childLedgerEmptyTitle": "No rules to use yet",
   "childLedgerEmptyBody": "Create rules on the Rules tab to start adding entries.",
-  "childLedgerAllOffTitle": "Every rule is off for {name}"
+  "childLedgerAllOffTitle": "Every rule is off for {name}",
+  "sendReportAction": "Send report",
+  "reportTitle": "{name}'s allowance",
+  "reportGeneratedAt": "Generated on {date}",
+  "reportRuleColumn": "Rule",
+  "reportValueColumn": "Value",
+  "reportQuantityColumn": "Qty",
+  "reportTotalColumn": "Total",
+  "reportEmpty": "No entries yet.",
+  "reportSummary": "{name} — allowance {allowance}, balance {balance}."
 }

@@ -191,5 +191,41 @@
         "type": "String"
       }
     }
+  },
+  "sendReportAction": "Enviar relatório",
+  "reportTitle": "Mesada de {name}",
+  "@reportTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reportGeneratedAt": "Gerado em {date}",
+  "@reportGeneratedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reportRuleColumn": "Regra",
+  "reportValueColumn": "Valor",
+  "reportQuantityColumn": "Qtd",
+  "reportTotalColumn": "Total",
+  "reportEmpty": "Nenhum lançamento até agora.",
+  "reportSummary": "{name} — mesada {allowance}, saldo {balance}.",
+  "@reportSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "allowance": {
+        "type": "String"
+      },
+      "balance": {
+        "type": "String"
+      }
+    }
   }
 }

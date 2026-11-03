@@ -754,6 +754,60 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Todas as regras estão desativadas para {name}'**
   String childLedgerAllOffTitle(String name);
+
+  /// No description provided for @sendReportAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar relatório'**
+  String get sendReportAction;
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mesada de {name}'**
+  String reportTitle(String name);
+
+  /// No description provided for @reportGeneratedAt.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerado em {date}'**
+  String reportGeneratedAt(String date);
+
+  /// No description provided for @reportRuleColumn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Regra'**
+  String get reportRuleColumn;
+
+  /// No description provided for @reportValueColumn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor'**
+  String get reportValueColumn;
+
+  /// No description provided for @reportQuantityColumn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Qtd'**
+  String get reportQuantityColumn;
+
+  /// No description provided for @reportTotalColumn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total'**
+  String get reportTotalColumn;
+
+  /// No description provided for @reportEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum lançamento até agora.'**
+  String get reportEmpty;
+
+  /// No description provided for @reportSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'{name} — mesada {allowance}, saldo {balance}.'**
+  String reportSummary(String name, String allowance, String balance);
 }
 
 class _AppLocalizationsDelegate

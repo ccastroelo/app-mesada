@@ -27,7 +27,8 @@ lib/
     rules/             Regras: lista, criar/editar, excluir, reordenar, sugestões (M2)
     children/          Filhos: cartões com saldo, CRUD, foto local (M3); tela do filho com os
                        lançamentos ± e as regras do filho (M4)
-    ledger/            Lançamentos: Entry, saldo e as escritas (±, ativar/desativar, zerar) (M4)
+    ledger/            Lançamentos: Entry, saldo, escritas (±, ativar/desativar, zerar) (M4)
+                       e o relatório em PDF compartilhado (M5)
     settings/          Ajustes (família, convite, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
@@ -92,6 +93,7 @@ JoinFamilyPage (presentation/pages)
 - O lançamento **nasce no primeiro toque** (ADR-0013). No modo local a conta é feita no arquivo, com piso 0. Na nuvem, ± vira `FieldValue.increment(±1)` com `merge`: a soma acontece no servidor, então dois responsáveis lançando junto não perdem toque e a fila do SDK cobre o offline. O piso 0 do − fica com a tela (botão desabilitado em 0) e com as regras de segurança, que rejeitam negativo.
 - Zerar não mexe em `enabled` nem na mesada. Desativar uma regra para o filho preserva a quantidade e só a tira do saldo (ADR-0008); a linha desativada não aparece nos lançamentos.
 - Acessibilidade da linha: o `tooltip` do botão é o rótulo do leitor de tela ("Aumentar Arrumar a cama, quantidade 2"), o saldo é anunciado após cada lançamento (`SemanticsService.sendAnnouncement`) e, a partir de 1,3× de escala de texto, o stepper desce para uma segunda linha.
+- **Relatório (M5, ADR-0016)**: `buildChildReport` (domínio puro) escolhe as linhas — só regras ativas com quantidade > 0 — e o saldo. A tela monta um `ReportDocument` com **tudo já em texto** (`children/presentation/state/child_report_state.dart`), porque moeda, data e idioma vivem na presentation. O `ReportSharer` (contrato no domínio) é implementado por `SharePlusReportSharer`, que chama `buildReportPdf` (Dart puro, pacote `pdf`), grava na pasta temporária e abre a folha do sistema. Nos testes o contrato é trocado por um falso, então nenhum teste gera PDF nem abre a folha.
 
 ## O portão de entrada (`gateProvider`)
 

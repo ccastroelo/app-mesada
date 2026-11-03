@@ -366,4 +366,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String childLedgerAllOffTitle(String name) {
     return 'Every rule is off for $name';
   }
+
+  @override
+  String get sendReportAction => 'Send report';
+
+  @override
+  String reportTitle(String name) {
+    return '$name\'s allowance';
+  }
+
+  @override
+  String reportGeneratedAt(String date) {
+    return 'Generated on $date';
+  }
+
+  @override
+  String get reportRuleColumn => 'Rule';
+
+  @override
+  String get reportValueColumn => 'Value';
+
+  @override
+  String get reportQuantityColumn => 'Qty';
+
+  @override
+  String get reportTotalColumn => 'Total';
+
+  @override
+  String get reportEmpty => 'No entries yet.';
+
+  @override
+  String reportSummary(String name, String allowance, String balance) {
+    return '$name — allowance $allowance, balance $balance.';
+  }
 }

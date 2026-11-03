@@ -418,6 +418,20 @@ class FakeLedgerRepository implements LedgerRepository {
   }
 }
 
+/// Guarda o documento em vez de gerar PDF e abrir a folha do sistema.
+class FakeReportSharer implements ReportSharer {
+  final shared = <ReportDocument>[];
+  Result<void> nextResult = const Ok(null);
+
+  ReportDocument get last => shared.last;
+
+  @override
+  Future<Result<void>> share(ReportDocument document) async {
+    shared.add(document);
+    return nextResult;
+  }
+}
+
 class FakePhotoStore implements ChildPhotoStore {
   FakePhotoStore({Map<String, String>? paths}) : paths = {...?paths};
 

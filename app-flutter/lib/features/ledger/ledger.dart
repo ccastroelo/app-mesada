@@ -4,4 +4,6 @@ library;
 
 export 'domain/entities/entry.dart';
 export 'domain/repositories/ledger_repository.dart';
+export 'domain/repositories/report_sharer.dart';
 export 'domain/usecases/calculate_balance.dart';
+export 'domain/usecases/child_report.dart';

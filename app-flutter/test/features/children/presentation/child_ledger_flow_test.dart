@@ -16,6 +16,7 @@ const _light = Rule(id: 'r3', description: 'Luz acesa', valueCents: -50);
 
 void main() {
   late FakeLedgerRepository ledger;
+  late FakeReportSharer sharer;
 
   /// Abre a aba Filhos e toca no cartão de [childName] para entrar nos
   /// lançamentos.
@@ -27,6 +28,7 @@ void main() {
     List<Entry> entries = const [],
   }) async {
     ledger = FakeLedgerRepository(entries: entries);
+    sharer = FakeReportSharer();
     await pumpApp(
       tester,
       auth: FakeAuthRepository(user: testUser),
@@ -36,6 +38,7 @@ void main() {
       children: FakeChildrenRepository(children: children),
       rules: FakeRulesRepository(rules: rules),
       ledger: ledger,
+      reportSharer: sharer,
     );
     await tester.tap(find.text(childName));
     await tester.pumpAndSettle();
@@ -283,6 +286,96 @@ void main() {
 
       expect([for (final e in ledger.entries) e.quantity], [0, 0]);
       expect(find.text('Lançamentos zerados'), findsOneWidget);
+    });
+  });
+
+  group('relatório', () {
+    testWidgets('a barra inferior monta o documento e compartilha', (
+      tester,
+    ) async {
+      await openLedger(
+        tester,
+        children: const [
+          Child(
+            id: 'c1',
+            name: 'Lucas',
+            allowanceCents: 10000,
+            email: 'lucas@example.com',
+          ),
+        ],
+        entries: const [
+          Entry(childId: 'c1', ruleId: 'r1', quantity: 2),
+          Entry(childId: 'c1', ruleId: 'r3', quantity: 1, enabled: false),
+        ],
+      );
+
+      await tester.tap(find.widgetWithText(TextButton, 'Enviar relatório'));
+      await tester.pumpAndSettle();
+
+      final document = sharer.last;
+      expect(document.fileName, 'mesada-lucas.pdf');
+      expect(document.title, 'Mesada de Lucas');
+      expect(document.subtitle, startsWith('Gerado em'));
+      // O e-mail do filho vai no texto, para colar no destinatário.
+      expect(document.summary, contains('lucas@example.com'));
+      expect(document.summary, contains(money('101,00')));
+      expect(document.columns, ['Regra', 'Valor', 'Qtd', 'Total']);
+      // Só a regra lançada e ativa; a desativada fica fora.
+      expect(document.rows, [
+        ['Arrumar a cama', '+${money('0,50')}', '2', '+${money('1,00')}'],
+      ]);
+      expect(
+        [for (final total in document.totals) total.label],
+        ['Mesada', 'Saldo'],
+      );
+      expect(document.totals.last.value, money('101,00'));
+    });
+
+    testWidgets('sem lançamento, o documento vai sem linhas', (tester) async {
+      await openLedger(tester);
+
+      await tester.tap(find.widgetWithText(TextButton, 'Enviar relatório'));
+      await tester.pumpAndSettle();
+
+      expect(sharer.last.rows, isEmpty);
+      expect(sharer.last.emptyMessage, 'Nenhum lançamento até agora.');
+    });
+
+    testWidgets('o menu do cartão também envia, sem abrir a tela', (
+      tester,
+    ) async {
+      sharer = FakeReportSharer();
+      await pumpApp(
+        tester,
+        auth: FakeAuthRepository(user: testUser),
+        family: FakeFamilyRepository(
+          family: const Family(id: 'f1', name: 'Família Castro'),
+        ),
+        children: FakeChildrenRepository(children: const [_lucas, _ana]),
+        rules: FakeRulesRepository(rules: const [_bed]),
+        ledger: FakeLedgerRepository(
+          entries: const [Entry(childId: 'c2', ruleId: 'r1', quantity: 4)],
+        ),
+        reportSharer: sharer,
+      );
+
+      await tester.tap(
+        find.descendant(
+          of: find.ancestor(of: find.text('Ana'), matching: find.byType(Card)),
+          matching: find.byIcon(Icons.more_vert),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Enviar relatório'));
+      await tester.pumpAndSettle();
+
+      expect(sharer.last.title, 'Mesada de Ana');
+      expect(sharer.last.rows.single, [
+        'Arrumar a cama',
+        '+${money('0,50')}',
+        '4',
+        '+${money('2,00')}',
+      ]);
     });
   });
 

@@ -19,6 +19,7 @@ import '../../../ledger/ledger_providers.dart';
 import '../../../rules/rules.dart';
 import '../../../rules/rules_providers.dart';
 import '../state/child_ledger_state.dart';
+import '../state/child_report_state.dart';
 import '../state/children_state.dart';
 import '../widgets/child_avatar.dart';
 
@@ -124,30 +125,48 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
     final data = ledger.value;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(data?.child.name ?? ''),
-        actions: [
-          if (data != null)
-            PopupMenuButton<_LedgerMenu>(
-              onSelected: (item) => switch (item) {
-                _LedgerMenu.zero => _confirmZero(data),
-                _LedgerMenu.rules => context.push(
-                  '/filhos/${widget.childId}/regras',
-                ),
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: _LedgerMenu.zero,
-                  child: Text(l10n.childLedgerZeroMenu),
-                ),
-                PopupMenuItem(
-                  value: _LedgerMenu.rules,
-                  child: Text(l10n.childRulesMenu),
-                ),
-              ],
+      appBar: AppBar(title: Text(data?.child.name ?? '')),
+      // Barra inferior com o relatório e o menu (design.md §4.4).
+      bottomNavigationBar: data == null
+          ? null
+          : BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: TextButton.icon(
+                      onPressed: action.loading
+                          ? null
+                          : () =>
+                                shareChildReport(context, ref, widget.childId),
+                      icon: const Icon(Icons.mail_outline),
+                      label: Text(
+                        l10n.sendReportAction,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  PopupMenuButton<_LedgerMenu>(
+                    onSelected: (item) => switch (item) {
+                      _LedgerMenu.zero => _confirmZero(data),
+                      _LedgerMenu.rules => context.push(
+                        '/filhos/${widget.childId}/regras',
+                      ),
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: _LedgerMenu.zero,
+                        child: Text(l10n.childLedgerZeroMenu),
+                      ),
+                      PopupMenuItem(
+                        value: _LedgerMenu.rules,
+                        child: Text(l10n.childRulesMenu),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-        ],
-      ),
       body: ledger.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, _) => ErrorState(

@@ -11,11 +11,12 @@ import '../../../../core/widgets/failure_message.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../ledger/ledger_providers.dart';
 import '../../domain/entities/child.dart';
+import '../state/child_report_state.dart';
 import '../state/children_state.dart';
 import '../widgets/child_avatar.dart';
 import 'child_ledger_page.dart';
 
-enum _ChildMenu { edit, zero, delete }
+enum _ChildMenu { edit, zero, report, delete }
 
 enum _ChildrenMenu { zeroAll }
 
@@ -204,6 +205,8 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
                           onEdit: (child) =>
                               context.push('/filhos/${child.id}/editar'),
                           onZero: (child) => _confirmZero(child: child),
+                          onReport: (child) =>
+                              shareChildReport(context, ref, child.id),
                           onDelete: _confirmDelete,
                         ),
                       ),
@@ -222,6 +225,7 @@ class _ChildCard extends StatelessWidget {
     required this.onOpen,
     required this.onEdit,
     required this.onZero,
+    required this.onReport,
     required this.onDelete,
   });
 
@@ -229,6 +233,7 @@ class _ChildCard extends StatelessWidget {
   final void Function(Child) onOpen;
   final void Function(Child) onEdit;
   final void Function(Child) onZero;
+  final void Function(Child) onReport;
   final void Function(Child) onDelete;
 
   @override
@@ -312,6 +317,7 @@ class _ChildCard extends StatelessWidget {
                 onSelected: (item) => switch (item) {
                   _ChildMenu.edit => onEdit(child),
                   _ChildMenu.zero => onZero(child),
+                  _ChildMenu.report => onReport(child),
                   _ChildMenu.delete => onDelete(child),
                 },
                 itemBuilder: (context) => [
@@ -322,6 +328,10 @@ class _ChildCard extends StatelessWidget {
                   PopupMenuItem(
                     value: _ChildMenu.zero,
                     child: Text(l10n.childLedgerZeroMenu),
+                  ),
+                  PopupMenuItem(
+                    value: _ChildMenu.report,
+                    child: Text(l10n.sendReportAction),
                   ),
                   PopupMenuItem(
                     value: _ChildMenu.delete,

@@ -108,5 +108,14 @@
   "decreaseSemantics": "Disminuir {description}, cantidad {quantity}",
   "childLedgerEmptyTitle": "Todavía no hay reglas",
   "childLedgerEmptyBody": "Crea reglas en la pestaña Reglas para empezar a registrar.",
-  "childLedgerAllOffTitle": "Todas las reglas están desactivadas para {name}"
+  "childLedgerAllOffTitle": "Todas las reglas están desactivadas para {name}",
+  "sendReportAction": "Enviar informe",
+  "reportTitle": "Mesada de {name}",
+  "reportGeneratedAt": "Generado el {date}",
+  "reportRuleColumn": "Regla",
+  "reportValueColumn": "Valor",
+  "reportQuantityColumn": "Cant.",
+  "reportTotalColumn": "Total",
+  "reportEmpty": "Todavía no hay registros.",
+  "reportSummary": "{name} — mesada {allowance}, saldo {balance}."
 }

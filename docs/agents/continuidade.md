@@ -5,10 +5,12 @@
 ## Estado atual (atualizado em 2026-11-03)
 
 - **Mudança de requisito (2026-11-03)**: o app guarda os dados **no aparelho** por padrão, sem conta e sem Firebase; compartilhar com o outro responsável é a assinatura **Família**, que é da família (o convidado não paga) e só então pede conta. ADR-0014 e ADR-0015; `design.md` §13. Preço e período seguem em aberto.
-- **M1.5 (modo local) pronto no código (2026-11-03)**: `LocalStore` grava um `mesada.json` atômico na pasta do app e publica cada mudança; `RulesLocalRepository`, `ChildrenLocalRepository` e `LedgerLocalRepository` servem as abas sem rede; a família nasce local (sem nome, a tela mostra "Minha família"); o portão (`gateProvider`) tem caminho local e caminho nuvem, com `GateReady.user` nulo no local; `main.dart` **não** inicializa o Firebase; Ajustes esconde conta, sair e convidar sem conta. `analyze` limpo e **142 testes**. Telas de login/convite seguem no código, desligadas, para o M4.5. **Nunca rodou em aparelho/emulador.**
-- **M4 (ledger) pronto no código (2026-11-03)**: a tela do filho (toque no cartão) com linhas `− qtd +` em Recompensas/Descontos, chip do último lançamento junto ao saldo, retorno tátil, "Regras deste filho" com switches (desativar guarda a quantidade), zerar um filho ou todos com "Desfazer" por 8 s. Escritas novas no `LedgerRepository` (local e Firestore, este com `FieldValue.increment`). 168 testes, `analyze` limpo. Pendências de propósito (som, seções recolhíveis, animação do saldo): `tech-debt.md`. **Não validado em aparelho.**
-- Modo: **reescrita**. Design **aprovado** (ADR-0009). Marco **M0 parcial**: tema, rotas das 3 abas, `Result/Failure`, dinheiro em centavos, l10n (4 idiomas), lints e 6 testes. `analyze` limpo. Nunca rodou em aparelho/emulador.
-- Falta do M0: CI (`analyze` + `test`) e ícone. A inicialização do Firebase saiu do M0 e virou parte do M4.5 (ADR-0014).
+- **Rodou em aparelho/emulador (2026-11-03)**: o usuário abriu o app pela primeira vez fora dos testes, sem relato de problema. Falta a conferência tela por tela (1,0×/1,3×/2,0×, claro e escuro) com `flutter-preview`.
+- **M1.5 (modo local) pronto no código (2026-11-03)**: `LocalStore` grava um `mesada.json` atômico na pasta do app e publica cada mudança; `RulesLocalRepository`, `ChildrenLocalRepository` e `LedgerLocalRepository` servem as abas sem rede; a família nasce local (sem nome, a tela mostra "Minha família"); o portão (`gateProvider`) tem caminho local e caminho nuvem, com `GateReady.user` nulo no local; `main.dart` **não** inicializa o Firebase; Ajustes esconde conta, sair e convidar sem conta. `analyze` limpo e **142 testes**. Telas de login/convite seguem no código, desligadas, para o M4.5.
+- **M4 (ledger) pronto no código (2026-11-03)**: a tela do filho (toque no cartão) com linhas `− qtd +` em Recompensas/Descontos, chip do último lançamento junto ao saldo, retorno tátil, "Regras deste filho" com switches (desativar guarda a quantidade), zerar um filho ou todos com "Desfazer" por 8 s. Escritas novas no `LedgerRepository` (local e Firestore, este com `FieldValue.increment`). 168 testes, `analyze` limpo. Pendências de propósito (som, seções recolhíveis, animação do saldo): `tech-debt.md`.
+- **M5 (relatório) pronto no código (2026-11-03)**: "Enviar relatório" na barra inferior da tela do filho e no menu ⋮ do cartão gera um **PDF** no aparelho (pacote `pdf`, Dart puro) e abre a folha de compartilhamento com um resumo em texto (ADR-0016, que substitui o corpo em HTML do design — `mailto:` não carrega HTML). Entram só as regras ativas com quantidade > 0. **O destinatário não vem preenchido**; o e-mail do filho vai no texto. 178 testes.
+- Modo: **reescrita**. Design **aprovado** (ADR-0009). Marco **M0 parcial**: tema, rotas das 3 abas, `Result/Failure`, dinheiro em centavos, l10n (4 idiomas), lints e 6 testes. `analyze` limpo.
+- Falta do M0: **só o ícone**. A CI mínima entrou em 2026-11-03 (`.github/workflows/ci.yml`, `analyze` + `test`); ela ainda não executou, porque depende do primeiro push. A inicialização do Firebase saiu do M0 e virou parte do M4.5 (ADR-0014).
 - Tag `legacy/1.2` marca o app iOS antigo (commit `a61a69e`).
 - **M1 (auth_family) com código completo (2026-10-28)**: boas-vindas, entrar/criar conta por e-mail, Google (OAuth do Firebase), escolha de família, criar família (semeia as 20 regras no idioma), entrar com código, convite em Ajustes (copiar/compartilhar), sair. Roteador com guardas (`redirectFor`). `architecture.md` descreve o fluxo. **Falta validar em aparelho/emulador com o Firebase real**: criar conta, criar família, convidar e entrar com a segunda conta, Google. O APK de debug compila.
 - Fora do M1 (ainda não existe): "Entrar com a Apple", sair/trocar de família, tela de introdução (4 cartões), banner offline, redefinição de senha só testada com fake.
@@ -26,8 +28,8 @@
 Pré-requisitos: Git, Flutter **3.44.4** stable (Dart 3.12.2) e Android SDK. Build/execução de iOS exige macOS com Xcode (no Windows/Linux, testar via Android e `flutter test`).
 
 ```bash
-git clone https://github.com/ccastroelo/mesada.git
-cd mesada
+git clone https://github.com/ccastroelo/app-mesada.git
+cd app-mesada
 git fetch --tags
 cd app-flutter
 flutter pub get
@@ -41,14 +43,14 @@ Resultado esperado: `analyze` sem problemas e 168 testes passando (mais os 28 da
 
 ## Próximos passos (ordem)
 
-> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015). M1.5 e M4 com código pronto.
+> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015). M1.5, M4 e M5 com código pronto; o app já rodou no aparelho.
 
-1. **Rodar em aparelho/emulador** (`flutter-preview`): o app nunca abriu fora dos testes, e agora dá para abrir **sem nenhuma configuração de Firebase**. É o passo mais barato antes de empilhar mais telas — e a tela de lançamentos é de uso diário, vale sentir o toque, o chip e o retorno tátil.
-2. **M0 restante**: CI mínima (`analyze` + `test`) e ícone.
-3. **M5 relatório por e-mail** (a barra inferior da tela do filho nasce aqui, com "Enviar relatório"), depois **M6 PIN** e **M7 ajuda**.
-4. **M4.5 Família (assinatura)**: tela do recurso, `in_app_purchase`, restaurar compras, conta no momento de compartilhar, envio inicial do local para o Firestore e troca do `appModeProvider`. **Só aqui** voltam a ser necessários o Auth e o Firestore habilitados no console, e só aqui dá para exercitar de verdade dois responsáveis lançando ao mesmo tempo.
+1. **Ícone** (fecha o M0). Precisa de duas decisões do usuário: a dependência `flutter_launcher_icons` e o desenho em si (conceito no `design.md` §9). O gerador consome **PNG**, não SVG, então alguém precisa rasterizar.
+2. **M6 PIN** (`app_lock`): PIN de 4 dígitos, trava após 30 s fora do app, bloqueio temporário crescente após 3 erros (ADR-0008, `design.md` §4.11). Guardar o PIN pede `flutter_secure_storage` — dependência nova, pedir OK.
+3. **M7 ajuda**: introdução em 4 cartões (reabrível em Ajustes) e contato.
+4. **M4.5 Família (assinatura)**: tela do recurso, `in_app_purchase`, restaurar compras, conta no momento de compartilhar, envio inicial do local para o Firestore e troca do `appModeProvider`. **Só aqui** voltam a ser necessários o Auth e o Firestore habilitados no console.
 5. M8 (corte) é decisão do usuário.
-6. **Do usuário, quando quiser**: revogar a chave/secret do Dropbox e a do Flurry do app antigo (estão no histórico do git; ver `behavior-inventory.md` §5); definir versão/build de release (> 1.2, build > 9); **definir preço e período da Família**.
+6. **Do usuário, quando quiser**: `git push` (o remoto `ccastroelo/app-mesada` ainda está no M3; M1.5, M4, a CI e o M5 só existem localmente, e a CI só roda depois do primeiro push); revogar a chave/secret do Dropbox e a do Flurry do app antigo (ver `behavior-inventory.md` §5); definir versão/build de release (> 1.2, build > 9); **definir preço e período da Família**.
 
 ## Cuidados
 

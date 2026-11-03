@@ -29,6 +29,7 @@ Future<void> pumpApp(
   FakeLedgerRepository? ledger,
   FakePhotoStore? photoStore,
   FakePhotoPicker? photoPicker,
+  FakeReportSharer? reportSharer,
   LocalStore? store,
   Locale locale = const Locale('pt', 'BR'),
 }) async {
@@ -48,6 +49,10 @@ Future<void> pumpApp(
           photoStore ?? FakePhotoStore(),
         ),
         photoPickerProvider.overrideWithValue(photoPicker ?? FakePhotoPicker()),
+        // Nunca gerar PDF nem abrir a folha do sistema num teste.
+        reportSharerProvider.overrideWithValue(
+          reportSharer ?? FakeReportSharer(),
+        ),
         if (rules != null || !local)
           rulesRepositoryProvider.overrideWithValue(
             rules ?? FakeRulesRepository(),

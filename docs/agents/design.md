@@ -1,6 +1,6 @@
 # Design — Mesada (proposta para aprovação)
 
-> **Status: APROVADO em 2026-10-28** · **emenda em 2026-11-03 na §13** (Família por assinatura, entrada sem conta) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
+> **Status: APROVADO em 2026-10-28** · **emendas em 2026-11-03: §13** (Família por assinatura, entrada sem conta) e **§14** (relatório em PDF) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
 > Escopo do redesenho: visual **e** fluxo (ADR-0005). O app é de uso diário, em pé, com uma mão: a ação mais frequente (lançar ±1) precisa ser a mais fácil.
 
 ## 1. Princípios
@@ -202,3 +202,12 @@ Decidido depois da aprovação (ADR-0014 e ADR-0015); onde conflitar com as seç
 - **Princípio 4 de §1** ("dois pais, uma base") passa a valer só com a assinatura. Sem ela, não há nada a sincronizar — e o indicador de offline (§4) só aparece no modo assinante.
 - **Introdução (§4.9)**: o 4º cartão ("Convide o outro responsável") passa a apresentar a Família como recurso da assinatura, sem forçar a compra.
 - **Acesso do filho** continua **fora do escopo** (§11): mostrar o saldo ao filho é o relatório por e-mail (§4.10).
+
+## 14. Emenda de 2026-11-03 — relatório em PDF (ADR-0016)
+
+Substitui a §4.10 e o item "relatório em PDF" da §11 (que o punha fora de escopo).
+
+- **Enviar relatório** gera um **PDF** no aparelho e abre a folha de compartilhamento do sistema, com um **resumo em texto** junto (nome, mesada, saldo). O motivo é técnico: `mailto:` não carrega HTML, então a tabela do legado não cabe no corpo de um e-mail aberto por link.
+- O PDF traz: título com o nome do filho, data de geração, a tabela (regra · valor · quantidade · total) com as regras de quantidade > 0, e as linhas de Mesada e Saldo. Regras desativadas para o filho não entram.
+- O **destinatário não vem preenchido** (a folha do sistema não aceita). O e-mail do filho, quando existe, vai no texto compartilhado.
+- Onde fica: **barra inferior** da tela do filho (§4.4), ao lado do menu, e item **Enviar relatório** no menu ⋮ do cartão (§4.3).

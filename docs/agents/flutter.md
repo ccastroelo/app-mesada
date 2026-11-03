@@ -8,6 +8,7 @@ Comandos e baseline do projeto Flutter em `app-flutter/` (rode tudo a partir des
 - Plataformas criadas: Android e iOS
 - `applicationId` / bundle id: `br.eti.claudiocastro.mesada` (ADR-0007)
 - Estado: Riverpod · rotas: `go_router` · l10n: `gen-l10n` (pt, pt_PT, en, es; `lib/l10n/`)
+- Relatório: `pdf` (Dart puro) gerando o documento e `share_plus` entregando ao sistema (ADR-0016)
 
 ## Comandos
 
@@ -23,10 +24,11 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | **168 testes passando** (os 142 do M1.5 mais 26 do M4: lançamentos no repositório local e no do Firestore com datasource falso, e a tela do filho — abrir pelo cartão, ±, piso 0, regra desativada, switches, zerar com Desfazer, zerar de todos e fonte 1,3×/2,0× em tela de 360 dp) — atualizado em 2026-11-03 |
+| `flutter test` | **178 testes passando** (os 168 do M4 mais 10 do M5: montagem do relatório, geração do PDF e o compartilhamento pelas duas entradas — barra inferior e menu do cartão) — atualizado em 2026-11-03 |
 | `flutter build apk --debug` | compilava em 2026-10-28; **não refeito** depois de tirar o Firebase do `main.dart` (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
+| CI (GitHub Actions) | `.github/workflows/ci.yml`: `flutter pub get`, `analyze` e `test` em `app-flutter/` a cada push em `main` e em todo PR. Flutter fixo em 3.44.4. **Nunca executou** — só roda depois do primeiro push. |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |
-| Executado em aparelho/emulador | **não** — só testes de widget e compilação |
+| Executado em aparelho/emulador | **sim, em 2026-11-03** (primeira execução fora dos testes, pelo usuário; sem relato de problema). A conferência tela por tela em 1,0×/1,3×/2,0×, claro e escuro (`flutter-preview`) segue pendente. |
 | Firebase | projeto `mesada-proj`; apps Android e iOS registrados. **Não é mais inicializado** no `main.dart`: o modo local não usa Firebase (ADR-0014). Auth e Firestore seguem desabilitados no console — passam a ser pré-requisito do M4.5. |
 
 ## Testes das regras do Firestore (emulador local)

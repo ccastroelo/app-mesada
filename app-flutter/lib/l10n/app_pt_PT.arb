@@ -108,5 +108,14 @@
   "decreaseSemantics": "Diminuir {description}, quantidade {quantity}",
   "childLedgerEmptyTitle": "Nenhuma regra para lançar",
   "childLedgerEmptyBody": "Crie regras no separador Regras para começar a lançar.",
-  "childLedgerAllOffTitle": "Todas as regras estão desativadas para {name}"
+  "childLedgerAllOffTitle": "Todas as regras estão desativadas para {name}",
+  "sendReportAction": "Enviar relatório",
+  "reportTitle": "Mesada de {name}",
+  "reportGeneratedAt": "Gerado em {date}",
+  "reportRuleColumn": "Regra",
+  "reportValueColumn": "Valor",
+  "reportQuantityColumn": "Qtd",
+  "reportTotalColumn": "Total",
+  "reportEmpty": "Nenhum lançamento até agora.",
+  "reportSummary": "{name} — mesada {allowance}, saldo {balance}."
 }

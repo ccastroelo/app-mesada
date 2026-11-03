@@ -4,6 +4,13 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0016 — Relatório em PDF compartilhado, no lugar do corpo em HTML
+- Data: 2026-11-03 · Status: aceita · Escopo: feature `ledger` (M5); muda `design.md` §4.10 e §11
+- Contexto: o design previa o corpo do e-mail em HTML, como no legado (que usava o `MFMailComposeViewController` do iOS com `isHTML`). Em Flutter, `mailto:` (via `url_launcher`) carrega **só texto puro**, por especificação; HTML no corpo exigiria `flutter_email_sender` ou código nativo em cada plataforma.
+- Decisão: o relatório é um **PDF gerado no aparelho** (pacote `pdf`, Dart puro) e sai pela folha de compartilhamento do sistema (`share_plus`, que já serve o convite), junto com um **resumo em texto** (nome, mesada, saldo) para quem recebe bater o olho sem abrir o anexo. O documento lista só as regras com quantidade > 0. O **destinatário não vem preenchido**: a folha do sistema não aceita destinatário, então o e-mail do filho entra no texto compartilhado, a um "colar" de distância.
+- Alternativas descartadas: texto puro no `mailto:` (perde a tabela e quebra em fonte grande); `flutter_email_sender` para anexar com destinatário e assunto prontos (mais uma dependência, e depende de app de e-mail configurado) — **reabrir se o destinatário preenchido fizer falta**; gerar o relatório num servidor (não há servidor, ADR-0015).
+- Consequências: uma dependência nova (`pdf`); por ser Dart puro, a geração entra nos testes de unidade. O PDF usa a Helvetica embutida (Latin-1), que não tem o sinal "−" (U+2212) usado pelo `formatCents`: o gerador troca por "-" no documento. O relatório funciona no modo local, sem conta e sem rede.
+
 ### ADR-0015 — Conta só ao assinar; assinatura por família
 - Data: 2026-11-03 · Status: aceita · Escopo: feature `auth_family`, nova feature de assinatura, roteador
 - Contexto: com os dados locais (ADR-0014), exigir login na primeira abertura só adiciona atrito e cria usuários no Auth sem receita. Compartilhar, porém, exige identidade: as regras do Firestore (ADR-0011) precisam de um `uid` para saber quem é membro.
