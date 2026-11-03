@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mesada/core/storage/device_settings.dart';
 import 'package:mesada/features/app_lock/app_lock.dart';
 import 'package:mesada/features/app_lock/data/repositories/pin_store_impl.dart';
 
@@ -10,7 +11,7 @@ void main() {
 
   setUp(() {
     base = Directory.systemTemp.createTempSync('mesada_pin_');
-    store = PinStoreImpl(() async => base);
+    store = PinStoreImpl(DeviceSettings(() async => base));
   });
 
   tearDown(() => base.deleteSync(recursive: true));

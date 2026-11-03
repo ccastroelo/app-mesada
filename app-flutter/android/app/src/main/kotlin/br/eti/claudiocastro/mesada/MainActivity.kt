@@ -1,5 +1,7 @@
 package br.eti.claudiocastro.mesada
 
-import io.flutter.embedding.android.FlutterActivity
+// FlutterFragmentActivity (e não FlutterActivity) é exigência do local_auth:
+// o BiometricPrompt do Android precisa de uma FragmentActivity.
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity : FlutterFragmentActivity()

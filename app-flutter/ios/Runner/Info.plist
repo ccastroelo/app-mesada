@@ -10,6 +10,8 @@
 	<string>Mesada</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Escolha a foto do seu filho. Ela fica só neste aparelho.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use o Face ID para desbloquear o Mesada neste aparelho.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

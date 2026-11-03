@@ -910,6 +910,36 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'{typed} de {total} dígitos'**
   String pinDotsSemantics(int typed, int total);
+
+  /// No description provided for @biometricsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desbloquear com biometria'**
+  String get biometricsTitle;
+
+  /// No description provided for @biometricsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Face ID ou digital, conforme o aparelho. O PIN continua valendo como reserva.'**
+  String get biometricsSubtitle;
+
+  /// No description provided for @biometricsUseAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar biometria'**
+  String get biometricsUseAction;
+
+  /// No description provided for @biometricsReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desbloqueie o Mesada'**
+  String get biometricsReason;
+
+  /// No description provided for @biometricsUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não deu para ligar a biometria neste aparelho.'**
+  String get biometricsUnavailable;
 }
 
 class _AppLocalizationsDelegate

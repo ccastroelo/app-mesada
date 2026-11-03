@@ -1,6 +1,6 @@
 # Design — Mesada (proposta para aprovação)
 
-> **Status: APROVADO em 2026-10-28** · **emendas em 2026-11-03: §13** (Família por assinatura, entrada sem conta) e **§14** (relatório em PDF) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
+> **Status: APROVADO em 2026-10-28** · **emendas em 2026-11-03: §13** (Família por assinatura, entrada sem conta), **§14** (relatório em PDF) e **§15** (biometria) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
 > Escopo do redesenho: visual **e** fluxo (ADR-0005). O app é de uso diário, em pé, com uma mão: a ação mais frequente (lançar ±1) precisa ser a mais fácil.
 
 ## 1. Princípios
@@ -211,3 +211,12 @@ Substitui a §4.10 e o item "relatório em PDF" da §11 (que o punha fora de esc
 - O PDF traz: título com o nome do filho, data de geração, a tabela (regra · valor · quantidade · total) com as regras de quantidade > 0, e as linhas de Mesada e Saldo. Regras desativadas para o filho não entram.
 - O **destinatário não vem preenchido** (a folha do sistema não aceita). O e-mail do filho, quando existe, vai no texto compartilhado.
 - Onde fica: **barra inferior** da tela do filho (§4.4), ao lado do menu, e item **Enviar relatório** no menu ⋮ do cartão (§4.3).
+
+## 15. Emenda de 2026-11-03 — biometria no desbloqueio (ADR-0018)
+
+Tira "biometria no lugar do PIN" da §11 (fora de escopo) e complementa a §4.11.
+
+- A tela de bloqueio **pede a biometria sozinha** ao aparecer (Face ID/Touch ID no iOS, digital ou rosto no Android). O teclado do PIN continua atrás, e há um botão **Usar biometria** para tentar de novo.
+- O **PIN é a reserva**, não um igual: biometria falha, sensor suja, aparelho novo. O **código do aparelho não serve** de reserva — o filho costuma saber, e é dele que o bloqueio protege.
+- Em Ajustes › Segurança entra o interruptor **Desbloquear com biometria**, visível só com PIN ativo. Ligar pede a biometria na hora (prova que funciona); desativar o PIN desliga a biometria junto.
+- Durante a espera por erros de PIN (§4.11), nem a biometria passa.

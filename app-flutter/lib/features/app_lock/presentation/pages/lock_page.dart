@@ -31,6 +31,17 @@ class _LockPageState extends ConsumerState<LockPage> {
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) setState(() {});
     });
+    // Com biometria ligada, pedir logo ao abrir é o caminho esperado: o PIN
+    // fica como reserva, atrás do teclado que já está na tela (ADR-0018).
+    WidgetsBinding.instance.addPostFrameCallback((_) => _tryBiometrics());
+  }
+
+  Future<void> _tryBiometrics() async {
+    final controller = ref.read(appLockProvider.notifier);
+    if (!controller.biometricsEnabled) return;
+    final reason = AppLocalizations.of(context).biometricsReason;
+    await controller.unlockWithBiometrics(reason);
+    // Se não reconheceu, a tela segue como está: o teclado do PIN vale.
   }
 
   @override
@@ -82,6 +93,15 @@ class _LockPageState extends ConsumerState<LockPage> {
                     enabled: !waiting,
                     onCompleted: _submit,
                   ),
+                  if (controller.biometricsEnabled && !waiting)
+                    Padding(
+                      padding: const EdgeInsets.only(top: Space.lg),
+                      child: TextButton.icon(
+                        onPressed: _tryBiometrics,
+                        icon: const Icon(Icons.fingerprint),
+                        label: Text(l10n.biometricsUseAction),
+                      ),
+                    ),
                 ],
               ),
             ),

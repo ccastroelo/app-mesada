@@ -456,4 +456,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String pinDotsSemantics(int typed, int total) {
     return '$typed de $total dígitos';
   }
+
+  @override
+  String get biometricsTitle => 'Desbloquear con biometría';
+
+  @override
+  String get biometricsSubtitle =>
+      'Face ID o huella, según el dispositivo. El PIN sigue valiendo como respaldo.';
+
+  @override
+  String get biometricsUseAction => 'Usar biometría';
+
+  @override
+  String get biometricsReason => 'Desbloquea Mesada';
+
+  @override
+  String get biometricsUnavailable =>
+      'No se pudo activar la biometría en este dispositivo.';
 }

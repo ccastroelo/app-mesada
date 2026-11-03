@@ -134,5 +134,10 @@
   "pinLockMessage": "Escribe tu PIN",
   "pinWaitMessage": "Inténtalo otra vez en {time}",
   "pinEraseAction": "Borrar",
-  "pinDotsSemantics": "{typed} de {total} dígitos"
+  "pinDotsSemantics": "{typed} de {total} dígitos",
+  "biometricsTitle": "Desbloquear con biometría",
+  "biometricsSubtitle": "Face ID o huella, según el dispositivo. El PIN sigue valiendo como respaldo.",
+  "biometricsUseAction": "Usar biometría",
+  "biometricsReason": "Desbloquea Mesada",
+  "biometricsUnavailable": "No se pudo activar la biometría en este dispositivo."
 }

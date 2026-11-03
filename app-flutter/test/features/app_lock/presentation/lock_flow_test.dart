@@ -7,13 +7,22 @@ import '../../../support/fakes.dart';
 import '../../../support/pump_app.dart';
 
 void main() {
+  late FakeBiometricAuth biometrics;
+
   /// Abre o app com (ou sem) um PIN já guardado neste aparelho.
-  Future<FakePinStore> openApp(WidgetTester tester, {String? pin}) async {
+  Future<FakePinStore> openApp(
+    WidgetTester tester, {
+    String? pin,
+    bool biometricsOn = false,
+    bool biometricsRecognizes = true,
+  }) async {
     final store = FakePinStore();
     if (pin != null) {
       final salt = newPinSalt();
       store.credential = PinCredential(salt: salt, hash: hashPin(pin, salt));
     }
+    store.biometricsEnabled = biometricsOn;
+    biometrics = FakeBiometricAuth(recognizes: biometricsRecognizes);
     await pumpApp(
       tester,
       auth: FakeAuthRepository(user: testUser),
@@ -21,6 +30,7 @@ void main() {
         family: const Family(id: 'f1', name: 'Família Castro'),
       ),
       pinStore: store,
+      biometrics: biometrics,
       // Relógio parado: a contagem da espera não depende do tempo real que
       // passa entre o toque e o quadro desenhado.
       clock: () => DateTime(2026, 11, 3, 20),
@@ -91,6 +101,42 @@ void main() {
     });
   });
 
+  group('biometria na tela de bloqueio', () {
+    testWidgets('ligada, abre o app sozinha ao aparecer', (tester) async {
+      await openApp(tester, pin: '1234', biometricsOn: true);
+
+      expect(biometrics.reasons, ['Desbloqueie o Mesada']);
+      expect(inAppBar('Filhos'), findsOneWidget);
+    });
+
+    testWidgets('não reconheceu: fica o teclado do PIN e o botão', (
+      tester,
+    ) async {
+      await openApp(
+        tester,
+        pin: '1234',
+        biometricsOn: true,
+        biometricsRecognizes: false,
+      );
+
+      expect(find.text('Digite seu PIN'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Usar biometria'), findsOneWidget);
+
+      // Dá para tentar de novo pelo botão...
+      biometrics.recognizes = true;
+      await tester.tap(find.widgetWithText(TextButton, 'Usar biometria'));
+      await tester.pumpAndSettle();
+      expect(inAppBar('Filhos'), findsOneWidget);
+    });
+
+    testWidgets('desligada, não pede biometria nenhuma', (tester) async {
+      await openApp(tester, pin: '1234');
+
+      expect(biometrics.reasons, isEmpty);
+      expect(find.widgetWithText(TextButton, 'Usar biometria'), findsNothing);
+    });
+  });
+
   group('Ajustes › Segurança', () {
     Future<void> openSecurity(WidgetTester tester) async {
       await tester.tap(
@@ -136,6 +182,27 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Escolha um PIN de 4 dígitos'), findsOneWidget);
+    });
+
+    testWidgets('o switch da biometria só aparece com PIN ativo', (
+      tester,
+    ) async {
+      final store = await openApp(tester);
+      await openSecurity(tester);
+
+      expect(find.byType(SwitchListTile), findsNothing);
+
+      await tester.tap(find.text('Ativar PIN'));
+      await tester.pumpAndSettle();
+      await type(tester, '1234');
+      await type(tester, '1234');
+
+      expect(find.text('Desbloquear com biometria'), findsOneWidget);
+      await tester.tap(find.byType(Switch));
+      await tester.pumpAndSettle();
+
+      expect(biometrics.reasons, ['Desbloqueie o Mesada']);
+      expect(store.biometricsEnabled, isTrue);
     });
 
     testWidgets('desativar exige o PIN atual', (tester) async {

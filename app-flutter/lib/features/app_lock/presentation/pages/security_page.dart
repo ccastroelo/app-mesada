@@ -88,6 +88,26 @@ class _SecurityPageState extends ConsumerState<SecurityPage> {
     }
   }
 
+  /// Ligar a biometria exige provar que ela funciona neste aparelho; desligar
+  /// é direto (ADR-0018).
+  Future<void> _toggleBiometrics(bool value) async {
+    final l10n = AppLocalizations.of(context);
+    final controller = ref.read(appLockProvider.notifier);
+    if (!value) {
+      await controller.disableBiometrics();
+      if (mounted) setState(() {});
+      return;
+    }
+    final ok = await controller.enableBiometrics(l10n.biometricsReason);
+    if (!mounted) return;
+    setState(() {});
+    if (!ok) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.biometricsUnavailable)));
+    }
+  }
+
   void _finish(String message) {
     _cancel();
     ScaffoldMessenger.of(context)
@@ -128,6 +148,13 @@ class _SecurityPageState extends ConsumerState<SecurityPage> {
                     onTap: () => _start(_Goal.enable),
                   ),
                 if (enabled) ...[
+                  SwitchListTile(
+                    value: ref.read(appLockProvider.notifier).biometricsEnabled,
+                    onChanged: _toggleBiometrics,
+                    secondary: const Icon(Icons.fingerprint),
+                    title: Text(l10n.biometricsTitle),
+                    subtitle: Text(l10n.biometricsSubtitle),
+                  ),
                   ListTile(
                     leading: const Icon(Icons.pin_outlined),
                     title: Text(l10n.pinChangeAction),

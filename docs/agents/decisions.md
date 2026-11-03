@@ -4,6 +4,17 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0018 — Biometria para desbloquear, com o PIN do app como reserva
+- Data: 2026-11-03 · Status: aceita · Escopo: feature `app_lock`; muda o `design.md` §11
+- Contexto: o PIN de 4 dígitos (ADR-0017) é chato de digitar todo dia e fraco por natureza. O usuário pediu Face ID em 2026-11-03. O `design.md` §11 punha "biometria no lugar do PIN" fora de escopo.
+- Decisão: **biometria é o caminho normal** (`local_auth`: Face ID/Touch ID no iOS, BiometricPrompt no Android) e o **PIN do app fica como reserva**, não como igual: a tela de bloqueio pede a biometria sozinha ao aparecer e mantém o teclado do PIN atrás, com um botão "Usar biometria" para tentar de novo.
+  - `biometricOnly: true`: o **código do aparelho não serve de reserva**. O filho normalmente sabe o código do celular do pai, e é dele que o bloqueio protege — a reserva tem de ser o PIN do app.
+  - Ligar a biometria exige **PIN ativo** e uma autenticação bem-sucedida ali na hora (prova que funciona no aparelho). Desligar o PIN desliga a biometria: sem reserva, uma falha de leitura trancaria o app.
+  - Durante a espera por erros de PIN (ADR-0017), nem a biometria passa — senão a espera não valeria nada.
+  - Qualquer erro da plataforma conta como "não reconheceu" e cai no PIN.
+- Alternativas descartadas: biometria substituindo o PIN de vez (sem reserva, um aparelho sem digital cadastrada ou um sensor sujo tranca o app); `biometricOnly: false`, aceitando o código do aparelho (fura o propósito); `flutter_secure_storage` junto (ver ADR-0017, segue sem).
+- Consequências: dependência nova (`local_auth`) e configuração de plataforma — Android passa a usar `FlutterFragmentActivity` (exigência do BiometricPrompt) e declara `USE_BIOMETRIC`; iOS ganha `NSFaceIDUsageDescription`. O `minSdk` padrão do Flutter (24) já atende os 23 que o plugin pede. **Nada disso foi exercitado em aparelho**: nos testes a biometria é um falso, porque é canal de plataforma (ver `tech-debt.md`).
+
 ### ADR-0017 — PIN guardado no aparelho como hash, sem armazenamento seguro
 - Data: 2026-11-03 · Status: aceita · Escopo: feature `app_lock` (M6)
 - Contexto: o legado guardava o PIN no Keychain do iOS (serviço `senha2`). A alternativa em Flutter seria `flutter_secure_storage` (Keychain/Keystore), uma dependência nova. O usuário definiu o alvo em 2026-11-03: **"é só para evitar que o filho pegue e mexa"** — proteção fraca basta, não é defesa contra atacante.

@@ -45,6 +45,7 @@ const awayLimit = Duration(seconds: 30);
 
 class AppLockController extends Notifier<LockState> {
   PinCredential? _credential;
+  bool _biometricsEnabled = false;
   DateTime? _awaySince;
 
   @override
@@ -55,11 +56,46 @@ class AppLockController extends Notifier<LockState> {
 
   bool get enabled => _credential != null;
 
+  /// Desbloqueio por biometria ligado neste aparelho (ADR-0018).
+  bool get biometricsEnabled => _biometricsEnabled;
+
   Future<void> _load() async {
-    _credential = await ref.read(pinStoreProvider).read();
+    final store = ref.read(pinStoreProvider);
+    _credential = await store.read();
+    _biometricsEnabled = await store.readBiometricsEnabled();
     if (!ref.mounted) return;
-    // Abrir o app com PIN ativo já pede o PIN.
+    // Abrir o app com PIN ativo já pede o PIN (ou a biometria).
     state = _credential == null ? const LockOff() : const LockClosed();
+  }
+
+  /// O aparelho tem biometria cadastrada?
+  Future<bool> biometricsAvailable() =>
+      ref.read(biometricAuthProvider).isAvailable();
+
+  /// Pede a biometria para destravar. [reason] é o texto do diálogo do
+  /// sistema. Durante a espera por erros de PIN, nem a biometria passa.
+  Future<bool> unlockWithBiometrics(String reason) async {
+    if (!_biometricsEnabled || state is! LockClosed || waiting) return false;
+    final ok = await ref.read(biometricAuthProvider).authenticate(reason);
+    if (ok && ref.mounted) state = const LockOpen();
+    return ok;
+  }
+
+  /// Liga a biometria só depois de provar que funciona neste aparelho, e só
+  /// com PIN ativo — ele é a reserva (ADR-0018).
+  Future<bool> enableBiometrics(String reason) async {
+    if (!enabled) return false;
+    final auth = ref.read(biometricAuthProvider);
+    if (!await auth.isAvailable()) return false;
+    if (!await auth.authenticate(reason)) return false;
+    await ref.read(pinStoreProvider).saveBiometricsEnabled(true);
+    _biometricsEnabled = true;
+    return true;
+  }
+
+  Future<void> disableBiometrics() async {
+    await ref.read(pinStoreProvider).saveBiometricsEnabled(false);
+    _biometricsEnabled = false;
   }
 
   /// true quando o PIN estava certo (ou quando não há bloqueio a vencer).
@@ -108,11 +144,14 @@ class AppLockController extends Notifier<LockState> {
     if (ref.mounted) state = const LockOpen();
   }
 
-  /// Desativa se [pin] for o atual; devolve false se não for.
+  /// Desativa se [pin] for o atual; devolve false se não for. Desligar o PIN
+  /// desliga a biometria também: sem reserva, não há como entrar se ela
+  /// falhar.
   Future<bool> disablePin(String pin) async {
     if (!matches(pin)) return false;
     await ref.read(pinStoreProvider).clear();
     _credential = null;
+    _biometricsEnabled = false;
     if (ref.mounted) state = const LockOff();
     return true;
   }

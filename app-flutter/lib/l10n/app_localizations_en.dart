@@ -455,4 +455,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String pinDotsSemantics(int typed, int total) {
     return '$typed of $total digits';
   }
+
+  @override
+  String get biometricsTitle => 'Unlock with biometrics';
+
+  @override
+  String get biometricsSubtitle =>
+      'Face ID or fingerprint, depending on the device. The PIN still works as a fallback.';
+
+  @override
+  String get biometricsUseAction => 'Use biometrics';
+
+  @override
+  String get biometricsReason => 'Unlock Mesada';
+
+  @override
+  String get biometricsUnavailable =>
+      'Biometrics couldn\'t be turned on this device.';
 }

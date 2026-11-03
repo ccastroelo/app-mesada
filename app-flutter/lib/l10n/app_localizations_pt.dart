@@ -453,6 +453,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String pinDotsSemantics(int typed, int total) {
     return '$typed de $total dígitos';
   }
+
+  @override
+  String get biometricsTitle => 'Desbloquear com biometria';
+
+  @override
+  String get biometricsSubtitle =>
+      'Face ID ou digital, conforme o aparelho. O PIN continua valendo como reserva.';
+
+  @override
+  String get biometricsUseAction => 'Usar biometria';
+
+  @override
+  String get biometricsReason => 'Desbloqueie o Mesada';
+
+  @override
+  String get biometricsUnavailable =>
+      'Não deu para ligar a biometria neste aparelho.';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -906,4 +923,21 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   String pinDotsSemantics(int typed, int total) {
     return '$typed de $total dígitos';
   }
+
+  @override
+  String get biometricsTitle => 'Desbloquear com biometria';
+
+  @override
+  String get biometricsSubtitle =>
+      'Face ID ou digital, conforme o aparelho. O PIN continua valendo como reserva.';
+
+  @override
+  String get biometricsUseAction => 'Usar biometria';
+
+  @override
+  String get biometricsReason => 'Desbloqueie o Mesada';
+
+  @override
+  String get biometricsUnavailable =>
+      'Não deu para ligar a biometria neste aparelho.';
 }

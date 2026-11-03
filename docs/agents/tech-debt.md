@@ -61,3 +61,9 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 - **Por que dói mais aqui**: com os dados no aparelho (ADR-0014), reinstalar o app para destravar **apaga a mesada da família**. No modo assinante o dado volta da nuvem; no grátis, não volta.
 - **O que fazer**: decidir um caminho de saída e implementar — por exemplo, um aviso claro na tela de bloqueio ("esqueceu? reinstalar apaga os dados deste aparelho") e, melhor ainda, exportar/compartilhar os dados antes. Enquanto não houver, vale avisar no texto de Ajustes › Segurança ao ativar o PIN.
 - O gatilho de 30 s fora do app usa `AppLifecycleListener` e **não foi exercitado em aparelho**: os testes chamam `onAway`/`onBack` direto no controlador.
+
+## A biometria não foi exercitada em aparelho
+
+- **Onde**: `app_lock/data/repositories/local_auth_biometrics.dart` (ADR-0018). `local_auth` é canal de plataforma, então nos testes o contrato `BiometricAuth` é trocado por um falso: o que está coberto é a **decisão** (quando pedir, o que fazer ao falhar), não o diálogo do sistema.
+- **O que falta ver no aparelho**: o Face ID aparecendo ao abrir, o cancelamento caindo no PIN, o aparelho sem digital cadastrada (o interruptor deve recusar), e o Android com `FlutterFragmentActivity` — se essa troca estiver errada, o app quebra ao chamar a biometria.
+- Enquanto isso não for feito, a biometria é **código que compila e passa nos testes**, não funcionalidade confirmada.

@@ -1,54 +1,41 @@
-import 'dart:convert';
-import 'dart:io';
-
+import '../../../../core/storage/device_settings.dart';
 import '../../domain/repositories/pin_store.dart';
 
-/// Guarda o PIN em `<pasta do app>/device.json`, **fora** do `mesada.json`:
-/// é ajuste do aparelho e não pode subir com os dados da família no M4.5.
-///
-/// Gravação atômica (escreve `.tmp` e renomeia), como no `LocalStore`. A pasta
-/// vem de fora (`path_provider` no app, pasta temporária nos testes).
+/// Guarda PIN e biometria no `device.json` (ADR-0017), pelo `DeviceSettings`:
+/// a escrita é por junção, então ligar a biometria não apaga o PIN.
 class PinStoreImpl implements PinStore {
-  PinStoreImpl(this._baseDirectory, {this.fileName = 'device.json'});
+  PinStoreImpl(this._settings);
 
-  final Future<Directory> Function() _baseDirectory;
-  final String fileName;
+  final DeviceSettings _settings;
+
+  static const _salt = 'pinSalt';
+  static const _hash = 'pinHash';
+  static const _biometrics = 'biometricsEnabled';
 
   @override
   Future<PinCredential?> read() async {
-    final file = await _file();
-    if (!file.existsSync()) return null;
-    // Arquivo é borda: ilegível ou sem as chaves conta como "sem PIN", que é o
-    // lado seguro aqui — trancar o app sem poder destravar seria pior.
-    try {
-      final json = jsonDecode(await file.readAsString());
-      if (json is! Map) return null;
-      final salt = json['pinSalt'];
-      final hash = json['pinHash'];
-      if (salt is! String || hash is! String) return null;
-      return PinCredential(salt: salt, hash: hash);
-    } catch (_) {
-      return null;
-    }
+    // Arquivo é borda: sem as chaves (ou ilegível) conta como "sem PIN", que é
+    // o lado seguro aqui — trancar o app sem poder destravar seria pior.
+    final json = await _settings.read();
+    final salt = json[_salt];
+    final hash = json[_hash];
+    if (salt is! String || hash is! String) return null;
+    return PinCredential(salt: salt, hash: hash);
   }
 
   @override
   Future<void> save(PinCredential credential) =>
-      _write({'pinSalt': credential.salt, 'pinHash': credential.hash});
+      _settings.merge({_salt: credential.salt, _hash: credential.hash});
 
   @override
-  Future<void> clear() => _write(const {});
+  Future<void> clear() =>
+      _settings.merge({_salt: null, _hash: null, _biometrics: null});
 
-  Future<void> _write(Map<String, Object?> json) async {
-    final file = await _file();
-    await file.parent.create(recursive: true);
-    final temporary = File('${file.path}.tmp');
-    await temporary.writeAsString(jsonEncode(json), flush: true);
-    await temporary.rename(file.path);
-  }
+  @override
+  Future<bool> readBiometricsEnabled() async =>
+      (await _settings.read())[_biometrics] == true;
 
-  Future<File> _file() async {
-    final base = await _baseDirectory();
-    return File('${base.path}${Platform.pathSeparator}$fileName');
-  }
+  @override
+  Future<void> saveBiometricsEnabled(bool enabled) =>
+      _settings.merge({_biometrics: enabled});
 }

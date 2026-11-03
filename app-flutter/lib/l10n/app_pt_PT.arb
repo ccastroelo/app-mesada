@@ -134,5 +134,10 @@
   "pinLockMessage": "Introduza o seu PIN",
   "pinWaitMessage": "Tente outra vez em {time}",
   "pinEraseAction": "Apagar",
-  "pinDotsSemantics": "{typed} de {total} dígitos"
+  "pinDotsSemantics": "{typed} de {total} dígitos",
+  "biometricsTitle": "Desbloquear com biometria",
+  "biometricsSubtitle": "Face ID ou digital, conforme o aparelho. O PIN continua valendo como reserva.",
+  "biometricsUseAction": "Usar biometria",
+  "biometricsReason": "Desbloqueie o Mesada",
+  "biometricsUnavailable": "Não deu para ligar a biometria neste aparelho."
 }

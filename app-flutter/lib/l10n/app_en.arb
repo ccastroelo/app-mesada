@@ -134,5 +134,10 @@
   "pinLockMessage": "Enter your PIN",
   "pinWaitMessage": "Try again in {time}",
   "pinEraseAction": "Delete",
-  "pinDotsSemantics": "{typed} of {total} digits"
+  "pinDotsSemantics": "{typed} of {total} digits",
+  "biometricsTitle": "Unlock with biometrics",
+  "biometricsSubtitle": "Face ID or fingerprint, depending on the device. The PIN still works as a fallback.",
+  "biometricsUseAction": "Use biometrics",
+  "biometricsReason": "Unlock Mesada",
+  "biometricsUnavailable": "Biometrics couldn't be turned on this device."
 }

@@ -16,7 +16,8 @@ lib/
     router/            go_router + guardas (redirectFor) + casca de 3 abas
     error/             Failure (selada) e Result<T> = Ok | Err
     firebase/          failureFromFirebase: exceção do SDK -> Failure (só a camada data usa)
-    storage/           LocalStore (arquivo JSON atômico) + LocalDocument + AppMode/providers
+    storage/           LocalStore (mesada.json atômico) + LocalDocument + AppMode/providers
+                       + DeviceSettings (device.json: ajustes do aparelho)
     state/             ActionState + ActionController (base das ações de tela: carregando/falha)
     widgets/           PageBody, FailureText/failureMessage, EmptyState, ErrorState,
                        SectionHeader, MoneyField (máscara de centavos)
@@ -29,7 +30,7 @@ lib/
                        lançamentos ± e as regras do filho (M4)
     ledger/            Lançamentos: Entry, saldo, escritas (±, ativar/desativar, zerar) (M4)
                        e o relatório em PDF compartilhado (M5)
-    app_lock/          PIN local: bloqueio, Ajustes › Segurança, espera por erros (M6)
+    app_lock/          Bloqueio: biometria com PIN de reserva, Ajustes › Segurança (M6)
     settings/          Ajustes (família, convite, segurança, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
@@ -109,7 +110,8 @@ O roteador decide a tela só pelo `Gate` selado (`GateLoading | GateError | Gate
 ## O bloqueio por PIN (M6, ADR-0017)
 
 - `appLockProvider` (`app_lock/presentation/state/app_lock_state.dart`) é um `LockState` selado: `LockLoading | LockOff | LockOpen | LockClosed(wrongAttempts, waitUntil)`. O roteador recebe isso em `redirectFor(gate, location, lock:)` e o PIN vem **antes do portão**: enquanto não se sabe se existe PIN, nem o conteúdo nem a tela de entrada aparecem — é a tela de espera.
-- O PIN mora em `device.json`, **fora do `mesada.json`** (ADR-0017): é ajuste do aparelho e não pode subir com os dados da família no M4.5. Guarda-se sal + SHA-256, nunca o PIN.
+- O PIN e o interruptor da biometria moram em `device.json`, **fora do `mesada.json`** (ADR-0017): são ajustes do aparelho e não podem subir com os dados da família no M4.5. Quem escreve é o `DeviceSettings` (`core/storage`), que grava **por junção** — ligar a biometria não apaga o PIN. Do PIN guarda-se sal + SHA-256, nunca o PIN.
+- **Biometria** (ADR-0018): contrato `BiometricAuth` no domínio, `LocalAuthBiometrics` (`local_auth`) na `data`. A tela de bloqueio pede a biometria ao aparecer e o PIN fica como reserva; `biometricOnly: true`, porque o código do aparelho não serve de reserva. Ligar exige PIN ativo e uma autenticação na hora; desativar o PIN desliga a biometria. Nos testes o contrato é um falso.
 - As regras puras ficam em `domain/usecases/pin_lock_rules.dart`: 4 dígitos, sal novo, hash, e a espera que dobra a cada 3 erros (30 s → 15 min de teto). O app **não** se fecha, ao contrário do `exit(0)` do legado.
 - O relógio é injetado (`clockProvider`), e é o que deixa os 30 s fora do app e a contagem regressiva testáveis sem esperar de verdade.
 - O ciclo de vida é observado em `app.dart` com `AppLifecycleListener`: `hidden`/`paused` marcam a saída, `resumed` decide se pede o PIN. Vale o **primeiro** aviso de saída, porque a volta passa por estados intermediários e um segundo registro zeraria o tempo fora.

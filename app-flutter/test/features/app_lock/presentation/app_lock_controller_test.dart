@@ -8,20 +8,32 @@ import '../../../support/fakes.dart';
 
 void main() {
   late FakePinStore store;
+  late FakeBiometricAuth biometrics;
   late DateTime now;
   late ProviderContainer container;
 
   /// Abre o controlador com o relógio nas mãos do teste.
-  Future<AppLockController> open({String? pin}) async {
+  Future<AppLockController> open({
+    String? pin,
+    bool biometricsOn = false,
+    bool biometricsAvailable = true,
+    bool biometricsRecognizes = true,
+  }) async {
     store = FakePinStore();
     if (pin != null) {
       final salt = newPinSalt();
       await store.save(PinCredential(salt: salt, hash: hashPin(pin, salt)));
     }
+    store.biometricsEnabled = biometricsOn;
+    biometrics = FakeBiometricAuth(
+      available: biometricsAvailable,
+      recognizes: biometricsRecognizes,
+    );
     now = DateTime(2026, 11, 3, 20);
     container = ProviderContainer(
       overrides: [
         pinStoreProvider.overrideWithValue(store),
+        biometricAuthProvider.overrideWithValue(biometrics),
         clockProvider.overrideWithValue(() => now),
       ],
     );
@@ -137,6 +149,72 @@ void main() {
       controller.onBack();
 
       expect(state(), isA<LockOff>());
+    });
+  });
+
+  group('biometria', () {
+    test('ligada, a biometria destrava sem PIN digitado', () async {
+      final controller = await open(pin: '1234', biometricsOn: true);
+
+      expect(controller.biometricsEnabled, isTrue);
+      expect(await controller.unlockWithBiometrics('Desbloqueie'), isTrue);
+      expect(state(), isA<LockOpen>());
+      expect(biometrics.reasons, ['Desbloqueie']);
+    });
+
+    test('não reconheceu: continua pedindo, e o PIN ainda vale', () async {
+      final controller = await open(
+        pin: '1234',
+        biometricsOn: true,
+        biometricsRecognizes: false,
+      );
+
+      expect(await controller.unlockWithBiometrics('Desbloqueie'), isFalse);
+      expect(state(), isA<LockClosed>());
+      // O erro da biometria não conta como tentativa de PIN.
+      expect((state() as LockClosed).wrongAttempts, 0);
+      expect(controller.unlock('1234'), isTrue);
+    });
+
+    test('desligada, nem tenta', () async {
+      final controller = await open(pin: '1234');
+
+      expect(await controller.unlockWithBiometrics('Desbloqueie'), isFalse);
+      expect(biometrics.reasons, isEmpty);
+    });
+
+    test('durante a espera por erros, a biometria não passa', () async {
+      final controller = await open(pin: '1234', biometricsOn: true);
+      for (var i = 0; i < 3; i++) {
+        controller.unlock('9999');
+      }
+
+      expect(await controller.unlockWithBiometrics('Desbloqueie'), isFalse);
+      expect(biometrics.reasons, isEmpty);
+      expect(state(), isA<LockClosed>());
+    });
+
+    test('ligar exige PIN ativo e biometria que funcione', () async {
+      final semPin = await open();
+      expect(await semPin.enableBiometrics('Desbloqueie'), isFalse);
+
+      final semAparelho = await open(pin: '1234', biometricsAvailable: false);
+      expect(await semAparelho.enableBiometrics('Desbloqueie'), isFalse);
+      expect(store.biometricsEnabled, isFalse);
+
+      final controller = await open(pin: '1234');
+      expect(await controller.enableBiometrics('Desbloqueie'), isTrue);
+      expect(controller.biometricsEnabled, isTrue);
+      expect(store.biometricsEnabled, isTrue);
+    });
+
+    test('desligar o PIN desliga a biometria: sem reserva, não dá', () async {
+      final controller = await open(pin: '1234', biometricsOn: true);
+
+      await controller.disablePin('1234');
+
+      expect(controller.biometricsEnabled, isFalse);
+      expect(store.biometricsEnabled, isFalse);
     });
   });
 

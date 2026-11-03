@@ -33,6 +33,7 @@ Future<void> pumpApp(
   FakePhotoPicker? photoPicker,
   FakeReportSharer? reportSharer,
   FakePinStore? pinStore,
+  FakeBiometricAuth? biometrics,
   DateTime Function()? clock,
   LocalStore? store,
   Locale locale = const Locale('pt', 'BR'),
@@ -46,6 +47,9 @@ Future<void> pumpApp(
         appModeProvider.overrideWithValue(mode),
         // Sem PIN por padrão: o bloqueio não entra no caminho dos outros testes.
         pinStoreProvider.overrideWithValue(pinStore ?? FakePinStore()),
+        biometricAuthProvider.overrideWithValue(
+          biometrics ?? FakeBiometricAuth(),
+        ),
         if (clock != null) clockProvider.overrideWithValue(clock),
         localStoreProvider.overrideWithValue(store ?? temporaryStore()),
         authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),

@@ -464,9 +464,10 @@ class FakePhotoPicker implements PhotoPicker {
   Future<String?> pickFromGallery() async => next;
 }
 
-/// PIN em memória, com acesso ao que foi guardado.
+/// PIN e biometria em memória, com acesso ao que foi guardado.
 class FakePinStore implements PinStore {
   PinCredential? credential;
+  bool biometricsEnabled = false;
 
   @override
   Future<PinCredential?> read() async => credential;
@@ -475,5 +476,33 @@ class FakePinStore implements PinStore {
   Future<void> save(PinCredential value) async => credential = value;
 
   @override
-  Future<void> clear() async => credential = null;
+  Future<void> clear() async {
+    credential = null;
+    biometricsEnabled = false;
+  }
+
+  @override
+  Future<bool> readBiometricsEnabled() async => biometricsEnabled;
+
+  @override
+  Future<void> saveBiometricsEnabled(bool enabled) async =>
+      biometricsEnabled = enabled;
+}
+
+/// Biometria falsa: o teste diz se o aparelho tem e se reconhece.
+class FakeBiometricAuth implements BiometricAuth {
+  FakeBiometricAuth({this.available = true, this.recognizes = true});
+
+  bool available;
+  bool recognizes;
+  final reasons = <String>[];
+
+  @override
+  Future<bool> isAvailable() async => available;
+
+  @override
+  Future<bool> authenticate(String reason) async {
+    reasons.add(reason);
+    return recognizes;
+  }
 }
