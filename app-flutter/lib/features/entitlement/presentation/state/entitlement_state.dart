@@ -40,10 +40,20 @@ final purchasesProvider = FutureProvider<Map<StoreProduct, PurchaseRecord>>(
 final accessProvider = FutureProvider<AppAccess>((ref) async {
   final entitlement = await ref.watch(entitlementProvider.future);
   final purchases = await ref.watch(purchasesProvider.future);
+  final clock = ref.read(clockProvider)();
+  // Atrasar o relógio não devolve dias de teste: vale o maior instante já
+  // visto. Guardar esse instante é só reforço, então uma falha de gravação não
+  // pode trancar quem tem direito.
+  final seen = entitlement.markSeen(clock);
+  if (!identical(seen, entitlement)) {
+    try {
+      await ref.read(entitlementStoreProvider).save(seen);
+    } catch (_) {}
+  }
   return evaluateAccess(
     entitlement: entitlement,
     ownsApp: purchases.containsKey(StoreProduct.app),
-    now: ref.read(clockProvider)(),
+    now: entitlement.effectiveNow(clock),
   );
 });
 

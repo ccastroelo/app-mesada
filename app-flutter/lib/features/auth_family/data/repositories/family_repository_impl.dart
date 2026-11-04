@@ -6,6 +6,7 @@ import '../../../../core/firebase/firebase_failures.dart';
 import '../../../rules/rules.dart';
 import '../../domain/entities/app_user.dart';
 import '../../domain/entities/family.dart';
+import '../../domain/entities/family_snapshot.dart';
 import '../../domain/repositories/family_repository.dart';
 import '../../domain/usecases/invite_code.dart';
 import '../datasources/family_firestore_datasource.dart';
@@ -66,6 +67,15 @@ class FamilyRepositoryImpl implements FamilyRepository {
         entries: entries,
       );
       return const Ok(null);
+    } catch (error) {
+      return Err(failureFromFirebase(error));
+    }
+  }
+
+  @override
+  Future<Result<FamilySnapshot>> downloadSnapshot(String familyId) async {
+    try {
+      return Ok(await _remote.fetchSnapshot(familyId));
     } catch (error) {
       return Err(failureFromFirebase(error));
     }

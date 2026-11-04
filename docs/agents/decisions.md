@@ -4,6 +4,16 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0022 — Recibos das compras conferidos pelo RevenueCat
+- Data: 2026-11-04 · Status: aceita (direção); **a implementação espera a conta e as chaves do usuário** · Escopo: M4.5c; fecha o risco 11 do `migration-plan.md`
+- Contexto: no M4.5b a loja é a fonte de verdade da compra no aparelho de quem comprou, mas a assinatura de compartilhar chegaria ao convidado por um campo gravado pelo aparelho de quem assina — forjável. Sem servidor conferindo o recibo, qualquer um adulterando o app compartilharia de graça.
+- Decisão: usar o **RevenueCat** (`purchases_flutter`) para validar os recibos da App Store e do Google Play e expor o estado das assinaturas, sem Cloud Functions nem plano Blaze. Mantém-se o contrato `StoreGateway`: troca a implementação (`InAppPurchaseStoreGateway` → uma do RevenueCat), e o resto do app (acesso, só leitura, tela de compra) não muda.
+- Como o convidado enxerga a assinatura: o app usa o **id da família como `appUserID`** do RevenueCat; o aparelho do assinante compra com esse id e o do convidado consulta o mesmo `CustomerInfo`, que o RevenueCat já validou. O id da família não é segredo entre os membros, o que é aceito.
+- Limite assumido: o RevenueCat prova que a assinatura existe, mas **as regras do Firestore não consultam o RevenueCat**; quem bloqueia a sincronização continua sendo o app. Um cliente adulterado ainda poderia sincronizar sem assinar. Fechar isso exige um webhook que grave o estado na família (função com Blaze) e regras que o exijam — fica como evolução se houver abuso.
+- Pendências do usuário: criar a conta e o projeto no RevenueCat, ligar App Store Connect e Google Play, criar os produtos `mesada_app` e `mesada_compartilhar` e um *entitlement* para cada, e entregar as chaves públicas do SDK (vão em `--dart-define-from-file`, fora do git).
+- Alternativas descartadas: Cloud Functions com validação própria (mais controle, mas Blaze, credenciais das lojas e manutenção); manter sem servidor (só serve para beta fechado).
+- Consequências: `purchases_flutter` entra no `pubspec` só na implementação, com o OK do usuário e as chaves; `in_app_purchase` sai nesse momento; o retrato local ao vencer e o endurecimento do teste de 15 dias seguem independentes disto.
+
 ### ADR-0021 — Teste de 15 dias, compra única do app e assinatura para sincronizar
 - Data: 2026-11-04 · Status: aceita · Escopo: produto, M4.5; **substitui o ADR-0020** e os itens 3, 5, 6 e 8 do ADR-0015; renomeia os termos do ADR-0014
 - Contexto: o ADR-0020 vendia a "Família" por compra única dentro do app. O usuário fechou o modelo em 2026-11-04: (a) o que se compra uma vez é o **app**; (b) **todo mundo que usa o app paga a compra única, inclusive o convidado**; (c) o **compartilhamento** (a sincronização entre os aparelhos) é uma **assinatura por família**, paga por quem cria a família; (d) quem já pagou pelo app **não é cobrado de novo** se o modelo mudar; (e) há **15 dias de teste**. O app antigo (iOS 1.2) foi pago e depois ficou grátis.

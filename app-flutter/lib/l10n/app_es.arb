@@ -181,5 +181,8 @@
   "settingsPurchaseTile": "Comprar la app",
   "settingsPurchaseReadOnly": "La prueba terminó: solo lectura",
   "sharingSubscribeHint": "Compartir es una suscripción por familia: quien crea la familia se suscribe, y el otro responsable solo necesita la app.",
-  "sharingSubscribeAction": "Suscribirse por {price}"
+  "sharingSubscribeAction": "Suscribirse por {price}",
+  "settingsBackToLocalTile": "Volver a usar solo este dispositivo",
+  "backToLocalDialogTitle": "¿Usar solo este dispositivo?",
+  "backToLocalDialogBody": "Este dispositivo se queda con una copia de los datos de ahora y deja de sincronizar. Lo que está en la nube no se borra, y el otro responsable sigue en ella. Los cambios posteriores no pasan de un lado a otro."
 }

@@ -622,4 +622,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String sharingSubscribeAction(String price) {
     return 'Subscribe for $price';
   }
+
+  @override
+  String get settingsBackToLocalTile => 'Go back to this device only';
+
+  @override
+  String get backToLocalDialogTitle => 'Use this device only?';
+
+  @override
+  String get backToLocalDialogBody =>
+      'This device keeps a copy of today\'s data and stops syncing. Nothing in the cloud is deleted, and the other parent stays in it. Changes made afterwards won\'t pass from one side to the other.';
 }

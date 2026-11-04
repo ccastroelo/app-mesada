@@ -13,6 +13,7 @@ class AppEntitlement {
     required this.since,
     this.origin = EntitlementOrigin.newInstall,
     this.modelVersion = currentModelVersion,
+    this.lastSeen,
   });
 
   /// Modelo 1: teste de 15 dias, compra única do app e assinatura para
@@ -28,10 +29,40 @@ class AppEntitlement {
   final EntitlementOrigin origin;
   final int modelVersion;
 
+  /// O maior instante em que o app já esteve aberto neste aparelho. Serve só
+  /// para o teste de 15 dias não voltar no tempo quando o relógio é atrasado
+  /// (ADR-0021). Ausente numa marca que nunca foi atualizada.
+  final DateTime? lastSeen;
+
+  /// Quanto vale "agora" para o teste: nunca antes do maior instante já visto
+  /// (nem antes do primeiro uso). Atrasar o relógio não devolve dias.
+  DateTime effectiveNow(DateTime clock) {
+    final floor = lastSeen ?? since;
+    return clock.isBefore(floor) ? floor : clock;
+  }
+
+  /// A marca com o [clock] registrado como visto, ou ela mesma se o relógio
+  /// não andou pelo menos [seenGranularity] desde o último registro (evita
+  /// gravar em disco a cada abertura de tela).
+  AppEntitlement markSeen(DateTime clock) {
+    final floor = lastSeen ?? since;
+    if (clock.difference(floor) < seenGranularity) return this;
+    return AppEntitlement(
+      since: since,
+      origin: origin,
+      modelVersion: modelVersion,
+      lastSeen: clock,
+    );
+  }
+
+  /// Passo mínimo entre dois registros de [lastSeen].
+  static const seenGranularity = Duration(hours: 1);
+
   Map<String, Object?> toJson() => {
     'modelVersion': modelVersion,
     'since': since.toIso8601String(),
     'origin': origin.name,
+    'lastSeen': ?lastSeen?.toIso8601String(),
   };
 
   /// Borda (arquivo): sem data legível não há marca — quem lê cria uma nova.
@@ -49,6 +80,10 @@ class AppEntitlement {
         orElse: () => EntitlementOrigin.newInstall,
       ),
       modelVersion: (json['modelVersion'] as num?)?.toInt() ?? firstModel,
+      lastSeen: switch (json['lastSeen']) {
+        final String value => DateTime.tryParse(value),
+        _ => null,
+      },
     );
   }
 }

@@ -621,6 +621,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String sharingSubscribeAction(String price) {
     return 'Assinar por $price';
   }
+
+  @override
+  String get settingsBackToLocalTile => 'Voltar a usar só neste aparelho';
+
+  @override
+  String get backToLocalDialogTitle => 'Usar só neste aparelho?';
+
+  @override
+  String get backToLocalDialogBody =>
+      'Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. Mudanças feitas depois não passam de um lado para o outro.';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -1242,4 +1252,14 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   String sharingSubscribeAction(String price) {
     return 'Subscrever por $price';
   }
+
+  @override
+  String get settingsBackToLocalTile => 'Voltar a usar só neste aparelho';
+
+  @override
+  String get backToLocalDialogTitle => 'Usar só neste aparelho?';
+
+  @override
+  String get backToLocalDialogBody =>
+      'Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. As alterações feitas depois não passam de um lado para o outro.';
 }

@@ -2,6 +2,7 @@ import '../../../../core/error/result.dart';
 import '../../../rules/rules.dart';
 import '../entities/app_user.dart';
 import '../entities/family.dart';
+import '../entities/family_snapshot.dart';
 
 abstract class FamilyRepository {
   /// Id da família do usuário, ou null se ainda não entrou em nenhuma.
@@ -28,6 +29,10 @@ abstract class FamilyRepository {
     required List<Map<String, dynamic>> rules,
     required List<Map<String, dynamic>> entries,
   });
+
+  /// Baixa o conteúdo da família na nuvem, para virar o arquivo local quando
+  /// a pessoa deixa de compartilhar (ADR-0014). Só lê: nada é apagado na nuvem.
+  Future<Result<FamilySnapshot>> downloadSnapshot(String familyId);
 
   /// Gera um código de convite (uso único, validade curta) e o devolve.
   Future<Result<String>> createInvite({

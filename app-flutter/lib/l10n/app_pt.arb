@@ -339,5 +339,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsBackToLocalTile": "Voltar a usar só neste aparelho",
+  "backToLocalDialogTitle": "Usar só neste aparelho?",
+  "backToLocalDialogBody": "Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. Mudanças feitas depois não passam de um lado para o outro."
 }

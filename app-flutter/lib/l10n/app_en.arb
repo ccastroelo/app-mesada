@@ -181,5 +181,8 @@
   "settingsPurchaseTile": "Buy the app",
   "settingsPurchaseReadOnly": "The trial is over: read-only",
   "sharingSubscribeHint": "Sharing is a subscription per family: whoever creates the family subscribes, and the other parent only needs the app.",
-  "sharingSubscribeAction": "Subscribe for {price}"
+  "sharingSubscribeAction": "Subscribe for {price}",
+  "settingsBackToLocalTile": "Go back to this device only",
+  "backToLocalDialogTitle": "Use this device only?",
+  "backToLocalDialogBody": "This device keeps a copy of today's data and stops syncing. Nothing in the cloud is deleted, and the other parent stays in it. Changes made afterwards won't pass from one side to the other."
 }

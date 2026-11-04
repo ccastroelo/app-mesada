@@ -67,6 +67,12 @@ class SettingsPage extends ConsumerWidget {
               title: Text(l10n.settingsInviteTile),
               onTap: () => showInviteDialog(context),
             ),
+          if (user != null)
+            ListTile(
+              leading: const Icon(Icons.phone_iphone_outlined),
+              title: Text(l10n.settingsBackToLocalTile),
+              onTap: () => showBackToLocalDialog(context),
+            ),
           SectionHeader(l10n.settingsSecuritySection),
           ListTile(
             leading: const Icon(Icons.lock_outline),

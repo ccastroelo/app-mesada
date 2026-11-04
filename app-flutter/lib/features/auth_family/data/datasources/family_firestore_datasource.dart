@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../rules/rules.dart';
+import '../../domain/entities/family_snapshot.dart';
 import '../models/family_dto.dart';
 import '../models/invite_dto.dart';
 
@@ -73,6 +74,34 @@ class FamilyFirestoreDataSource {
       batch.set(family.collection('entries').doc(id), entry);
     }
     await batch.commit();
+  }
+
+  /// Lê a família inteira (nome, filhos, regras e lançamentos) de uma vez.
+  /// É o caminho de volta da virada do ADR-0014: o retrato que vira o arquivo
+  /// local. Os ids dos documentos acompanham os dados, para os lançamentos
+  /// (`childId_ruleId`) continuarem apontando para o lugar certo.
+  Future<FamilySnapshot> fetchSnapshot(String familyId) async {
+    final family = _db.doc('families/$familyId');
+    final results = await Future.wait([
+      family.get(),
+      family.collection('children').get(),
+      family.collection('rules').get(),
+      family.collection('entries').get(),
+    ]);
+    final name = (results[0] as DocumentSnapshot<Map<String, dynamic>>)
+        .data()?['name'];
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docs(int index) =>
+        (results[index] as QuerySnapshot<Map<String, dynamic>>).docs;
+    return FamilySnapshot(
+      name: name is String ? name : '',
+      children: [
+        for (final doc in docs(1)) {...doc.data(), 'id': doc.id},
+      ],
+      rules: [
+        for (final doc in docs(2)) {...doc.data(), 'id': doc.id},
+      ],
+      entries: [for (final doc in docs(3)) doc.data()],
+    );
   }
 
   Future<void> createFamily({

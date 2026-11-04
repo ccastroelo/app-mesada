@@ -1192,6 +1192,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Assinar por {price}'**
   String sharingSubscribeAction(String price);
+
+  /// No description provided for @settingsBackToLocalTile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar a usar só neste aparelho'**
+  String get settingsBackToLocalTile;
+
+  /// No description provided for @backToLocalDialogTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar só neste aparelho?'**
+  String get backToLocalDialogTitle;
+
+  /// No description provided for @backToLocalDialogBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. Mudanças feitas depois não passam de um lado para o outro.'**
+  String get backToLocalDialogBody;
 }
 
 class _AppLocalizationsDelegate

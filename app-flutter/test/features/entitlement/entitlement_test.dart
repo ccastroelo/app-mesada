@@ -74,6 +74,147 @@ void main() {
     });
   });
 
+  group('maior instante visto (relógio atrasado não devolve dias)', () {
+    final since = DateTime(2026, 11, 4, 8);
+
+    test('sem registro, o piso é o primeiro uso', () {
+      final entitlement = AppEntitlement(since: since);
+
+      expect(
+        entitlement.effectiveNow(since.subtract(const Duration(days: 3))),
+        since,
+      );
+      expect(
+        entitlement.effectiveNow(since.add(const Duration(days: 2))),
+        since.add(const Duration(days: 2)),
+      );
+    });
+
+    test('com registro, o relógio atrasado vale o maior instante visto', () {
+      final seen = since.add(const Duration(days: 10));
+      final entitlement = AppEntitlement(since: since, lastSeen: seen);
+
+      expect(
+        entitlement.effectiveNow(since.add(const Duration(days: 1))),
+        seen,
+      );
+      expect(
+        entitlement.effectiveNow(since.add(const Duration(days: 12))),
+        since.add(const Duration(days: 12)),
+      );
+    });
+
+    test('só registra quando o relógio andou pelo menos uma hora', () {
+      final entitlement = AppEntitlement(since: since);
+
+      expect(
+        entitlement.markSeen(since.add(const Duration(minutes: 59))),
+        same(entitlement),
+      );
+      final later = since.add(const Duration(hours: 1));
+      final marked = entitlement.markSeen(later);
+      expect(marked.lastSeen, later);
+      expect(marked.since, since);
+      expect(marked.origin, entitlement.origin);
+      expect(marked.modelVersion, entitlement.modelVersion);
+    });
+
+    test('relógio atrasado não rebaixa o registro', () {
+      final seen = since.add(const Duration(days: 10));
+      final entitlement = AppEntitlement(since: since, lastSeen: seen);
+
+      expect(
+        entitlement.markSeen(since.add(const Duration(days: 1))),
+        same(entitlement),
+      );
+    });
+
+    test('vai e volta pelo JSON; sem registro a chave nem aparece', () {
+      final plain = AppEntitlement(since: since);
+      expect(plain.toJson().containsKey('lastSeen'), isFalse);
+
+      final seen = DateTime.utc(2026, 11, 20, 9);
+      final back = AppEntitlement.fromJson(
+        AppEntitlement(since: since, lastSeen: seen).toJson(),
+      )!;
+      expect(back.lastSeen, seen);
+      expect(AppEntitlement.fromJson(plain.toJson())!.lastSeen, isNull);
+    });
+
+    test('registro estragado conta como sem registro', () {
+      for (final bad in ['ontem', 12, null]) {
+        final entitlement = AppEntitlement.fromJson({
+          'since': '2026-11-04T08:00:00.000',
+          'lastSeen': bad,
+        })!;
+        expect(entitlement.lastSeen, isNull);
+      }
+    });
+
+    ProviderContainer open(FakeEntitlementStore store, DateTime now) {
+      final container = ProviderContainer(
+        overrides: [
+          entitlementStoreProvider.overrideWithValue(store),
+          legacyAppDetectorProvider.overrideWithValue(FakeLegacyDetector()),
+          purchaseStoreProvider.overrideWithValue(FakePurchaseStore()),
+          clockProvider.overrideWithValue(() => now),
+        ],
+      );
+      addTearDown(container.dispose);
+      return container;
+    }
+
+    test('depois do teste, atrasar o relógio não volta ao teste', () async {
+      // Primeira abertura depois do fim do teste: grava o instante visto.
+      final store = FakeEntitlementStore(
+        entitlement: AppEntitlement(since: since),
+      );
+      final afterTrial = since.add(const Duration(days: 20));
+      final first = await open(store, afterTrial).read(accessProvider.future);
+      expect(first, isA<ReadOnlyAccess>());
+      expect(store.entitlement!.lastSeen, afterTrial);
+
+      // A pessoa atrasa o relógio para o meio do teste e abre de novo.
+      final back = since.add(const Duration(days: 3));
+      final second = await open(store, back).read(accessProvider.future);
+
+      expect(second, isA<ReadOnlyAccess>());
+    });
+
+    test('durante o teste, os dias que faltam não aumentam', () async {
+      final store = FakeEntitlementStore(
+        entitlement: AppEntitlement(since: since),
+      );
+      await open(
+        store,
+        since.add(const Duration(days: 10)),
+      ).read(accessProvider.future);
+
+      final access = await open(
+        store,
+        since.add(const Duration(days: 2)),
+      ).read(accessProvider.future);
+
+      expect((access as FullAccess).trialDaysLeft, 5);
+    });
+
+    test('abrir de novo logo em seguida não grava outra vez', () async {
+      final store = FakeEntitlementStore(
+        entitlement: AppEntitlement(
+          since: since,
+          lastSeen: since.add(const Duration(days: 1)),
+        ),
+      );
+
+      await open(
+        store,
+        since.add(const Duration(days: 1, minutes: 5)),
+      ).read(accessProvider.future);
+
+      expect(store.saves, 0);
+    });
+  });
+
   group('EntitlementStoreImpl (device.json numa pasta temporária)', () {
     late Directory base;
     late DeviceSettings settings;
@@ -251,7 +392,7 @@ void main() {
       expect(store.entitlement?.modelVersion, 1);
     });
 
-    testWidgets('abrir de novo não mexe na marca', (tester) async {
+    testWidgets('abrir de novo só registra o instante visto', (tester) async {
       final store = FakeEntitlementStore(
         entitlement: AppEntitlement(since: DateTime(2026, 1, 9)),
       );
@@ -263,8 +404,13 @@ void main() {
         clock: () => DateTime(2026, 11, 4),
       );
 
-      expect(store.saves, 0);
+      // Data, modelo e origem ficam como estavam; só o maior instante visto
+      // anda (e uma vez só).
+      expect(store.saves, 1);
       expect(store.entitlement?.since, DateTime(2026, 1, 9));
+      expect(store.entitlement?.modelVersion, 1);
+      expect(store.entitlement?.origin, EntitlementOrigin.newInstall);
+      expect(store.entitlement?.lastSeen, DateTime(2026, 11, 4));
     });
   });
 }

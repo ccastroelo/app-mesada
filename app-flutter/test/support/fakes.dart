@@ -5,6 +5,7 @@ import 'package:mesada/core/error/result.dart';
 import 'package:mesada/features/app_lock/app_lock.dart';
 import 'package:mesada/features/auth_family/domain/entities/app_user.dart';
 import 'package:mesada/features/auth_family/domain/entities/family.dart';
+import 'package:mesada/features/auth_family/domain/entities/family_snapshot.dart';
 import 'package:mesada/features/auth_family/domain/repositories/auth_repository.dart';
 import 'package:mesada/features/auth_family/domain/repositories/family_repository.dart';
 import 'package:mesada/features/auth_family/domain/usecases/invite_code.dart';
@@ -135,6 +136,23 @@ class FakeFamilyRepository implements FamilyRepository {
     if (error != null) return error;
     _set(Family(id: 'f1', name: name));
     return const Ok(null);
+  }
+
+  /// O retrato que a "nuvem" devolve; o teste troca por outro se quiser.
+  FamilySnapshot snapshot = const FamilySnapshot(
+    name: '',
+    children: [],
+    rules: [],
+    entries: [],
+  );
+  Failure? snapshotFailure;
+  final downloads = <String>[];
+
+  @override
+  Future<Result<FamilySnapshot>> downloadSnapshot(String familyId) async {
+    downloads.add(familyId);
+    final failure = snapshotFailure;
+    return failure == null ? Ok(snapshot) : Err(failure);
   }
 
   @override

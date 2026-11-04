@@ -9,6 +9,7 @@ import 'package:mesada/features/auth_family/data/models/family_dto.dart';
 import 'package:mesada/features/auth_family/data/models/invite_dto.dart';
 import 'package:mesada/features/auth_family/data/repositories/family_repository_impl.dart';
 import 'package:mesada/features/auth_family/domain/entities/family.dart';
+import 'package:mesada/features/auth_family/domain/entities/family_snapshot.dart';
 import 'package:mesada/features/rules/rules.dart';
 
 import '../../../support/fakes.dart';
@@ -58,6 +59,27 @@ class _FakeDataSource implements FamilyFirestoreDataSource {
       children: children.length,
       rules: rules.length,
       entries: entries.length,
+    );
+  }
+
+  Object? snapshotError;
+  final fetched = <String>[];
+
+  @override
+  Future<FamilySnapshot> fetchSnapshot(String familyId) async {
+    fetched.add(familyId);
+    if (snapshotError != null) throw snapshotError!;
+    return const FamilySnapshot(
+      name: 'Família Castro',
+      children: [
+        {'id': 'c1', 'name': 'Ana', 'allowanceCents': 10000},
+      ],
+      rules: [
+        {'id': 'r1', 'description': 'Arrumar a cama', 'valueCents': 50},
+      ],
+      entries: [
+        {'childId': 'c1', 'ruleId': 'r1', 'quantity': 2},
+      ],
     );
   }
 
@@ -125,6 +147,27 @@ void main() {
         name: 'X',
         rules: const [],
       );
+      expect(failureOf(result), isA<NoConnection>());
+    });
+  });
+
+  group('downloadSnapshot', () {
+    test('devolve a família inteira, com os ids dos documentos', () async {
+      final result = await repository.downloadSnapshot('f1');
+
+      final snapshot = (result as Ok<FamilySnapshot>).value;
+      expect(remote.fetched, ['f1']);
+      expect(snapshot.name, 'Família Castro');
+      expect(snapshot.children.single['id'], 'c1');
+      expect(snapshot.rules.single['id'], 'r1');
+      expect(snapshot.entries.single['quantity'], 2);
+    });
+
+    test('traduz erro do Firestore em falha', () async {
+      remote.snapshotError = _firestoreError('unavailable');
+
+      final result = await repository.downloadSnapshot('f1');
+
       expect(failureOf(result), isA<NoConnection>());
     });
   });

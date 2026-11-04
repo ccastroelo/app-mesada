@@ -230,7 +230,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Família Castro'), findsOneWidget);
-      expect(find.text('ana@example.com'), findsOneWidget);
+      expect(find.text('Voltar a usar só neste aparelho'), findsOneWidget);
 
       await tapText(tester, 'Convidar outro responsável');
       expect(find.text('ABC234'), findsOneWidget);
@@ -242,6 +242,7 @@ void main() {
       // A lista de Ajustes cresceu (Segurança, Ajuda): Sair ficou fora da
       // primeira tela.
       await tester.scrollUntilVisible(find.text('Sair'), 200);
+      expect(find.text('ana@example.com'), findsOneWidget);
       await tapText(tester, 'Sair');
       expect(find.text('Continuar com o Google'), findsOneWidget);
       expect(auth.calls, ['signOut']);

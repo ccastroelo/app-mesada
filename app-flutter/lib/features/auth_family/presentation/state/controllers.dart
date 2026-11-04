@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/state/action_controller.dart';
+import '../../../../core/storage/app_mode_state.dart';
+import '../../../../core/storage/local_document.dart';
 import '../../../../core/storage/providers.dart';
 import '../../../rules/rules.dart';
 import '../../data/providers.dart';
 import '../../domain/entities/app_user.dart';
+import '../../domain/entities/family_snapshot.dart';
 import 'gate.dart';
 
 AppUser? _currentUser(Ref ref) => ref.read(authUserProvider).value;
@@ -66,6 +69,44 @@ class CreateFamilyController extends ActionController {
   });
 }
 
+/// Deixa de compartilhar neste aparelho: baixa um retrato da família para o
+/// arquivo local e só então troca o modo (ADR-0014, "ao cancelar, baixa um
+/// retrato"). A ordem importa: se baixar ou gravar falhar, o modo não muda e a
+/// pessoa segue na nuvem com tudo intacto. Nada é apagado na nuvem, e o outro
+/// responsável continua nela.
+class BackToLocalController extends ActionController {
+  Future<bool> leave() => run(() async {
+    final gate = ref.read(gateProvider);
+    if (gate is! GateReady) return const Err(Unexpected());
+    final downloaded = await ref
+        .read(familyRepositoryProvider)
+        .downloadSnapshot(gate.family.id);
+    final FamilySnapshot snapshot;
+    switch (downloaded) {
+      case Ok(:final value):
+        snapshot = value;
+      case Err(:final failure):
+        return Err(failure);
+    }
+
+    final saved = await ref
+        .read(localStoreProvider)
+        .update(
+          (_) => LocalDocument(
+            family: {'id': LocalDocument.localFamilyId, 'name': snapshot.name},
+            children: snapshot.children,
+            rules: snapshot.rules,
+            entries: snapshot.entries,
+          ),
+        );
+    if (saved is Err) return saved;
+
+    await ref.read(deviceSettingsProvider).merge({'mode': AppMode.local.name});
+    ref.invalidate(savedModeProvider);
+    return const Ok(null);
+  });
+}
+
 class JoinFamilyController extends ActionController {
   Future<bool> join(String code) => run(() async {
     final user = _currentUser(ref);
@@ -89,6 +130,11 @@ final signInControllerProvider =
 final createFamilyControllerProvider =
     NotifierProvider.autoDispose<CreateFamilyController, ActionState>(
       CreateFamilyController.new,
+    );
+
+final backToLocalControllerProvider =
+    NotifierProvider.autoDispose<BackToLocalController, ActionState>(
+      BackToLocalController.new,
     );
 
 final joinFamilyControllerProvider =

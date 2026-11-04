@@ -625,4 +625,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String sharingSubscribeAction(String price) {
     return 'Suscribirse por $price';
   }
+
+  @override
+  String get settingsBackToLocalTile => 'Volver a usar solo este dispositivo';
+
+  @override
+  String get backToLocalDialogTitle => '¿Usar solo este dispositivo?';
+
+  @override
+  String get backToLocalDialogBody =>
+      'Este dispositivo se queda con una copia de los datos de ahora y deja de sincronizar. Lo que está en la nube no se borra, y el otro responsable sigue en ella. Los cambios posteriores no pasan de un lado a otro.';
 }
