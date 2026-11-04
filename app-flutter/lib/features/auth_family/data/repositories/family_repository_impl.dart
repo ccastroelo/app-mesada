@@ -49,6 +49,31 @@ class FamilyRepositoryImpl implements FamilyRepository {
   }
 
   @override
+  Future<Result<void>> createFamilyFromLocal({
+    required AppUser user,
+    required String name,
+    required Map<String, Object?> plan,
+    required List<Map<String, dynamic>> children,
+    required List<Map<String, dynamic>> rules,
+    required List<Map<String, dynamic>> entries,
+  }) async {
+    try {
+      await _remote.createFamilyFromLocal(
+        uid: user.uid,
+        email: user.email,
+        name: name.trim(),
+        plan: plan,
+        children: children,
+        rules: rules,
+        entries: entries,
+      );
+      return const Ok(null);
+    } catch (error) {
+      return Err(failureFromFirebase(error));
+    }
+  }
+
+  @override
   Future<Result<String>> createInvite({
     required AppUser user,
     required Family family,

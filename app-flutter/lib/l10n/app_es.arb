@@ -168,5 +168,8 @@
   "planStoreUnavailable": "La tienda no respondió. Inténtalo más tarde.",
   "planActiveTitle": "Familia desbloqueada",
   "planActiveSince": "Pago único, desde {date}",
-  "settingsFamilyPlanSubtitle": "Compartir con el otro responsable"
+  "settingsFamilyPlanSubtitle": "Compartir con el otro responsable",
+  "planStartSharing": "Entrar para compartir",
+  "planSharingHint": "Entras con una cuenta y los datos de este dispositivo suben a la nube. Después invitas al otro responsable.",
+  "backToLocalAction": "Usar solo este dispositivo"
 }

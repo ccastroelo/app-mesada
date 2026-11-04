@@ -168,5 +168,8 @@
   "planStoreUnavailable": "The store didn't answer. Try again later.",
   "planActiveTitle": "Family unlocked",
   "planActiveSince": "One-time payment, since {date}",
-  "settingsFamilyPlanSubtitle": "Share with the other parent"
+  "settingsFamilyPlanSubtitle": "Share with the other parent",
+  "planStartSharing": "Sign in to share",
+  "planSharingHint": "You sign in with an account and this device's data moves to the cloud. Then you invite the other parent.",
+  "backToLocalAction": "Use this device only"
 }

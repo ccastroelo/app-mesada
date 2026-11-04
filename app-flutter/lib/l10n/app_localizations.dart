@@ -1114,6 +1114,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Compartilhar com o outro responsável'**
   String get settingsFamilyPlanSubtitle;
+
+  /// No description provided for @planStartSharing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar para compartilhar'**
+  String get planStartSharing;
+
+  /// No description provided for @planSharingHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você entra com uma conta e os dados deste aparelho sobem para a nuvem. Depois é só convidar o outro responsável.'**
+  String get planSharingHint;
+
+  /// No description provided for @backToLocalAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar só neste aparelho'**
+  String get backToLocalAction;
 }
 
 class _AppLocalizationsDelegate

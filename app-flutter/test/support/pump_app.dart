@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mesada/app.dart';
+import 'package:mesada/core/storage/app_mode_state.dart';
+import 'package:mesada/core/storage/device_settings.dart';
 import 'package:mesada/core/storage/local_store.dart';
 import 'package:mesada/core/storage/providers.dart';
 import 'package:mesada/features/app_lock/app_lock_providers.dart';
@@ -41,6 +43,7 @@ Future<void> pumpApp(
   FakePlanGateway? planGateway,
   DateTime Function()? clock,
   LocalStore? store,
+  DeviceSettings? deviceSettings,
   Locale locale = const Locale('pt', 'BR'),
 }) async {
   final local = mode == AppMode.local;
@@ -50,6 +53,13 @@ Future<void> pumpApp(
     ProviderScope(
       overrides: [
         appModeProvider.overrideWithValue(mode),
+        // O portão espera o modo guardado; nos testes ele já vem resolvido.
+        savedModeProvider.overrideWith((ref) async => mode),
+        // Ajustes do aparelho numa pasta temporária: trocar o modo e gravar
+        // o PIN não podem falar com o path_provider num teste.
+        deviceSettingsProvider.overrideWithValue(
+          deviceSettings ?? temporaryDeviceSettings(),
+        ),
         // Sem PIN por padrão: o bloqueio não entra no caminho dos outros testes.
         pinStoreProvider.overrideWithValue(pinStore ?? FakePinStore()),
         biometricAuthProvider.overrideWithValue(
@@ -99,4 +109,11 @@ LocalStore temporaryStore() {
   final directory = Directory.systemTemp.createTempSync('mesada_store_');
   addTearDown(() => directory.deleteSync(recursive: true));
   return LocalStore(() async => directory);
+}
+
+/// Ajustes do aparelho sobre uma pasta temporária, apagada no fim do teste.
+DeviceSettings temporaryDeviceSettings() {
+  final directory = Directory.systemTemp.createTempSync('mesada_device_');
+  addTearDown(() => directory.deleteSync(recursive: true));
+  return DeviceSettings(() async => directory);
 }

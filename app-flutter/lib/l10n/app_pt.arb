@@ -319,5 +319,8 @@
       }
     }
   },
-  "settingsFamilyPlanSubtitle": "Compartilhar com o outro responsável"
+  "settingsFamilyPlanSubtitle": "Compartilhar com o outro responsável",
+  "planStartSharing": "Entrar para compartilhar",
+  "planSharingHint": "Você entra com uma conta e os dados deste aparelho sobem para a nuvem. Depois é só convidar o outro responsável.",
+  "backToLocalAction": "Usar só neste aparelho"
 }

@@ -27,6 +27,56 @@ class FamilyFirestoreDataSource {
 
   /// Lote 1: família, membro e vínculo do usuário. Lote 2: regras iniciais
   /// (só depois, porque as regras de segurança exigem já existir como membro).
+  /// Cria a família já com o conteúdo **deste aparelho**, em vez das
+  /// regras-padrão: é a virada de fonte de verdade do ADR-0014, que acontece
+  /// uma vez, quando a Família é liberada.
+  ///
+  /// Os ids locais são preservados, senão os lançamentos (`childId_ruleId`)
+  /// apontariam para o vazio. Tudo num lote só — o pior caso aqui é umas
+  /// centenas de documentos, bem abaixo do limite de 500 por lote.
+  Future<void> createFamilyFromLocal({
+    required String uid,
+    required String email,
+    required String name,
+    required Map<String, Object?> plan,
+    required List<Map<String, dynamic>> children,
+    required List<Map<String, dynamic>> rules,
+    required List<Map<String, dynamic>> entries,
+  }) async {
+    final family = _db.collection('families').doc();
+    final batch = _db.batch();
+    batch.set(family, {
+      'name': name,
+      'createdBy': uid,
+      'createdAt': FieldValue.serverTimestamp(),
+      'plan': plan,
+    });
+    batch.set(family.collection('members').doc(uid), {
+      'email': email,
+      'joinedAt': FieldValue.serverTimestamp(),
+    });
+    batch.set(_db.doc('users/$uid'), {'familyId': family.id});
+
+    void copy(String collection, List<Map<String, dynamic>> items) {
+      for (final item in items) {
+        final id = item['id'] as String?;
+        if (id == null) continue;
+        batch.set(
+          family.collection(collection).doc(id),
+          {...item}..remove('id'),
+        );
+      }
+    }
+
+    copy('children', children);
+    copy('rules', rules);
+    for (final entry in entries) {
+      final id = '${entry['childId']}_${entry['ruleId']}';
+      batch.set(family.collection('entries').doc(id), entry);
+    }
+    await batch.commit();
+  }
+
   Future<void> createFamily({
     required String uid,
     required String email,

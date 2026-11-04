@@ -571,4 +571,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsFamilyPlanSubtitle => 'Compartir con el otro responsable';
+
+  @override
+  String get planStartSharing => 'Entrar para compartir';
+
+  @override
+  String get planSharingHint =>
+      'Entras con una cuenta y los datos de este dispositivo suben a la nube. Después invitas al otro responsable.';
+
+  @override
+  String get backToLocalAction => 'Usar solo este dispositivo';
 }

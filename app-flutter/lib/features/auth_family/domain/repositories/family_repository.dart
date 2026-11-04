@@ -18,6 +18,18 @@ abstract class FamilyRepository {
     required List<RuleSeed> rules,
   });
 
+  /// Cria a família já com o conteúdo deste aparelho, em vez de semear as
+  /// regras-padrão: a virada de fonte de verdade do ADR-0014. Recebe só
+  /// primitivos para não amarrar esta feature às outras.
+  Future<Result<void>> createFamilyFromLocal({
+    required AppUser user,
+    required String name,
+    required Map<String, Object?> plan,
+    required List<Map<String, dynamic>> children,
+    required List<Map<String, dynamic>> rules,
+    required List<Map<String, dynamic>> entries,
+  });
+
   /// Gera um código de convite (uso único, validade curta) e o devolve.
   Future<Result<String>> createInvite({
     required AppUser user,

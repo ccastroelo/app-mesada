@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/storage/app_mode_state.dart';
+import '../../../../core/storage/providers.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/widgets/failure_message.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -64,6 +66,22 @@ class FamilyPlanPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: Space.xl),
+            // Comprado mas ainda sem conta: aqui começa a virada para a
+            // nuvem (ADR-0014). Entrar leva ao fluxo de conta e família.
+            if (ref.watch(appModeProvider) == AppMode.local) ...[
+              Text(
+                l10n.planSharingHint,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: Space.md),
+              FilledButton(
+                onPressed: () => setAppMode(ref, AppMode.cloud),
+                child: Text(l10n.planStartSharing),
+              ),
+              const SizedBox(height: Space.md),
+            ],
             OutlinedButton(
               onPressed: action.loading ? null : restore,
               child: Text(l10n.planRestoreAction),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mesada/core/storage/device_settings.dart';
 import 'package:mesada/core/storage/providers.dart';
 import 'package:mesada/features/family_plan/family_plan.dart';
 
@@ -18,6 +19,7 @@ void main() {
     bool hasOffer = true,
     bool buys = true,
     bool restores = false,
+    DeviceSettings? deviceSettings,
   }) async {
     store = FakePlanStore(plan: plan);
     gateway = FakePlanGateway(
@@ -30,6 +32,7 @@ void main() {
       mode: AppMode.local,
       planStore: store,
       planGateway: gateway,
+      deviceSettings: deviceSettings,
       clock: () => DateTime(2026, 11, 3),
     );
     await tester.tap(
@@ -131,6 +134,22 @@ void main() {
       find.text('Pagamento único, desde 9 de janeiro de 2026'),
       findsOneWidget,
     );
-    expect(find.byType(FilledButton), findsNothing);
+    expect(find.textContaining('Liberar por'), findsNothing);
+  });
+
+  testWidgets('pago e ainda local: o próximo passo é entrar', (tester) async {
+    await openPlan(
+      tester,
+      plan: FamilyPlan.lifetime(since: DateTime(2026, 1, 9)),
+    );
+
+    expect(find.textContaining('sobem para a nuvem'), findsOneWidget);
+    // Que o toque grave o modo no aparelho se prova em
+    // `core/storage/app_mode_state_test.dart`: num teste de widget, I/O
+    // começado fora de `runAsync` não completa.
+    expect(
+      find.widgetWithText(FilledButton, 'Entrar para compartilhar'),
+      findsOneWidget,
+    );
   });
 }

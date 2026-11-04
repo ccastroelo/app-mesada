@@ -568,6 +568,16 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get settingsFamilyPlanSubtitle =>
       'Compartilhar com o outro responsável';
+
+  @override
+  String get planStartSharing => 'Entrar para compartilhar';
+
+  @override
+  String get planSharingHint =>
+      'Você entra com uma conta e os dados deste aparelho sobem para a nuvem. Depois é só convidar o outro responsável.';
+
+  @override
+  String get backToLocalAction => 'Usar só neste aparelho';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -1135,4 +1145,14 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get settingsFamilyPlanSubtitle => 'Partilhar com o outro responsável';
+
+  @override
+  String get planStartSharing => 'Entrar para partilhar';
+
+  @override
+  String get planSharingHint =>
+      'Entra com uma conta e os dados deste aparelho sobem para a nuvem. Depois basta convidar o outro responsável.';
+
+  @override
+  String get backToLocalAction => 'Usar só neste aparelho';
 }

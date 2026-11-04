@@ -79,3 +79,10 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 - **Pré-requisito do usuário**: criar o produto **`mesada_familia`** (não-consumível) no App Store Connect e no Google Play, com o mesmo id. Sem isso a oferta volta nula e a tela mostra "a loja não respondeu" — que é exatamente o que acontece hoje.
 - **O que falta ver em aparelho**: compra em ambiente de teste (sandbox/teste interno), compra cancelada, "Restaurar compras" em aparelho novo e a compra pendente de aprovação (cartão em análise).
 - **E falta a outra metade do M4.5**: o direito gravado em `families/{id}`, as regras do Firestore conhecendo o plano, e a virada de fonte de verdade (subir o local e trocar o `appModeProvider`). Sem isso, comprar hoje não compartilha nada.
+
+## A virada para a nuvem nunca rodou de verdade
+
+- **Onde**: `createFamilyFromLocal` (datasource da `auth_family`), o modo guardado em `core/storage/app_mode_state.dart` e a tela da Família (M4.5, ADR-0014/0020). Os testes usam repositório falso e pasta temporária: cobrem a **decisão** (quando virar, o que subir, o que preservar), não o Firestore.
+- **Pré-requisitos do usuário**: habilitar Authentication e Firestore no `mesada-proj`; criar o produto `mesada_familia` nas duas lojas; **rodar os testes das regras no emulador** (`firebase-tests`, precisa do terminal dele) e **publicar as regras** (`firebase deploy --only firestore:rules`) — nada disso o Claude faz sozinho.
+- **O que falta ver rodando**: subir um aparelho com dados, comprar, entrar, criar a família e confirmar que filhos, regras e lançamentos chegaram com os **mesmos ids** (senão os lançamentos apontam para o vazio); depois convidar o segundo responsável e ver os dois lançando.
+- **Lacuna conhecida**: nada **lê** o `plan` do documento da família para decidir se compartilha. Hoje quem manda é a cópia local do direito, e o único caminho para a nuvem passa por ela. Se um dia o segundo aparelho precisar conferir o plano, a leitura é o que falta.

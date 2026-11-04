@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/storage/app_mode_state.dart';
 import '../../../../core/storage/providers.dart';
 import '../../data/providers.dart';
 import '../../domain/entities/app_user.dart';
@@ -63,6 +64,8 @@ final class GateReady extends Gate {
 /// No modo local a família vem do arquivo e não há login a esperar; no modo
 /// nuvem (assinatura) vale a composição auth → família (ADR-0014).
 final gateProvider = Provider<Gate>((ref) {
+  // Sem saber de onde vêm os dados, não há conteúdo a mostrar (ADR-0014).
+  if (ref.watch(savedModeProvider).isLoading) return const GateLoading();
   return switch (ref.watch(appModeProvider)) {
     AppMode.local => _localGate(ref),
     AppMode.cloud => _cloudGate(ref),

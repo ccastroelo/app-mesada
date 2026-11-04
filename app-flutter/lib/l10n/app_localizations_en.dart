@@ -568,4 +568,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsFamilyPlanSubtitle => 'Share with the other parent';
+
+  @override
+  String get planStartSharing => 'Sign in to share';
+
+  @override
+  String get planSharingHint =>
+      'You sign in with an account and this device\'s data moves to the cloud. Then you invite the other parent.';
+
+  @override
+  String get backToLocalAction => 'Use this device only';
 }

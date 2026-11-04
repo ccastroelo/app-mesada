@@ -27,7 +27,7 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | **247 testes passando** (os 178 do M5 mais 48 do M6: espera crescente, hash e sal do PIN, `DeviceSettings`, controlador com relógio controlado — inclusive os 30 s fora do app —, biometria com falso e os fluxos da tela de bloqueio e de Ajustes › Segurança; mais 9 do M7 (introdução, Ajuda e a marca no `device.json`) e 12 do M4.5 (a marca do direito, a cópia local e os estados da tela da Família)) — atualizado em 2026-11-03 |
+| `flutter test` | **256 testes passando** (os 178 do M5 mais 48 do M6: espera crescente, hash e sal do PIN, `DeviceSettings`, controlador com relógio controlado — inclusive os 30 s fora do app —, biometria com falso e os fluxos da tela de bloqueio e de Ajustes › Segurança; mais 9 do M7 (introdução, Ajuda e a marca no `device.json`) e 21 do M4.5 (a marca do direito, a cópia local, os estados da tela da Família, o modo guardado no aparelho e a família nascendo com os dados locais)) — atualizado em 2026-11-04 |
 | `flutter build apk --debug` | compilava em 2026-10-28; **não refeito** depois de tirar o Firebase do `main.dart` (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
 | CI/CD (Codemagic, ADR-0019) | `codemagic.yaml` na raiz, workflow `verificacao`: `flutter pub get`, `analyze` e `test` em `app-flutter/`, Flutter 3.44.4, máquina Linux. **Não dispara sozinho**: o repositório precisa ser conectado no Codemagic e o webhook criado lá. **Nenhuma execução vista ainda.** O workflow do GitHub Actions foi removido. Build de release depende de versão, assinatura e contas das lojas. |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |
@@ -36,7 +36,7 @@ flutter test
 
 ## Testes das regras do Firestore (emulador local)
 
-Pasta `app-flutter/firebase-tests/` (Node 22, Java 21, `firebase` CLI). Baseline (2026-10-28): **28 testes passando**. Não toca a nuvem (projeto `demo-mesada`).
+Pasta `app-flutter/firebase-tests/` (Node 22, Java 21, `firebase` CLI). Baseline (2026-10-28): **28 testes passando**. Em 2026-11-04 entraram **6 testes do campo `plan`** (ADR-0020) que **nunca foram executados** — o emulador precisa do terminal do usuário. Não toca a nuvem (projeto `demo-mesada`).
 
 ```bash
 cd app-flutter/firebase-tests

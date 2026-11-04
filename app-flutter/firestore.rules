@@ -20,6 +20,19 @@ service cloud.firestore {
       return value is string && value.size() > 0 && value.size() <= max;
     }
 
+    // O direito ao compartilhamento, com a marca de qual modelo de cobrança
+    // valia na compra (ADR-0020). Sem recibo validado no servidor: o cliente
+    // afirma, e isso já está aceito (ADR-0015) — aqui só se confere a forma,
+    // para o campo não virar depósito de lixo.
+    function validPlan() {
+      return !('plan' in request.resource.data) || (
+        request.resource.data.plan.keys().hasOnly(['kind', 'productId', 'since', 'modelVersion'])
+        && request.resource.data.plan.kind in ['lifetime']
+        && isShortText(request.resource.data.plan.productId, 60)
+        && request.resource.data.plan.modelVersion is int
+      );
+    }
+
     // Preferências e vínculo do próprio usuário.
     match /users/{uid} {
       allow read, write: if signedIn() && request.auth.uid == uid
@@ -34,15 +47,18 @@ service cloud.firestore {
       // Quem cria vira o criador; o próprio cliente grava o documento de membro
       // em seguida (ver regra de members).
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['name', 'createdBy', 'createdAt'])
+        && request.resource.data.keys().hasOnly(['name', 'createdBy', 'createdAt', 'plan'])
         && request.resource.data.createdBy == request.auth.uid
         && isShortText(request.resource.data.name, 60)
-        && request.resource.data.createdAt == request.time;
+        && request.resource.data.createdAt == request.time
+        && validPlan();
 
-      // Só o nome pode mudar.
+      // Só o nome e o plano podem mudar (o plano, para quem comprou depois de
+      // já ter família).
       allow update: if isMember(fid)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name'])
-        && isShortText(request.resource.data.name, 60);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'plan'])
+        && isShortText(request.resource.data.name, 60)
+        && validPlan();
 
       allow delete: if false;
 

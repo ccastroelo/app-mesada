@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'app_mode_state.dart';
 import 'device_settings.dart';
 import 'local_store.dart';
 
@@ -9,7 +10,11 @@ import 'local_store.dart';
 /// assinatura Família (M4.5), e é só aí que o Firebase é inicializado.
 enum AppMode { local, cloud }
 
-final appModeProvider = Provider<AppMode>((ref) => AppMode.local);
+/// O modo em uso. Vem do `device.json` (`savedModeProvider`); enquanto o
+/// arquivo não respondeu vale `local`, e o portão segura o conteúdo até lá.
+final appModeProvider = Provider<AppMode>(
+  (ref) => ref.watch(savedModeProvider).value ?? AppMode.local,
+);
 
 final localStoreProvider = Provider<LocalStore>(
   (ref) => LocalStore(getApplicationDocumentsDirectory),

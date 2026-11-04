@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/state/action_controller.dart';
+import '../../../../core/storage/providers.dart';
+import '../../../family_plan/data/providers.dart';
 import '../../../rules/rules.dart';
 import '../../data/providers.dart';
 import '../../domain/entities/app_user.dart';
@@ -36,6 +38,27 @@ class CreateFamilyController extends ActionController {
   Future<bool> create(String name, String languageCode) => run(() async {
     final user = _currentUser(ref);
     if (user == null) return const Err(Unexpected());
+
+    // Quem chegou aqui vindo do uso local **já tem dados**: a família nasce
+    // com eles, não com as 20 regras-padrão. É a virada de fonte de verdade
+    // do ADR-0014, e ela acontece uma vez só.
+    final document = await ref.read(localStoreProvider).watch().first;
+    final plan = await ref.read(planStoreProvider).read();
+    final hasLocalData =
+        document.children.isNotEmpty || document.rules.isNotEmpty;
+    if (plan.shares && hasLocalData) {
+      return ref
+          .read(familyRepositoryProvider)
+          .createFamilyFromLocal(
+            user: user,
+            name: name,
+            plan: plan.toJson(),
+            children: document.children,
+            rules: document.rules,
+            entries: document.entries,
+          );
+    }
+
     return ref
         .read(familyRepositoryProvider)
         .createFamily(

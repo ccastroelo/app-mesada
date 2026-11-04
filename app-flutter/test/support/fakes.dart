@@ -113,6 +113,32 @@ class FakeFamilyRepository implements FamilyRepository {
     return const Ok(null);
   }
 
+  /// O que a virada para a nuvem mandou subir (ADR-0014).
+  ({
+    Map<String, Object?> plan,
+    List<Map<String, dynamic>> children,
+    List<Map<String, dynamic>> rules,
+    List<Map<String, dynamic>> entries,
+  })?
+  uploaded;
+
+  @override
+  Future<Result<void>> createFamilyFromLocal({
+    required AppUser user,
+    required String name,
+    required Map<String, Object?> plan,
+    required List<Map<String, dynamic>> children,
+    required List<Map<String, dynamic>> rules,
+    required List<Map<String, dynamic>> entries,
+  }) async {
+    lastName = name;
+    uploaded = (plan: plan, children: children, rules: rules, entries: entries);
+    final error = createError;
+    if (error != null) return error;
+    _set(Family(id: 'f1', name: name));
+    return const Ok(null);
+  }
+
   @override
   Future<Result<String>> createInvite({
     required AppUser user,

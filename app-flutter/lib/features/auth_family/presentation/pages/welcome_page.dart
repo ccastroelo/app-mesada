@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/storage/app_mode_state.dart';
+import '../../../../core/storage/providers.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/widgets/failure_message.dart';
 import '../../../../core/widgets/page_body.dart';
@@ -62,6 +64,17 @@ class WelcomePage extends ConsumerWidget {
               child: Center(child: CircularProgressIndicator()),
             ),
           FailureText(action.failure),
+          // Saída de emergência de quem começou a liberar a Família e
+          // desistiu: sem isto, ficaria preso nesta tela com os dados do
+          // aparelho fora de alcance (ADR-0014).
+          if (ref.watch(appModeProvider) == AppMode.cloud)
+            Padding(
+              padding: const EdgeInsets.only(top: Space.xl),
+              child: TextButton(
+                onPressed: () => setAppMode(ref, AppMode.local),
+                child: Text(l10n.backToLocalAction),
+              ),
+            ),
         ],
       ),
     );

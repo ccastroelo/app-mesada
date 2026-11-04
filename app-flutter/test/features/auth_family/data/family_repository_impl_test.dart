@@ -41,6 +41,29 @@ class _FakeDataSource implements FamilyFirestoreDataSource {
     createdFamily = (name: name, rules: rules.length);
   }
 
+  ({String name, int children, int rules, int entries, Object? plan})?
+  uploadedFamily;
+
+  @override
+  Future<void> createFamilyFromLocal({
+    required String uid,
+    required String email,
+    required String name,
+    required Map<String, Object?> plan,
+    required List<Map<String, dynamic>> children,
+    required List<Map<String, dynamic>> rules,
+    required List<Map<String, dynamic>> entries,
+  }) async {
+    if (createFamilyError != null) throw createFamilyError!;
+    uploadedFamily = (
+      name: name,
+      children: children.length,
+      rules: rules.length,
+      entries: entries.length,
+      plan: plan['kind'],
+    );
+  }
+
   @override
   Future<void> createInvite({
     required String code,
