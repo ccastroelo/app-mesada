@@ -33,6 +33,9 @@ const _out = 1024;
 /// 16%, e os brilhos do alto não podem passar da zona segura da máscara.
 const _foregroundScale = 0.92;
 
+/// A splash mostra o cofrinho em 62% do quadro.
+const _splashScale = 0.62;
+
 void main() {
   testWidgets('gera os PNGs do ícone', (tester) async {
     await tester.runAsync(() async {
@@ -82,6 +85,27 @@ void main() {
       await _write('assets/icon/icon_monochrome.png', (c) {
         _drawCentered(c, monoImage, w, h);
       });
+
+      // Splash: só o cofrinho, menor, para caber na zona segura do ícone da
+      // splash do Android 12 (círculo de 2/3 do quadro) e sobrar respiro.
+      await _write('assets/icon/splash_logo.png', (c) {
+        _drawCentered(c, cutout, w, h, scale: _splashScale);
+      });
+      // Cor lisa da splash: a média do degradê do fundo (vai para o YAML).
+      final splash = Color.lerp(centerGreen, edgeGreen, 0.5)!;
+      debugPrint(
+        'cor da splash: #${(splash.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}',
+      );
+
+      // Play Store: o mesmo ícone cheio em 512 px.
+      await _write('assets/icon/icon_play_store_512.png', (c) {
+        c.drawImageRect(
+          source,
+          Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()),
+          const Rect.fromLTWH(0, 0, 512, 512),
+          Paint()..filterQuality = FilterQuality.high,
+        );
+      }, size: 512);
     });
   });
 }
@@ -103,14 +127,18 @@ Future<ui.Image> _fromPixels(Uint8List pixels, int w, int h) {
   return done.future;
 }
 
-Future<void> _write(String path, void Function(Canvas) draw) async {
+Future<void> _write(
+  String path,
+  void Function(Canvas) draw, {
+  int size = _out,
+}) async {
   final recorder = ui.PictureRecorder();
   final canvas = Canvas(
     recorder,
-    Rect.fromLTWH(0, 0, _out.toDouble(), _out.toDouble()),
+    Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
   );
   draw(canvas);
-  final image = await recorder.endRecording().toImage(_out, _out);
+  final image = await recorder.endRecording().toImage(size, size);
   final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
   File(path)
     ..createSync(recursive: true)
@@ -118,13 +146,19 @@ Future<void> _write(String path, void Function(Canvas) draw) async {
 }
 
 /// Desenha [image] (w × h) no centro do quadro de saída, reduzida.
-void _drawCentered(Canvas c, ui.Image image, int w, int h) {
-  const side = _out * _foregroundScale;
-  const offset = (_out - side) / 2;
+void _drawCentered(
+  Canvas c,
+  ui.Image image,
+  int w,
+  int h, {
+  double scale = _foregroundScale,
+}) {
+  final side = _out * scale;
+  final offset = (_out - side) / 2;
   c.drawImageRect(
     image,
     Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()),
-    const Rect.fromLTWH(offset, offset, side, side),
+    Rect.fromLTWH(offset, offset, side, side),
     Paint()..filterQuality = FilterQuality.high,
   );
 }

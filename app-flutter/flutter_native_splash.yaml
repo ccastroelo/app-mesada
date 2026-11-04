@@ -1,0 +1,15 @@
+# Configuração do flutter_native_splash (design.md §19). A imagem vem de
+# `flutter test tool/icon/generate_icon_test.dart` e a cor é a média do verde
+# do ícone (o gerador a imprime). Para aplicar:
+#
+#   dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#018255"
+  image: assets/icon/splash_logo.png
+  # Android 12 em diante: o sistema mostra um ícone dentro de um círculo; a
+  # imagem já tem folga para caber nele.
+  android_12:
+    color: "#018255"
+    image: assets/icon/splash_logo.png
+  # A splash vale igual no claro e no escuro: a marca é verde nos dois.
+  fullscreen: false

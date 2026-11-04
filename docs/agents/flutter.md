@@ -55,4 +55,4 @@ Pegadinhas no Windows:
 
 - `pubspec.yaml` está em `version: 1.0.0+1` (padrão do `flutter create`). Como o app **substitui** o publicado (ADR-0007, legado 1.2 build 9), a versão de release precisa ser **maior que 1.2 e build > 9**. Definição de versão/build é decisão do usuário; não alterar sem pedir.
 - Assinatura iOS/Android e perfis: não tocados.
-- Launch screen e nome exibido ainda são os padrões do Flutter. O ícone já é o do app (design §19): `tool/icon/` gera os PNGs a partir de `assets/icon/fonte.png` e `flutter_launcher_icons` aplica.
+- Nome exibido ainda é o padrão do Flutter. Ícone e splash já são os do app (design §19): `tool/icon/` gera os PNGs a partir de `assets/icon/fonte.png`; `flutter_launcher_icons` e `flutter_native_splash` aplicam (`flutter_launcher_icons.yaml`, `flutter_native_splash.yaml`).
