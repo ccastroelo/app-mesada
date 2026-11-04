@@ -472,4 +472,64 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get biometricsUnavailable =>
       'Biometrics couldn\'t be turned on this device.';
+
+  @override
+  String get settingsHelpSection => 'Help';
+
+  @override
+  String get settingsHelpSubtitle => 'Intro, contact and about';
+
+  @override
+  String get helpSeeIntroAction => 'See the intro';
+
+  @override
+  String get helpContactAction => 'Talk to us';
+
+  @override
+  String get helpContactCopied => 'Email copied';
+
+  @override
+  String get settingsAboutSection => 'About';
+
+  @override
+  String get aboutDataLocal => 'Your data stays on this device.';
+
+  @override
+  String get introSkipAction => 'Skip';
+
+  @override
+  String get introNextAction => 'Next';
+
+  @override
+  String get introStartAction => 'Start';
+
+  @override
+  String introProgress(int current, int total) {
+    return 'Card $current of $total';
+  }
+
+  @override
+  String get intro1Title => 'Your children';
+
+  @override
+  String get intro1Body => 'Add each child and their allowance.';
+
+  @override
+  String get intro2Title => 'The rules';
+
+  @override
+  String get intro2Body => 'Set what earns and what deducts.';
+
+  @override
+  String get intro3Title => 'Add entries';
+
+  @override
+  String get intro3Body => 'Tap + or − and the balance updates right away.';
+
+  @override
+  String get intro4Title => 'Both parents';
+
+  @override
+  String get intro4Body =>
+      'With the Family subscription, both of you see the same numbers in real time. You can decide later.';
 }

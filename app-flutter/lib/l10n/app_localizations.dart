@@ -940,6 +940,120 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Não deu para ligar a biometria neste aparelho.'**
   String get biometricsUnavailable;
+
+  /// No description provided for @settingsHelpSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ajuda'**
+  String get settingsHelpSection;
+
+  /// No description provided for @settingsHelpSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Introdução, contato e sobre'**
+  String get settingsHelpSubtitle;
+
+  /// No description provided for @helpSeeIntroAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver introdução'**
+  String get helpSeeIntroAction;
+
+  /// No description provided for @helpContactAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Falar com a gente'**
+  String get helpContactAction;
+
+  /// No description provided for @helpContactCopied.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail copiado'**
+  String get helpContactCopied;
+
+  /// No description provided for @settingsAboutSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sobre'**
+  String get settingsAboutSection;
+
+  /// No description provided for @aboutDataLocal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os dados ficam neste aparelho.'**
+  String get aboutDataLocal;
+
+  /// No description provided for @introSkipAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pular'**
+  String get introSkipAction;
+
+  /// No description provided for @introNextAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo'**
+  String get introNextAction;
+
+  /// No description provided for @introStartAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Começar'**
+  String get introStartAction;
+
+  /// No description provided for @introProgress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cartão {current} de {total}'**
+  String introProgress(int current, int total);
+
+  /// No description provided for @intro1Title.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seus filhos'**
+  String get intro1Title;
+
+  /// No description provided for @intro1Body.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre cada filho e a mesada dele.'**
+  String get intro1Body;
+
+  /// No description provided for @intro2Title.
+  ///
+  /// In pt, this message translates to:
+  /// **'As regras'**
+  String get intro2Title;
+
+  /// No description provided for @intro2Body.
+  ///
+  /// In pt, this message translates to:
+  /// **'Defina o que ganha e o que desconta.'**
+  String get intro2Body;
+
+  /// No description provided for @intro3Title.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lançar'**
+  String get intro3Title;
+
+  /// No description provided for @intro3Body.
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque em + ou − e o saldo muda na hora.'**
+  String get intro3Body;
+
+  /// No description provided for @intro4Title.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os dois responsáveis'**
+  String get intro4Title;
+
+  /// No description provided for @intro4Body.
+  ///
+  /// In pt, this message translates to:
+  /// **'Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois.'**
+  String get intro4Body;
 }
 
 class _AppLocalizationsDelegate

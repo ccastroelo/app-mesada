@@ -470,6 +470,66 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get biometricsUnavailable =>
       'Não deu para ligar a biometria neste aparelho.';
+
+  @override
+  String get settingsHelpSection => 'Ajuda';
+
+  @override
+  String get settingsHelpSubtitle => 'Introdução, contato e sobre';
+
+  @override
+  String get helpSeeIntroAction => 'Ver introdução';
+
+  @override
+  String get helpContactAction => 'Falar com a gente';
+
+  @override
+  String get helpContactCopied => 'E-mail copiado';
+
+  @override
+  String get settingsAboutSection => 'Sobre';
+
+  @override
+  String get aboutDataLocal => 'Os dados ficam neste aparelho.';
+
+  @override
+  String get introSkipAction => 'Pular';
+
+  @override
+  String get introNextAction => 'Próximo';
+
+  @override
+  String get introStartAction => 'Começar';
+
+  @override
+  String introProgress(int current, int total) {
+    return 'Cartão $current de $total';
+  }
+
+  @override
+  String get intro1Title => 'Seus filhos';
+
+  @override
+  String get intro1Body => 'Cadastre cada filho e a mesada dele.';
+
+  @override
+  String get intro2Title => 'As regras';
+
+  @override
+  String get intro2Body => 'Defina o que ganha e o que desconta.';
+
+  @override
+  String get intro3Title => 'Lançar';
+
+  @override
+  String get intro3Body => 'Toque em + ou − e o saldo muda na hora.';
+
+  @override
+  String get intro4Title => 'Os dois responsáveis';
+
+  @override
+  String get intro4Body =>
+      'Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois.';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -940,4 +1000,64 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   @override
   String get biometricsUnavailable =>
       'Não deu para ligar a biometria neste aparelho.';
+
+  @override
+  String get settingsHelpSection => 'Ajuda';
+
+  @override
+  String get settingsHelpSubtitle => 'Introdução, contacto e sobre';
+
+  @override
+  String get helpSeeIntroAction => 'Ver introdução';
+
+  @override
+  String get helpContactAction => 'Falar connosco';
+
+  @override
+  String get helpContactCopied => 'E-mail copiado';
+
+  @override
+  String get settingsAboutSection => 'Sobre';
+
+  @override
+  String get aboutDataLocal => 'Os dados ficam neste aparelho.';
+
+  @override
+  String get introSkipAction => 'Saltar';
+
+  @override
+  String get introNextAction => 'Seguinte';
+
+  @override
+  String get introStartAction => 'Começar';
+
+  @override
+  String introProgress(int current, int total) {
+    return 'Cartão $current de $total';
+  }
+
+  @override
+  String get intro1Title => 'Os seus filhos';
+
+  @override
+  String get intro1Body => 'Registe cada filho e a mesada dele.';
+
+  @override
+  String get intro2Title => 'As regras';
+
+  @override
+  String get intro2Body => 'Defina o que ganha e o que desconta.';
+
+  @override
+  String get intro3Title => 'Lançar';
+
+  @override
+  String get intro3Body => 'Toque em + ou − e o saldo muda na hora.';
+
+  @override
+  String get intro4Title => 'Os dois responsáveis';
+
+  @override
+  String get intro4Body =>
+      'Com a subscrição Família, os dois veem os mesmos números em tempo real. Pode decidir mais tarde.';
 }

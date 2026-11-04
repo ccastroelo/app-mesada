@@ -69,6 +69,27 @@ void main() {
       expect(redirectFor(ready, '/bloqueio', lock: closed), isNull);
     });
 
+    test('introdução: aparece uma vez e dá para rever', () {
+      // Enquanto o arquivo do aparelho não respondeu, espera.
+      expect(redirectFor(ready, '/filhos', introSeen: null), '/carregando');
+      // Não vista: vai para a introdução e fica nela.
+      expect(redirectFor(ready, '/filhos', introSeen: false), '/introducao');
+      expect(redirectFor(ready, '/introducao', introSeen: false), isNull);
+      // Vista: ninguém é levado para lá, mas rever é permitido.
+      expect(redirectFor(ready, '/filhos', introSeen: true), isNull);
+      expect(redirectFor(ready, '/introducao', introSeen: true), isNull);
+      // O PIN continua vindo antes da introdução.
+      expect(
+        redirectFor(
+          ready,
+          '/filhos',
+          lock: const LockClosed(),
+          introSeen: false,
+        ),
+        '/bloqueio',
+      );
+    });
+
     test('destravado, a tela do PIN não é lugar para ficar', () {
       expect(
         redirectFor(ready, '/bloqueio', lock: const LockOpen()),

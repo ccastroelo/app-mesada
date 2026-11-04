@@ -10,6 +10,9 @@ import '../../features/children/presentation/pages/child_edit_page.dart';
 import '../../features/children/presentation/pages/child_ledger_page.dart';
 import '../../features/children/presentation/pages/child_rules_page.dart';
 import '../../features/children/presentation/pages/children_page.dart';
+import '../../features/help/help_providers.dart';
+import '../../features/help/presentation/pages/help_page.dart';
+import '../../features/help/presentation/pages/intro_page.dart';
 import '../../features/rules/presentation/pages/rule_edit_page.dart';
 import '../../features/rules/presentation/pages/rules_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
@@ -21,15 +24,19 @@ const _signIn = '/entrar';
 const _family = '/familia';
 const _home = '/filhos';
 const _lock = '/bloqueio';
+const _intro = '/introducao';
 
 /// Para onde a pessoa deve ir dado o ponto da entrada em que está (null = fica).
 /// Guardas do design.md §3: sem login → boas-vindas; sem família → escolha;
-/// PIN pedido → bloqueio.
+/// PIN pedido → bloqueio; introdução não vista → introdução.
+///
+/// [introSeen] é nulo enquanto o arquivo do aparelho não respondeu.
 @visibleForTesting
 String? redirectFor(
   Gate gate,
   String location, {
   LockState lock = const LockOff(),
+  bool? introSeen = true,
 }) {
   bool inFamilyFlow() =>
       location == _family || location.startsWith('$_family/');
@@ -60,6 +67,13 @@ String? redirectFor(
           location == _welcome ||
           location == _signIn ||
           inFamilyFlow();
+      // Introdução: mostrada uma vez (design.md §4.9). Enquanto não se sabe,
+      // espera — melhor que abrir o app e a introdução pular na frente.
+      if (introSeen == null) return location == _loading ? null : _loading;
+      if (!introSeen && location != _intro) return _intro;
+      // Quem já viu pode reabrir por Ajustes › Ajuda, então ficar na
+      // introdução é permitido; o que não há é ir para lá sozinho.
+      if (location == _intro) return null;
       return inEntryFlow ? _home : null;
   }
 }
@@ -68,6 +82,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
   ref.listen(gateProvider, (_, _) => refresh.value++);
   ref.listen(appLockProvider, (_, _) => refresh.value++);
+  ref.listen(introSeenProvider, (_, _) => refresh.value++);
 
   final router = GoRouter(
     initialLocation: _loading,
@@ -76,14 +91,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       ref.read(gateProvider),
       state.uri.path,
       lock: ref.read(appLockProvider),
+      introSeen: ref.read(introSeenProvider).value,
     ),
     routes: [
       GoRoute(path: _loading, builder: (_, _) => const GatePage()),
       GoRoute(path: _lock, builder: (_, _) => const LockPage()),
+      GoRoute(path: _intro, builder: (_, _) => const IntroPage()),
       GoRoute(
         path: '/ajustes/seguranca',
         builder: (_, _) => const SecurityPage(),
       ),
+      GoRoute(path: '/ajustes/ajuda', builder: (_, _) => const HelpPage()),
       GoRoute(path: _welcome, builder: (_, _) => const WelcomePage()),
       GoRoute(path: _signIn, builder: (_, _) => const SignInPage()),
       GoRoute(

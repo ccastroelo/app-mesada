@@ -239,6 +239,9 @@ void main() {
       await tapText(tester, 'Fechar');
       expect(find.text('ABC234'), findsNothing);
 
+      // A lista de Ajustes cresceu (Segurança, Ajuda): Sair ficou fora da
+      // primeira tela.
+      await tester.scrollUntilVisible(find.text('Sair'), 200);
       await tapText(tester, 'Sair');
       expect(find.text('Continuar com o Google'), findsOneWidget);
       expect(auth.calls, ['signOut']);

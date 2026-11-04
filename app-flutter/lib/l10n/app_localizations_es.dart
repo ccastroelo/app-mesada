@@ -473,4 +473,64 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get biometricsUnavailable =>
       'No se pudo activar la biometría en este dispositivo.';
+
+  @override
+  String get settingsHelpSection => 'Ayuda';
+
+  @override
+  String get settingsHelpSubtitle => 'Introducción, contacto y acerca de';
+
+  @override
+  String get helpSeeIntroAction => 'Ver la introducción';
+
+  @override
+  String get helpContactAction => 'Habla con nosotros';
+
+  @override
+  String get helpContactCopied => 'Correo copiado';
+
+  @override
+  String get settingsAboutSection => 'Acerca de';
+
+  @override
+  String get aboutDataLocal => 'Los datos se quedan en este dispositivo.';
+
+  @override
+  String get introSkipAction => 'Saltar';
+
+  @override
+  String get introNextAction => 'Siguiente';
+
+  @override
+  String get introStartAction => 'Empezar';
+
+  @override
+  String introProgress(int current, int total) {
+    return 'Tarjeta $current de $total';
+  }
+
+  @override
+  String get intro1Title => 'Tus hijos';
+
+  @override
+  String get intro1Body => 'Registra cada hijo y su mesada.';
+
+  @override
+  String get intro2Title => 'Las reglas';
+
+  @override
+  String get intro2Body => 'Define qué gana y qué descuenta.';
+
+  @override
+  String get intro3Title => 'Registrar';
+
+  @override
+  String get intro3Body => 'Toca + o − y el saldo cambia al instante.';
+
+  @override
+  String get intro4Title => 'Los dos responsables';
+
+  @override
+  String get intro4Body =>
+      'Con la suscripción Familia, los dos ven los mismos números en tiempo real. Puedes decidir más tarde.';
 }

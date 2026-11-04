@@ -52,6 +52,13 @@ class SettingsPage extends ConsumerWidget {
             ),
             onTap: () => context.push('/ajustes/seguranca'),
           ),
+          SectionHeader(l10n.settingsHelpSection),
+          ListTile(
+            leading: const Icon(Icons.help_outline),
+            title: Text(l10n.settingsHelpSection),
+            subtitle: Text(l10n.settingsHelpSubtitle),
+            onTap: () => context.push('/ajustes/ajuda'),
+          ),
           if (user != null) ...[
             SectionHeader(l10n.settingsAccountSection),
             ListTile(

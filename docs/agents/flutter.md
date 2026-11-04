@@ -26,7 +26,7 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | **226 testes passando** (os 178 do M5 mais 48 do M6: espera crescente, hash e sal do PIN, `DeviceSettings`, controlador com relógio controlado — inclusive os 30 s fora do app —, biometria com falso e os fluxos da tela de bloqueio e de Ajustes › Segurança) — atualizado em 2026-11-03 |
+| `flutter test` | **235 testes passando** (os 178 do M5 mais 48 do M6: espera crescente, hash e sal do PIN, `DeviceSettings`, controlador com relógio controlado — inclusive os 30 s fora do app —, biometria com falso e os fluxos da tela de bloqueio e de Ajustes › Segurança; mais 9 do M7: introdução, Ajuda e a marca no `device.json`) — atualizado em 2026-11-03 |
 | `flutter build apk --debug` | compilava em 2026-10-28; **não refeito** depois de tirar o Firebase do `main.dart` (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
 | CI (GitHub Actions) | `.github/workflows/ci.yml`: `flutter pub get`, `analyze` e `test` em `app-flutter/` a cada push em `main` e em todo PR. Flutter fixo em 3.44.4. **Nunca executou** — só roda depois do primeiro push. |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |

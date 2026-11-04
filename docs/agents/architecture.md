@@ -31,6 +31,7 @@ lib/
     ledger/            Lançamentos: Entry, saldo, escritas (±, ativar/desativar, zerar) (M4)
                        e o relatório em PDF compartilhado (M5)
     app_lock/          Bloqueio: biometria com PIN de reserva, Ajustes › Segurança (M6)
+    help/              Introdução em 4 cartões e Ajustes › Ajuda (M7)
     settings/          Ajustes (família, convite, segurança, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
@@ -117,6 +118,14 @@ O roteador decide a tela só pelo `Gate` selado (`GateLoading | GateError | Gate
 - O ciclo de vida é observado em `app.dart` com `AppLifecycleListener`: `hidden`/`paused` marcam a saída, `resumed` decide se pede o PIN. Vale o **primeiro** aviso de saída, porque a volta passa por estados intermediários e um segundo registro zeraria o tempo fora.
 - `PinPad` (teclado, 4 pontos, mensagem e erro) é compartilhado pela tela de bloqueio e por Ajustes › Segurança, que usa o mesmo widget em três passos (PIN atual → novo → confirmar).
 
+
+## A introdução (M7)
+
+- `introSeenProvider` (`help/presentation/state/help_state.dart`) lê a marca do aparelho e entra no `redirectFor` como um `bool?`: **nulo = ainda lendo**, e aí o roteador espera na tela de carregando. Não vista leva para `/introducao` e deixa ficar; vista não leva ninguém para lá, mas **permite** ficar — é assim que Ajustes › Ajuda consegue reabrir a mesma rota.
+- A marca mora no `device.json`, pelo mesmo `DeviceSettings` do PIN: a escrita é por junção, então marcar a introdução não mexe no bloqueio.
+- A ordem das guardas é PIN → introdução → conteúdo. Quem tem PIN ativo digita antes de ver a introdução.
+- Os 4 cartões são **só texto e ícone** (`design.md` §4.9). O app antigo usava imagens de tela por idioma, que envelheceram e não dava para traduzir.
+
 ## Composição e testes
 
 - `auth_family/data/providers.dart` é a raiz de composição: `authRepositoryProvider` e `familyRepositoryProvider` criam as implementações com `FirebaseAuth.instance` / `FirebaseFirestore.instance`.
@@ -127,5 +136,6 @@ O roteador decide a tela só pelo `Gate` selado (`GateLoading | GateError | Gate
 ## Convenções
 
 - Tela de dados trata carregando, dado, vazio e erro. Erro de ação aparece em texto abaixo do controle (`FailureText`), nunca só em snackbar.
+- **Nunca aguarde um canal de plataforma antes de atualizar a tela** (`HapticFeedback`, `Clipboard`, vibração): num teste de widget esse Future não completa, e a tela trava sem motivo. Use `unawaited(...)` e siga. Já tropeçamos nisso três vezes (M4, M6, M7).
 - Texto de UI só em `.arb`; as 4 línguas na mesma mudança. Regras-padrão por idioma ficam em `rules/domain/default_rules.dart`.
 - Mudou a estrutura de um módulo? Atualize este arquivo no mesmo diff.

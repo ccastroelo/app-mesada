@@ -9,6 +9,7 @@ import 'package:mesada/features/auth_family/domain/repositories/auth_repository.
 import 'package:mesada/features/auth_family/domain/repositories/family_repository.dart';
 import 'package:mesada/features/auth_family/domain/usecases/invite_code.dart';
 import 'package:mesada/features/children/children.dart';
+import 'package:mesada/features/help/help.dart';
 import 'package:mesada/features/ledger/ledger.dart';
 import 'package:mesada/features/rules/rules.dart';
 
@@ -505,4 +506,17 @@ class FakeBiometricAuth implements BiometricAuth {
     reasons.add(reason);
     return recognizes;
   }
+}
+
+/// Marca da introdução em memória.
+class FakeIntroStore implements IntroStore {
+  FakeIntroStore({this.wasSeen = true});
+
+  bool wasSeen;
+
+  @override
+  Future<bool> seen() async => wasSeen;
+
+  @override
+  Future<void> markSeen() async => wasSeen = true;
 }

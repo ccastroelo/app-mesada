@@ -266,5 +266,34 @@
   "biometricsSubtitle": "Face ID ou digital, conforme o aparelho. O PIN continua valendo como reserva.",
   "biometricsUseAction": "Usar biometria",
   "biometricsReason": "Desbloqueie o Mesada",
-  "biometricsUnavailable": "Não deu para ligar a biometria neste aparelho."
+  "biometricsUnavailable": "Não deu para ligar a biometria neste aparelho.",
+  "settingsHelpSection": "Ajuda",
+  "settingsHelpSubtitle": "Introdução, contato e sobre",
+  "helpSeeIntroAction": "Ver introdução",
+  "helpContactAction": "Falar com a gente",
+  "helpContactCopied": "E-mail copiado",
+  "settingsAboutSection": "Sobre",
+  "aboutDataLocal": "Os dados ficam neste aparelho.",
+  "introSkipAction": "Pular",
+  "introNextAction": "Próximo",
+  "introStartAction": "Começar",
+  "introProgress": "Cartão {current} de {total}",
+  "@introProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "intro1Title": "Seus filhos",
+  "intro1Body": "Cadastre cada filho e a mesada dele.",
+  "intro2Title": "As regras",
+  "intro2Body": "Defina o que ganha e o que desconta.",
+  "intro3Title": "Lançar",
+  "intro3Body": "Toque em + ou − e o saldo muda na hora.",
+  "intro4Title": "Os dois responsáveis",
+  "intro4Body": "Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois."
 }

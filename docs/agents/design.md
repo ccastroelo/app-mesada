@@ -1,6 +1,6 @@
 # Design — Mesada (proposta para aprovação)
 
-> **Status: APROVADO em 2026-10-28** · **emendas em 2026-11-03: §13** (Família por assinatura, entrada sem conta), **§14** (relatório em PDF) e **§15** (biometria) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
+> **Status: APROVADO em 2026-10-28** · **emendas em 2026-11-03: §13** (Família por assinatura, entrada sem conta), **§14** (relatório em PDF), **§15** (biometria) e **§16** (o que o M7 entregou diferente) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
 > Escopo do redesenho: visual **e** fluxo (ADR-0005). O app é de uso diário, em pé, com uma mão: a ação mais frequente (lançar ±1) precisa ser a mais fácil.
 
 ## 1. Princípios
@@ -220,3 +220,9 @@ Tira "biometria no lugar do PIN" da §11 (fora de escopo) e complementa a §4.11
 - O **PIN é a reserva**, não um igual: biometria falha, sensor suja, aparelho novo. O **código do aparelho não serve** de reserva — o filho costuma saber, e é dele que o bloqueio protege.
 - Em Ajustes › Segurança entra o interruptor **Desbloquear com biometria**, visível só com PIN ativo. Ligar pede a biometria na hora (prova que funciona); desativar o PIN desliga a biometria junto.
 - Durante a espera por erros de PIN (§4.11), nem a biometria passa.
+
+## 16. Emenda de 2026-11-03 — o que o M7 entregou diferente
+
+- **Falar com a gente** (§4.8) **copia** o e-mail de contato (`contato@ideiasmob.com.br`, o mesmo do app antigo) em vez de abrir o compositor de e-mail. Abrir exigiria `url_launcher`, e o endereço copiado resolve; reabrir se incomodar.
+- **Sobre** (§4.8) mostra o nome do app e onde os dados ficam, mas **não a versão**: ela exigiria `package_info_plus`, e a versão de release ainda não foi definida (precisa ser > 1.2, ADR-0007). Mostrar "1.0.0" seria pior que não mostrar.
+- A **introdução** (§4.9) saiu como desenhada, em 4 cartões de texto e ícone, com o 4º apresentando a Família como assinatura (§13). Ela aparece na primeira abertura — no modo local não há "criar família" visível — e é reabrível em Ajustes › Ajuda.
