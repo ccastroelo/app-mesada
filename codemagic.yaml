@@ -1,0 +1,43 @@
+# CI/CD no Codemagic (ADR-0019). O app Flutter fica em app-flutter/, então
+# todo passo roda com `working_directory`.
+#
+# Este arquivo sozinho não liga nada: o repositório precisa estar conectado no
+# Codemagic e o webhook criado lá, senão nada dispara.
+workflows:
+  verificacao:
+    name: Verificação (analyze e test)
+    # Linux basta: não há build de iOS aqui, só análise e testes.
+    instance_type: linux_x2
+    max_build_duration: 30
+    environment:
+      # Mesma versão do baseline em docs/agents/flutter.md. Se o Codemagic não
+      # tiver esta versão, trocar por `stable`.
+      flutter: 3.44.4
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Dependências
+        working_directory: app-flutter
+        script: flutter pub get
+      - name: Análise estática
+        working_directory: app-flutter
+        script: flutter analyze
+      - name: Testes
+        working_directory: app-flutter
+        script: flutter test --machine > test-report.json
+        # Faz o Codemagic mostrar os testes um por um, não só o código de saída.
+        test_report: app-flutter/test-report.json
+
+# Falta um workflow de build/publicação, e ele depende de três decisões que
+# ainda são do usuário (ver docs/agents/flutter.md e continuidade.md):
+#   1. versão e build de release (> 1.2 e build > 9, ADR-0007);
+#   2. assinatura: certificado e perfil do iOS, keystore do Android;
+#   3. contas das lojas (App Store Connect e Google Play).
+# Os testes das regras do Firestore (app-flutter/firebase-tests) seguem fora da
+# CI: precisam do emulador e de Java.
