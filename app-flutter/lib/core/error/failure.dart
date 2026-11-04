@@ -38,6 +38,11 @@ final class InvalidInvite extends Failure {
   const InvalidInvite();
 }
 
+/// O teste acabou e o app não foi comprado: só leitura (ADR-0021).
+final class ReadOnly extends Failure {
+  const ReadOnly();
+}
+
 final class Unexpected extends Failure {
   const Unexpected([this.cause]);
 

@@ -7,6 +7,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/state/action_controller.dart';
 import '../../../auth_family/auth_family.dart';
+import '../../../entitlement/entitlement_providers.dart';
 import '../../../ledger/ledger.dart';
 import '../../../ledger/ledger_providers.dart';
 import '../../../rules/rules_providers.dart';
@@ -73,6 +74,8 @@ class ChildrenActions extends ActionController {
   Future<bool> _withFamily(
     Future<Result<void>> Function(String familyId) action,
   ) => run(() async {
+    // Só leitura não grava (ADR-0021).
+    if (!await canWriteNow(ref)) return const Err(ReadOnly());
     final familyId = ref.read(_familyIdProvider);
     if (familyId == null) return const Err(Unexpected());
     try {

@@ -559,4 +559,70 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get backToLocalAction => 'Usar solo este dispositivo';
+
+  @override
+  String accessTrialBanner(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'quedan $days días',
+      one: 'queda 1 día',
+    );
+    return 'Prueba gratis: $_temp0';
+  }
+
+  @override
+  String get accessReadOnlyBanner => 'La prueba terminó: solo lectura.';
+
+  @override
+  String get accessBuyAction => 'Comprar';
+
+  @override
+  String get errorReadOnly =>
+      'La prueba terminó. Compra la app para registrar y editar.';
+
+  @override
+  String get purchaseTitle => 'Comprar Mesada';
+
+  @override
+  String get purchasePitch =>
+      'Una compra única desbloquea la app en este dispositivo para siempre, sin cuota mensual.';
+
+  @override
+  String get purchaseSharingNote =>
+      'Compartir con el otro responsable es una suscripción aparte, en Ajustes › Familia. Quien recibe la invitación necesita su propio acceso a la app.';
+
+  @override
+  String purchaseBuyAction(String price) {
+    return 'Comprar por $price';
+  }
+
+  @override
+  String get purchaseRestoreAction => 'Restaurar compras';
+
+  @override
+  String get purchaseRestoreEmpty =>
+      'No se encontraron compras en esta cuenta de la tienda.';
+
+  @override
+  String get purchaseStoreUnavailable =>
+      'La tienda no respondió. Inténtalo más tarde.';
+
+  @override
+  String get purchaseOwned => 'Ya tienes la app. ¡Gracias!';
+
+  @override
+  String get settingsPurchaseTile => 'Comprar la app';
+
+  @override
+  String get settingsPurchaseReadOnly => 'La prueba terminó: solo lectura';
+
+  @override
+  String get sharingSubscribeHint =>
+      'Compartir es una suscripción por familia: quien crea la familia se suscribe, y el otro responsable solo necesita la app.';
+
+  @override
+  String sharingSubscribeAction(String price) {
+    return 'Suscribirse por $price';
+  }
 }

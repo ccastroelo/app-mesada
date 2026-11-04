@@ -14,6 +14,7 @@ import '../../../../core/widgets/error_state.dart';
 import '../../../../core/widgets/failure_message.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../entitlement/entitlement_providers.dart';
 import '../../../ledger/ledger.dart';
 import '../../../ledger/ledger_providers.dart';
 import '../../../rules/rules.dart';
@@ -123,6 +124,7 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
     final ledger = ref.watch(childLedgerProvider(widget.childId));
     final action = ref.watch(ledgerActionsProvider);
     final data = ledger.value;
+    final canWrite = ref.watch(canWriteProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(data?.child.name ?? '')),
@@ -155,10 +157,12 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
                     },
                     itemBuilder: (context) => [
                       PopupMenuItem(
+                        enabled: canWrite,
                         value: _LedgerMenu.zero,
                         child: Text(l10n.childLedgerZeroMenu),
                       ),
                       PopupMenuItem(
+                        enabled: canWrite,
                         value: _LedgerMenu.rules,
                         child: Text(l10n.childRulesMenu),
                       ),
@@ -167,32 +171,43 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
                 ],
               ),
             ),
-      body: ledger.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => ErrorState(
-          onRetry: () {
-            ref.invalidate(childrenProvider);
-            ref.invalidate(rulesProvider);
-            ref.invalidate(entriesProvider);
-          },
-        ),
-        data: (data) => SafeArea(
-          child: Column(
-            children: [
-              _Header(
-                ledger: data,
-                deltaCents: _lastDelta,
-                chipVisible: _chipVisible,
+      body: Column(
+        children: [
+          const AccessBanner(showTrial: false),
+          Expanded(
+            child: ledger.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, _) => ErrorState(
+                onRetry: () {
+                  ref.invalidate(childrenProvider);
+                  ref.invalidate(rulesProvider);
+                  ref.invalidate(entriesProvider);
+                },
               ),
-              if (action.failure != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Space.lg),
-                  child: FailureText(action.failure),
+              data: (data) => SafeArea(
+                child: Column(
+                  children: [
+                    _Header(
+                      ledger: data,
+                      deltaCents: _lastDelta,
+                      chipVisible: _chipVisible,
+                    ),
+                    if (action.failure != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Space.lg,
+                        ),
+                        child: FailureText(action.failure),
+                      ),
+                    Expanded(
+                      child: data.hasActiveRows ? _rows(data) : _empty(data),
+                    ),
+                  ],
                 ),
-              Expanded(child: data.hasActiveRows ? _rows(data) : _empty(data)),
-            ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -219,6 +234,7 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
   Widget _rowTile(LedgerRow row) => _LedgerRowTile(
     key: ValueKey(row.rule.id),
     row: row,
+    canWrite: ref.watch(canWriteProvider),
     onIncrease: () => _launch(row, increase: true),
     onDecrease: () => _launch(row, increase: false),
   );
@@ -236,7 +252,7 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
     return EmptyState(
       icon: Icons.toggle_off_outlined,
       title: l10n.childLedgerAllOffTitle(data.child.name),
-      actionLabel: l10n.childRulesMenu,
+      actionLabel: ref.watch(canWriteProvider) ? l10n.childRulesMenu : null,
       onAction: () => context.push('/filhos/${widget.childId}/regras'),
     );
   }
@@ -411,11 +427,13 @@ class _LedgerRowTile extends StatelessWidget {
   const _LedgerRowTile({
     super.key,
     required this.row,
+    required this.canWrite,
     required this.onIncrease,
     required this.onDecrease,
   });
 
   final LedgerRow row;
+  final bool canWrite;
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
 
@@ -452,6 +470,7 @@ class _LedgerRowTile extends StatelessWidget {
                   alignment: AlignmentDirectional.centerEnd,
                   child: _Stepper(
                     row: row,
+                    canWrite: canWrite,
                     onIncrease: onIncrease,
                     onDecrease: onDecrease,
                   ),
@@ -463,6 +482,7 @@ class _LedgerRowTile extends StatelessWidget {
                 Expanded(child: text),
                 _Stepper(
                   row: row,
+                  canWrite: canWrite,
                   onIncrease: onIncrease,
                   onDecrease: onDecrease,
                 ),
@@ -475,11 +495,13 @@ class _LedgerRowTile extends StatelessWidget {
 class _Stepper extends StatelessWidget {
   const _Stepper({
     required this.row,
+    required this.canWrite,
     required this.onIncrease,
     required this.onDecrease,
   });
 
   final LedgerRow row;
+  final bool canWrite;
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
 
@@ -496,7 +518,7 @@ class _Stepper extends StatelessWidget {
           tooltip: l10n.decreaseSemantics(description, row.quantity),
           icon: const Icon(Icons.remove_circle_outline),
           // Piso 0, como no legado (`imLanVC.m:119`).
-          onPressed: row.quantity == 0 ? null : onDecrease,
+          onPressed: !canWrite || row.quantity == 0 ? null : onDecrease,
         ),
         Text(
           '${row.quantity}',
@@ -507,7 +529,7 @@ class _Stepper extends StatelessWidget {
         IconButton(
           tooltip: l10n.increaseSemantics(description, row.quantity),
           icon: const Icon(Icons.add_circle_outline),
-          onPressed: onIncrease,
+          onPressed: canWrite ? onIncrease : null,
         ),
       ],
     );

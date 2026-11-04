@@ -73,12 +73,12 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 - **Sobre** (M7): sem `package_info_plus` não dá para ler a versão em tempo de execução, e a versão de release ainda não foi definida (> 1.2, build > 9 — ADR-0007). Quando ela for decidida, entra a dependência (ou uma constante gerada no build) e a linha aparece.
 - **Falar com a gente** (M7): copia `contato@synapsesolucoes.ia.br` para a área de transferência. Abrir o compositor de e-mail já preenchido exigiria `url_launcher`. O local-part (`contato@`) veio do app antigo; confirmar se é essa a caixa certa no domínio novo.
 
-## A compra e a assinatura ainda não existem no código
+## A compra e a assinatura existem no código, mas nunca falaram com uma loja
 
-- O modelo está decidido (ADR-0021), mas o código só tem o **núcleo**: a marca do aparelho e `evaluateAccess` (acesso ao app). O gateway de compra do M4.5 antigo (um produto, a Família) foi apagado; volta com **dois** produtos, `mesada_app` e `mesada_compartilhar`, que o usuário precisa criar nas duas lojas com esses ids.
-- Enquanto isso **ninguém é bloqueado**: nada consulta `evaluateAccess`, e compartilhar não pede assinatura. Um build de hoje daria acesso completo para sempre.
+- O M4.5b entregou o gateway (`in_app_purchase`), a cópia local, a faixa do teste, o só leitura e a assinatura exigida para compartilhar (`architecture.md`). Nos testes a loja é um `FakeStoreGateway`: o que está coberto é a **decisão**, não o canal de plataforma. Comprar, restaurar, o fluxo de confirmação e o `purchaseStream` só se provam em aparelho, com os produtos `mesada_app` e `mesada_compartilhar` criados nas duas lojas (passo do usuário).
+- **A assinatura não é validada**: a cópia local não sabe quando ela vence, e nada impede um aparelho adulterado de afirmar que assinou. Também não chega ao convidado (falta o campo no documento da família e as regras do Firestore). Validar o recibo no servidor é decisão a tomar **antes de vender** (`migration-plan.md`, risco 11).
 - **Antes de vender**: (1) o teste de 15 dias é um contador do próprio app: guardar o maior instante já visto resolve o relógio; no iOS o Keychain (e talvez a compra gratuita de $0) ajuda com a reinstalação; no Android só o Auto Backup e o Block Store, sem garantia — o furo residual é aceito (detalhes na ADR-0021). (2) A assinatura chega ao convidado por um campo no documento da família, forjável sem validação no servidor (Cloud Functions no plano Blaze, ou RevenueCat). (3) Revisão das lojas: o convidado sincroniza por causa da assinatura de outra pessoa; fallback, cada um assina. (4) A detecção do app antigo só enxerga quem salvou algo nele (o app antigo só gravava os `.plist` ao salvar). (5) O "retrato local" ao vencer a assinatura (ADR-0014) ainda não existe.
-- Como a biometria, a compra é canal de plataforma: nos testes o gateway será um falso, então o que ficará coberto é a decisão, não o diálogo de pagamento. Será preciso testar em ambiente de teste das lojas (compra, cancelamento, restaurar, pendente de aprovação).
+- **Retrato local ao vencer** (ADR-0014) ainda não existe: quem deixa de assinar continua com a nuvem até a virada de volta ser implementada.
 
 ## A virada para a nuvem nunca rodou de verdade
 

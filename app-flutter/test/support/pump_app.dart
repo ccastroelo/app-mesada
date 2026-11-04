@@ -41,6 +41,8 @@ Future<void> pumpApp(
   FakeIntroStore? introStore,
   FakeEntitlementStore? entitlementStore,
   FakeLegacyDetector? legacyDetector,
+  FakeStoreGateway? storeGateway,
+  FakePurchaseStore? purchaseStore,
   DateTime Function()? clock,
   LocalStore? store,
   DeviceSettings? deviceSettings,
@@ -75,6 +77,15 @@ Future<void> pumpApp(
         ),
         legacyAppDetectorProvider.overrideWithValue(
           legacyDetector ?? FakeLegacyDetector(),
+        ),
+        // A loja e a cópia das compras em memória. Por padrão o app já está
+        // comprado: a faixa de teste e o só leitura não entram no caminho dos
+        // outros testes (os de acesso passam o próprio `purchaseStore`).
+        storeGatewayProvider.overrideWithValue(
+          storeGateway ?? FakeStoreGateway(),
+        ),
+        purchaseStoreProvider.overrideWithValue(
+          purchaseStore ?? FakePurchaseStore.ownsApp(),
         ),
         localStoreProvider.overrideWithValue(store ?? temporaryStore()),
         authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),

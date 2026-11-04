@@ -12,6 +12,7 @@ import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/rule.dart';
 import '../../domain/usecases/split_rules.dart';
+import '../../../entitlement/entitlement_providers.dart';
 import '../state/rules_state.dart';
 
 enum _RuleMenu { edit, delete }
@@ -78,6 +79,7 @@ class _RulesPageState extends ConsumerState<RulesPage> {
     final rules = ref.watch(rulesProvider);
     final action = ref.watch(rulesActionsProvider);
     final list = rules.value;
+    final canWrite = ref.watch(canWriteProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -94,11 +96,13 @@ class _RulesPageState extends ConsumerState<RulesPage> {
                 : IconButton(
                     tooltip: l10n.reorderAction,
                     icon: const Icon(Icons.swap_vert),
-                    onPressed: () => setState(() => _working = [...list]),
+                    onPressed: canWrite
+                        ? () => setState(() => _working = [...list])
+                        : null,
                   ),
         ],
       ),
-      floatingActionButton: _reordering
+      floatingActionButton: _reordering || !canWrite
           ? null
           : FloatingActionButton.extended(
               // As abas ficam vivas juntas (IndexedStack): sem tag única para
@@ -108,35 +112,46 @@ class _RulesPageState extends ConsumerState<RulesPage> {
               icon: const Icon(Icons.add),
               label: Text(l10n.newRuleAction),
             ),
-      body: rules.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) =>
-            ErrorState(onRetry: () => ref.invalidate(rulesProvider)),
-        data: (data) {
-          if (data.isEmpty) return const _EmptyRules();
-          return Column(
-            children: [
-              if (action.failure != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Space.lg),
-                  child: FailureText(action.failure),
-                ),
-              Expanded(
-                child: _reordering
-                    ? _ReorderList(
-                        rules: _working!,
-                        onChanged: (next) => setState(() => _working = next),
-                      )
-                    : _GroupedList(
-                        rules: data,
-                        onEdit: (rule) =>
-                            context.push('/regras/${rule.id}/editar'),
-                        onDelete: _confirmDelete,
+      body: Column(
+        children: [
+          const AccessBanner(showTrial: false),
+          Expanded(
+            child: rules.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, _) =>
+                  ErrorState(onRetry: () => ref.invalidate(rulesProvider)),
+              data: (data) {
+                if (data.isEmpty) return const _EmptyRules();
+                return Column(
+                  children: [
+                    if (action.failure != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Space.lg,
+                        ),
+                        child: FailureText(action.failure),
                       ),
-              ),
-            ],
-          );
-        },
+                    Expanded(
+                      child: _reordering
+                          ? _ReorderList(
+                              rules: _working!,
+                              onChanged: (next) =>
+                                  setState(() => _working = next),
+                            )
+                          : _GroupedList(
+                              rules: data,
+                              canWrite: canWrite,
+                              onEdit: (rule) =>
+                                  context.push('/regras/${rule.id}/editar'),
+                              onDelete: _confirmDelete,
+                            ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -149,6 +164,7 @@ class _EmptyRules extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final action = ref.watch(rulesActionsProvider);
+    final canWrite = ref.watch(canWriteProvider);
     return Column(
       children: [
         Expanded(
@@ -156,8 +172,8 @@ class _EmptyRules extends ConsumerWidget {
             icon: Icons.checklist_outlined,
             title: l10n.rulesEmptyTitle,
             body: l10n.rulesEmptyBody,
-            actionLabel: l10n.useSuggestionsAction,
-            onAction: action.loading
+            actionLabel: canWrite ? l10n.useSuggestionsAction : null,
+            onAction: action.loading || !canWrite
                 ? null
                 : () => ref
                       .read(rulesActionsProvider.notifier)
@@ -178,11 +194,13 @@ class _EmptyRules extends ConsumerWidget {
 class _GroupedList extends StatelessWidget {
   const _GroupedList({
     required this.rules,
+    required this.canWrite,
     required this.onEdit,
     required this.onDelete,
   });
 
   final List<Rule> rules;
+  final bool canWrite;
   final void Function(Rule) onEdit;
   final void Function(Rule) onDelete;
 
@@ -197,12 +215,22 @@ class _GroupedList extends StatelessWidget {
         if (groups.rewards.isNotEmpty) ...[
           SectionHeader(l10n.rulesRewardsSection),
           for (final rule in groups.rewards)
-            _RuleTile(rule: rule, onEdit: onEdit, onDelete: onDelete),
+            _RuleTile(
+              rule: rule,
+              canWrite: canWrite,
+              onEdit: onEdit,
+              onDelete: onDelete,
+            ),
         ],
         if (groups.discounts.isNotEmpty) ...[
           SectionHeader(l10n.rulesDiscountsSection),
           for (final rule in groups.discounts)
-            _RuleTile(rule: rule, onEdit: onEdit, onDelete: onDelete),
+            _RuleTile(
+              rule: rule,
+              canWrite: canWrite,
+              onEdit: onEdit,
+              onDelete: onDelete,
+            ),
         ],
       ],
     );
@@ -212,11 +240,13 @@ class _GroupedList extends StatelessWidget {
 class _RuleTile extends StatelessWidget {
   const _RuleTile({
     required this.rule,
+    required this.canWrite,
     required this.onEdit,
     required this.onDelete,
   });
 
   final Rule rule;
+  final bool canWrite;
   final void Function(Rule) onEdit;
   final void Function(Rule) onDelete;
 
@@ -233,14 +263,19 @@ class _RuleTile extends StatelessWidget {
           _RuleMenu.delete => onDelete(rule),
         },
         itemBuilder: (context) => [
-          PopupMenuItem(value: _RuleMenu.edit, child: Text(l10n.editAction)),
           PopupMenuItem(
+            enabled: canWrite,
+            value: _RuleMenu.edit,
+            child: Text(l10n.editAction),
+          ),
+          PopupMenuItem(
+            enabled: canWrite,
             value: _RuleMenu.delete,
             child: Text(l10n.deleteAction),
           ),
         ],
       ),
-      onTap: () => onEdit(rule),
+      onTap: canWrite ? () => onEdit(rule) : null,
     );
   }
 }

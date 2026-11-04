@@ -9,6 +9,7 @@ import '../../../../core/widgets/error_state.dart';
 import '../../../../core/widgets/failure_message.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../entitlement/entitlement_providers.dart';
 import '../../../ledger/ledger_providers.dart';
 import '../../../rules/rules_providers.dart';
 import '../state/child_ledger_state.dart';
@@ -58,6 +59,7 @@ class ChildRulesPage extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.only(bottom: Space.xl),
               children: [
+                const AccessBanner(showTrial: false),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     Space.lg,
@@ -100,6 +102,7 @@ class _RuleSwitch extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.mesadaColors;
+    final canWrite = ref.watch(canWriteProvider);
     final rule = row.rule;
     final value = formatCents(
       rule.valueCents,
@@ -108,9 +111,15 @@ class _RuleSwitch extends ConsumerWidget {
     );
     return SwitchListTile(
       value: row.enabled,
-      onChanged: (enabled) => ref
-          .read(ledgerActionsProvider.notifier)
-          .setEnabled(childId: childId, ruleId: rule.id, enabled: enabled),
+      onChanged: !canWrite
+          ? null
+          : (enabled) => ref
+                .read(ledgerActionsProvider.notifier)
+                .setEnabled(
+                  childId: childId,
+                  ruleId: rule.id,
+                  enabled: enabled,
+                ),
       title: Text(rule.description),
       subtitle: Text(value),
       secondary: ExcludeSemantics(

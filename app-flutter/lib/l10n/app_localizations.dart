@@ -1096,6 +1096,102 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Usar só neste aparelho'**
   String get backToLocalAction;
+
+  /// No description provided for @accessTrialBanner.
+  ///
+  /// In pt, this message translates to:
+  /// **'Teste grátis: {days, plural, =1{falta 1 dia} other{faltam {days} dias}}'**
+  String accessTrialBanner(int days);
+
+  /// No description provided for @accessReadOnlyBanner.
+  ///
+  /// In pt, this message translates to:
+  /// **'O teste acabou: só leitura.'**
+  String get accessReadOnlyBanner;
+
+  /// No description provided for @accessBuyAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprar'**
+  String get accessBuyAction;
+
+  /// No description provided for @errorReadOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'O teste acabou. Compre o app para lançar e editar.'**
+  String get errorReadOnly;
+
+  /// No description provided for @purchaseTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprar o Mesada'**
+  String get purchaseTitle;
+
+  /// No description provided for @purchasePitch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Uma compra única libera o app neste aparelho para sempre, sem mensalidade.'**
+  String get purchasePitch;
+
+  /// No description provided for @purchaseSharingNote.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar com o outro responsável é uma assinatura à parte, em Ajustes › Família. Quem recebe o convite precisa ter o próprio acesso ao app.'**
+  String get purchaseSharingNote;
+
+  /// No description provided for @purchaseBuyAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprar por {price}'**
+  String purchaseBuyAction(String price);
+
+  /// No description provided for @purchaseRestoreAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar compras'**
+  String get purchaseRestoreAction;
+
+  /// No description provided for @purchaseRestoreEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma compra encontrada nesta conta da loja.'**
+  String get purchaseRestoreEmpty;
+
+  /// No description provided for @purchaseStoreUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'A loja não respondeu agora. Tente de novo mais tarde.'**
+  String get purchaseStoreUnavailable;
+
+  /// No description provided for @purchaseOwned.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você já tem o app. Obrigado!'**
+  String get purchaseOwned;
+
+  /// No description provided for @settingsPurchaseTile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comprar o app'**
+  String get settingsPurchaseTile;
+
+  /// No description provided for @settingsPurchaseReadOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'O teste acabou: só leitura'**
+  String get settingsPurchaseReadOnly;
+
+  /// No description provided for @sharingSubscribeHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar é uma assinatura por família: quem cria a família assina, e o outro responsável só precisa ter o app.'**
+  String get sharingSubscribeHint;
+
+  /// No description provided for @sharingSubscribeAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinar por {price}'**
+  String sharingSubscribeAction(String price);
 }
 
 class _AppLocalizationsDelegate

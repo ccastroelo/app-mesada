@@ -32,6 +32,8 @@ class _MesadaAppState extends ConsumerState<MesadaApp> {
             lock.onAway();
           case AppLifecycleState.resumed:
             lock.onBack();
+            // O teste pode ter acabado enquanto o app estava em segundo plano.
+            ref.invalidate(accessProvider);
           case AppLifecycleState.inactive || AppLifecycleState.detached:
             break;
         }

@@ -1,11 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../core/storage/providers.dart';
 import '../domain/repositories/entitlement_store.dart';
 import '../domain/repositories/legacy_app_detector.dart';
+import '../domain/repositories/purchase_store.dart';
+import '../domain/repositories/store_gateway.dart';
 import 'repositories/entitlement_store_impl.dart';
+import 'repositories/in_app_purchase_store_gateway.dart';
 import 'repositories/legacy_files_detector.dart';
+import 'repositories/purchase_store_impl.dart';
 
 /// Raiz de composição da feature; os testes trocam por falsos.
 final entitlementStoreProvider = Provider<EntitlementStore>(
@@ -14,4 +19,13 @@ final entitlementStoreProvider = Provider<EntitlementStore>(
 
 final legacyAppDetectorProvider = Provider<LegacyAppDetector>(
   (ref) => LegacyFilesDetector(getApplicationDocumentsDirectory),
+);
+
+final purchaseStoreProvider = Provider<PurchaseStore>(
+  (ref) => PurchaseStoreImpl(ref.watch(deviceSettingsProvider)),
+);
+
+/// A loja de verdade. Nenhum teste fala com ela.
+final storeGatewayProvider = Provider<StoreGateway>(
+  (ref) => InAppPurchaseStoreGateway(InAppPurchase.instance),
 );

@@ -572,3 +572,70 @@ class FakeLegacyDetector implements LegacyAppDetector {
   @override
   Future<bool> existed() async => found;
 }
+
+/// A loja em memória: o teste diz o preço, se a compra passa e o que
+/// "restaurar" encontra.
+class FakeStoreGateway implements StoreGateway {
+  FakeStoreGateway({
+    this.prices = const {
+      StoreProduct.app: 'R\$ 19,90',
+      StoreProduct.sharing: 'R\$ 9,90',
+    },
+    this.buyResult = true,
+    this.restorable = const {},
+  });
+
+  /// Produtos que a loja tem à venda, com o preço já formatado.
+  Map<StoreProduct, String> prices;
+
+  /// O que acontece quando a pessoa confirma a compra.
+  bool buyResult;
+
+  /// O que a conta da loja já tem (devolvido por "Restaurar compras").
+  Set<StoreProduct> restorable;
+
+  final bought = <StoreProduct>[];
+  int restores = 0;
+
+  @override
+  Future<StoreOffer?> offer(StoreProduct product) async {
+    final price = prices[product];
+    return price == null ? null : StoreOffer(product: product, price: price);
+  }
+
+  @override
+  Future<bool> buy(StoreProduct product) async {
+    bought.add(product);
+    return buyResult;
+  }
+
+  @override
+  Future<Set<StoreProduct>> restore() async {
+    restores++;
+    return restorable;
+  }
+}
+
+/// A cópia local das compras, em memória.
+class FakePurchaseStore implements PurchaseStore {
+  FakePurchaseStore({Iterable<PurchaseRecord> records = const []})
+    : records = {for (final record in records) record.product: record};
+
+  /// O aparelho de quem já comprou o app: padrão do `pumpApp`, para a faixa
+  /// de teste não entrar no caminho dos outros testes.
+  factory FakePurchaseStore.ownsApp() => FakePurchaseStore(
+    records: [
+      PurchaseRecord(product: StoreProduct.app, since: DateTime(2026, 1, 1)),
+    ],
+  );
+
+  final Map<StoreProduct, PurchaseRecord> records;
+
+  @override
+  Future<Map<StoreProduct, PurchaseRecord>> read() async => {...records};
+
+  @override
+  Future<void> save(PurchaseRecord record) async {
+    records[record.product] = record;
+  }
+}

@@ -12,6 +12,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../ledger/ledger_providers.dart';
 import '../../domain/entities/child.dart';
 import '../state/child_report_state.dart';
+import '../../../entitlement/entitlement_providers.dart';
 import '../state/children_state.dart';
 import '../widgets/child_avatar.dart';
 import 'child_ledger_page.dart';
@@ -115,6 +116,7 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
     final ledgerAction = ref.watch(ledgerActionsProvider);
     final failure = action.failure ?? ledgerAction.failure;
     final list = summaries.value;
+    final canWrite = ref.watch(canWriteProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -131,9 +133,11 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
                 : IconButton(
                     tooltip: l10n.reorderAction,
                     icon: const Icon(Icons.swap_vert),
-                    onPressed: () => setState(
-                      () => _working = [for (final s in list) s.child],
-                    ),
+                    onPressed: canWrite
+                        ? () => setState(
+                            () => _working = [for (final s in list) s.child],
+                          )
+                        : null,
                   ),
           if (list != null && list.isNotEmpty && !_reordering)
             PopupMenuButton<_ChildrenMenu>(
@@ -142,6 +146,7 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
               },
               itemBuilder: (context) => [
                 PopupMenuItem(
+                  enabled: canWrite,
                   value: _ChildrenMenu.zeroAll,
                   child: Text(l10n.childLedgerZeroAllMenu),
                 ),
@@ -149,7 +154,7 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
             ),
         ],
       ),
-      floatingActionButton: _reordering
+      floatingActionButton: _reordering || !canWrite
           ? null
           : FloatingActionButton.extended(
               // As abas ficam vivas juntas (IndexedStack): sem tag única para
@@ -159,61 +164,72 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
               icon: const Icon(Icons.add),
               label: Text(l10n.addChildAction),
             ),
-      body: summaries.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => ErrorState(
-          onRetry: () {
-            ref.invalidate(childrenProvider);
-            ref.invalidate(childSummariesProvider);
-          },
-        ),
-        data: (data) {
-          if (data.isEmpty) {
-            return EmptyState(
-              icon: Icons.child_care_outlined,
-              title: l10n.childrenEmptyTitle,
-              actionLabel: l10n.addChildAction,
-              onAction: () => context.push('/filhos/novo'),
-            );
-          }
-          return Column(
-            children: [
-              if (failure != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Space.lg),
-                  child: FailureText(failure),
-                ),
-              Expanded(
-                child: _reordering
-                    ? _ReorderList(
-                        children: _working!,
-                        onChanged: (next) => setState(() => _working = next),
-                      )
-                    : ListView.builder(
-                        // Folga para o botão flutuante não cobrir o último cartão.
-                        padding: const EdgeInsets.fromLTRB(
-                          Space.lg,
-                          Space.sm,
-                          Space.lg,
-                          88,
-                        ),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => _ChildCard(
-                          summary: data[index],
-                          onOpen: (child) =>
-                              context.push('/filhos/${child.id}'),
-                          onEdit: (child) =>
-                              context.push('/filhos/${child.id}/editar'),
-                          onZero: (child) => _confirmZero(child: child),
-                          onReport: (child) =>
-                              shareChildReport(context, ref, child.id),
-                          onDelete: _confirmDelete,
-                        ),
-                      ),
+      body: Column(
+        children: [
+          const AccessBanner(),
+          Expanded(
+            child: summaries.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, _) => ErrorState(
+                onRetry: () {
+                  ref.invalidate(childrenProvider);
+                  ref.invalidate(childSummariesProvider);
+                },
               ),
-            ],
-          );
-        },
+              data: (data) {
+                if (data.isEmpty) {
+                  return EmptyState(
+                    icon: Icons.child_care_outlined,
+                    title: l10n.childrenEmptyTitle,
+                    actionLabel: canWrite ? l10n.addChildAction : null,
+                    onAction: () => context.push('/filhos/novo'),
+                  );
+                }
+                return Column(
+                  children: [
+                    if (failure != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Space.lg,
+                        ),
+                        child: FailureText(failure),
+                      ),
+                    Expanded(
+                      child: _reordering
+                          ? _ReorderList(
+                              children: _working!,
+                              onChanged: (next) =>
+                                  setState(() => _working = next),
+                            )
+                          : ListView.builder(
+                              // Folga para o botão flutuante não cobrir o último cartão.
+                              padding: const EdgeInsets.fromLTRB(
+                                Space.lg,
+                                Space.sm,
+                                Space.lg,
+                                88,
+                              ),
+                              itemCount: data.length,
+                              itemBuilder: (context, index) => _ChildCard(
+                                summary: data[index],
+                                canWrite: canWrite,
+                                onOpen: (child) =>
+                                    context.push('/filhos/${child.id}'),
+                                onEdit: (child) =>
+                                    context.push('/filhos/${child.id}/editar'),
+                                onZero: (child) => _confirmZero(child: child),
+                                onReport: (child) =>
+                                    shareChildReport(context, ref, child.id),
+                                onDelete: _confirmDelete,
+                              ),
+                            ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -222,6 +238,7 @@ class _ChildrenPageState extends ConsumerState<ChildrenPage> {
 class _ChildCard extends StatelessWidget {
   const _ChildCard({
     required this.summary,
+    required this.canWrite,
     required this.onOpen,
     required this.onEdit,
     required this.onZero,
@@ -230,6 +247,7 @@ class _ChildCard extends StatelessWidget {
   });
 
   final ChildSummary summary;
+  final bool canWrite;
   final void Function(Child) onOpen;
   final void Function(Child) onEdit;
   final void Function(Child) onZero;
@@ -322,10 +340,12 @@ class _ChildCard extends StatelessWidget {
                 },
                 itemBuilder: (context) => [
                   PopupMenuItem(
+                    enabled: canWrite,
                     value: _ChildMenu.edit,
                     child: Text(l10n.editAction),
                   ),
                   PopupMenuItem(
+                    enabled: canWrite,
                     value: _ChildMenu.zero,
                     child: Text(l10n.childLedgerZeroMenu),
                   ),
@@ -334,6 +354,7 @@ class _ChildCard extends StatelessWidget {
                     child: Text(l10n.sendReportAction),
                   ),
                   PopupMenuItem(
+                    enabled: canWrite,
                     value: _ChildMenu.delete,
                     child: Text(l10n.deleteAction),
                   ),

@@ -557,4 +557,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backToLocalAction => 'Use this device only';
+
+  @override
+  String accessTrialBanner(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days left',
+      one: '1 day left',
+    );
+    return 'Free trial: $_temp0';
+  }
+
+  @override
+  String get accessReadOnlyBanner => 'The trial is over: read-only.';
+
+  @override
+  String get accessBuyAction => 'Buy';
+
+  @override
+  String get errorReadOnly => 'The trial is over. Buy the app to add and edit.';
+
+  @override
+  String get purchaseTitle => 'Buy Mesada';
+
+  @override
+  String get purchasePitch =>
+      'A one-time purchase unlocks the app on this device for good, with no monthly fee.';
+
+  @override
+  String get purchaseSharingNote =>
+      'Sharing with the other parent is a separate subscription, in Settings › Family. Whoever receives the invite needs their own access to the app.';
+
+  @override
+  String purchaseBuyAction(String price) {
+    return 'Buy for $price';
+  }
+
+  @override
+  String get purchaseRestoreAction => 'Restore purchases';
+
+  @override
+  String get purchaseRestoreEmpty =>
+      'No purchases found on this store account.';
+
+  @override
+  String get purchaseStoreUnavailable =>
+      'The store didn\'t respond. Try again later.';
+
+  @override
+  String get purchaseOwned => 'You already have the app. Thank you!';
+
+  @override
+  String get settingsPurchaseTile => 'Buy the app';
+
+  @override
+  String get settingsPurchaseReadOnly => 'The trial is over: read-only';
+
+  @override
+  String get sharingSubscribeHint =>
+      'Sharing is a subscription per family: whoever creates the family subscribes, and the other parent only needs the app.';
+
+  @override
+  String sharingSubscribeAction(String price) {
+    return 'Subscribe for $price';
+  }
 }

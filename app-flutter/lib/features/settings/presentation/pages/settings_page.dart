@@ -6,6 +6,8 @@ import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../app_lock/app_lock_providers.dart';
 import '../../../auth_family/auth_family.dart';
+import '../../../entitlement/entitlement.dart';
+import '../../../entitlement/entitlement_providers.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -19,11 +21,26 @@ class SettingsPage extends ConsumerWidget {
     // conta, que a pessoa cria ao escolher compartilhar (ADR-0021).
     final user = ready?.user;
     final family = ready?.family;
+    // Só quem ainda está no teste ou ficou em só leitura vê o atalho de compra.
+    final access = ref.watch(accessProvider).value;
+    final purchaseSubtitle = switch (access) {
+      FullAccess(source: AccessSource.trial, :final trialDaysLeft?) =>
+        l10n.accessTrialBanner(trialDaysLeft),
+      ReadOnlyAccess() => l10n.settingsPurchaseReadOnly,
+      _ => null,
+    };
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navSettings)),
       body: ListView(
         children: [
+          if (purchaseSubtitle != null)
+            ListTile(
+              leading: const Icon(Icons.shopping_bag_outlined),
+              title: Text(l10n.settingsPurchaseTile),
+              subtitle: Text(purchaseSubtitle),
+              onTap: () => context.push('/comprar'),
+            ),
           SectionHeader(l10n.settingsFamilySection),
           if (family != null)
             ListTile(

@@ -302,5 +302,42 @@
   "settingsFamilySharingSubtitle": "Compartilhar com o outro responsável",
   "sharingStart": "Entrar para compartilhar",
   "sharingHint": "Você entra com uma conta e os dados deste aparelho sobem para a nuvem. Depois é só convidar o outro responsável.",
-  "backToLocalAction": "Usar só neste aparelho"
+  "backToLocalAction": "Usar só neste aparelho",
+  "accessTrialBanner": "Teste grátis: {days, plural, =1{falta 1 dia} other{faltam {days} dias}}",
+  "@accessTrialBanner": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "accessReadOnlyBanner": "O teste acabou: só leitura.",
+  "accessBuyAction": "Comprar",
+  "errorReadOnly": "O teste acabou. Compre o app para lançar e editar.",
+  "purchaseTitle": "Comprar o Mesada",
+  "purchasePitch": "Uma compra única libera o app neste aparelho para sempre, sem mensalidade.",
+  "purchaseSharingNote": "Compartilhar com o outro responsável é uma assinatura à parte, em Ajustes › Família. Quem recebe o convite precisa ter o próprio acesso ao app.",
+  "purchaseBuyAction": "Comprar por {price}",
+  "@purchaseBuyAction": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseRestoreAction": "Restaurar compras",
+  "purchaseRestoreEmpty": "Nenhuma compra encontrada nesta conta da loja.",
+  "purchaseStoreUnavailable": "A loja não respondeu agora. Tente de novo mais tarde.",
+  "purchaseOwned": "Você já tem o app. Obrigado!",
+  "settingsPurchaseTile": "Comprar o app",
+  "settingsPurchaseReadOnly": "O teste acabou: só leitura",
+  "sharingSubscribeHint": "Compartilhar é uma assinatura por família: quem cria a família assina, e o outro responsável só precisa ter o app.",
+  "sharingSubscribeAction": "Assinar por {price}",
+  "@sharingSubscribeAction": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -165,5 +165,21 @@
   "settingsFamilySharingSubtitle": "Share with the other parent",
   "sharingStart": "Sign in to share",
   "sharingHint": "You sign in with an account and this device's data moves to the cloud. Then you invite the other parent.",
-  "backToLocalAction": "Use this device only"
+  "backToLocalAction": "Use this device only",
+  "accessTrialBanner": "Free trial: {days, plural, =1{1 day left} other{{days} days left}}",
+  "accessReadOnlyBanner": "The trial is over: read-only.",
+  "accessBuyAction": "Buy",
+  "errorReadOnly": "The trial is over. Buy the app to add and edit.",
+  "purchaseTitle": "Buy Mesada",
+  "purchasePitch": "A one-time purchase unlocks the app on this device for good, with no monthly fee.",
+  "purchaseSharingNote": "Sharing with the other parent is a separate subscription, in Settings › Family. Whoever receives the invite needs their own access to the app.",
+  "purchaseBuyAction": "Buy for {price}",
+  "purchaseRestoreAction": "Restore purchases",
+  "purchaseRestoreEmpty": "No purchases found on this store account.",
+  "purchaseStoreUnavailable": "The store didn't respond. Try again later.",
+  "purchaseOwned": "You already have the app. Thank you!",
+  "settingsPurchaseTile": "Buy the app",
+  "settingsPurchaseReadOnly": "The trial is over: read-only",
+  "sharingSubscribeHint": "Sharing is a subscription per family: whoever creates the family subscribes, and the other parent only needs the app.",
+  "sharingSubscribeAction": "Subscribe for {price}"
 }

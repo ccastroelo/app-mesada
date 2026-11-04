@@ -165,5 +165,21 @@
   "settingsFamilySharingSubtitle": "Compartir con el otro responsable",
   "sharingStart": "Entrar para compartir",
   "sharingHint": "Entras con una cuenta y los datos de este dispositivo suben a la nube. Después invitas al otro responsable.",
-  "backToLocalAction": "Usar solo este dispositivo"
+  "backToLocalAction": "Usar solo este dispositivo",
+  "accessTrialBanner": "Prueba gratis: {days, plural, =1{queda 1 día} other{quedan {days} días}}",
+  "accessReadOnlyBanner": "La prueba terminó: solo lectura.",
+  "accessBuyAction": "Comprar",
+  "errorReadOnly": "La prueba terminó. Compra la app para registrar y editar.",
+  "purchaseTitle": "Comprar Mesada",
+  "purchasePitch": "Una compra única desbloquea la app en este dispositivo para siempre, sin cuota mensual.",
+  "purchaseSharingNote": "Compartir con el otro responsable es una suscripción aparte, en Ajustes › Familia. Quien recibe la invitación necesita su propio acceso a la app.",
+  "purchaseBuyAction": "Comprar por {price}",
+  "purchaseRestoreAction": "Restaurar compras",
+  "purchaseRestoreEmpty": "No se encontraron compras en esta cuenta de la tienda.",
+  "purchaseStoreUnavailable": "La tienda no respondió. Inténtalo más tarde.",
+  "purchaseOwned": "Ya tienes la app. ¡Gracias!",
+  "settingsPurchaseTile": "Comprar la app",
+  "settingsPurchaseReadOnly": "La prueba terminó: solo lectura",
+  "sharingSubscribeHint": "Compartir es una suscripción por familia: quien crea la familia se suscribe, y el otro responsable solo necesita la app.",
+  "sharingSubscribeAction": "Suscribirse por {price}"
 }
