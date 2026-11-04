@@ -7,6 +7,17 @@ import '../../../rules/rules_providers.dart';
 import '../../domain/entities/child.dart';
 import 'children_state.dart';
 
+/// O filho pedido não está mais na lista: o outro responsável o excluiu com
+/// a tela aberta. A tela troca o erro genérico por voltar à lista.
+class ChildNotFound implements Exception {
+  const ChildNotFound(this.childId);
+
+  final String childId;
+
+  @override
+  String toString() => 'ChildNotFound($childId)';
+}
+
 /// Uma linha da tela do filho: a regra, quanto já foi lançado e se a regra
 /// está ativa para esse filho (ADR-0008).
 class LedgerRow {
@@ -81,10 +92,7 @@ final childLedgerProvider = Provider.family<AsyncValue<ChildLedger>, String>((
   }
   final child = found;
   if (child == null) {
-    return AsyncValue.error(
-      StateError('filho $childId não existe'),
-      StackTrace.empty,
-    );
+    return AsyncValue.error(ChildNotFound(childId), StackTrace.empty);
   }
 
   final byRule = {

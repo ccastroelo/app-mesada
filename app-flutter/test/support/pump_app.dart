@@ -38,6 +38,7 @@ Future<void> pumpApp(
   FakeReportSharer? reportSharer,
   FakePinStore? pinStore,
   FakeBiometricAuth? biometrics,
+  FakePinRecoveryService? recovery,
   FakeIntroStore? introStore,
   FakeEntitlementStore? entitlementStore,
   FakeLegacyDetector? legacyDetector,
@@ -66,6 +67,11 @@ Future<void> pumpApp(
         pinStoreProvider.overrideWithValue(pinStore ?? FakePinStore()),
         biometricAuthProvider.overrideWithValue(
           biometrics ?? FakeBiometricAuth(),
+        ),
+        // Sem servidor por padrão: o "esqueci o PIN" não entra no caminho dos
+        // outros testes (nem há rede num teste).
+        pinRecoveryServiceProvider.overrideWithValue(
+          recovery ?? FakePinRecoveryService(available: false),
         ),
         if (clock != null) clockProvider.overrideWithValue(clock),
         // Introdução já vista por padrão: ela não entra no caminho dos

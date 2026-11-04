@@ -38,6 +38,11 @@ final class InvalidInvite extends Failure {
   const InvalidInvite();
 }
 
+/// O servidor recusou por excesso de pedidos (limites do ADR-0023).
+final class TooManyRequests extends Failure {
+  const TooManyRequests();
+}
+
 /// O teste acabou e o app não foi comprado: só leitura (ADR-0021).
 final class ReadOnly extends Failure {
   const ReadOnly();

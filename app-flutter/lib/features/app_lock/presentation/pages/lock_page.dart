@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/error/failure.dart';
+import '../../../../core/error/result.dart';
 import '../../../../core/theme/tokens.dart';
+import '../../../../core/widgets/failure_message.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/usecases/pin_lock_rules.dart';
 import '../state/app_lock_state.dart';
 import '../widgets/pin_pad.dart';
 
@@ -24,6 +28,11 @@ class _LockPageState extends ConsumerState<LockPage> {
 
   /// Redesenha a contagem regressiva a cada segundo.
   Timer? _ticker;
+
+  /// "Esqueci o PIN" (ADR-0023): enviando, e o que voltou.
+  bool _sending = false;
+  Failure? _recoveryFailure;
+  String? _sentTo;
 
   @override
   void initState() {
@@ -59,6 +68,56 @@ class _LockPageState extends ConsumerState<LockPage> {
       setState(() => _wrong = true);
     }
     // Ao acertar, o roteador troca a tela sozinho (redirectFor).
+  }
+
+  /// Confirma e pede o PIN novo por e-mail. O PIN antigo só deixa de valer se
+  /// o servidor aceitar o envio; o PIN novo nunca aparece aqui.
+  Future<void> _forgot() async {
+    final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context);
+    final controller = ref.read(appLockProvider.notifier);
+    final email = controller.recoveryEmail;
+    if (email == null) return;
+    final masked = maskEmail(email);
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.pinForgotConfirmTitle),
+        content: Text(l10n.pinForgotConfirmBody(masked)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancelAction),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.pinForgotSendAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() {
+      _sending = true;
+      _recoveryFailure = null;
+      _sentTo = null;
+    });
+    final result = await controller.forgotPin(
+      recoveryLocale(locale.languageCode, locale.countryCode),
+    );
+    if (!mounted) return;
+    setState(() {
+      _sending = false;
+      switch (result) {
+        case Ok():
+          _wrong = false;
+          _sentTo = masked;
+        case Err(:final failure):
+          _recoveryFailure = failure;
+      }
+    });
   }
 
   @override
@@ -102,6 +161,35 @@ class _LockPageState extends ConsumerState<LockPage> {
                         label: Text(l10n.biometricsUseAction),
                       ),
                     ),
+                  if (controller.canRecover) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(top: Space.sm),
+                      child: TextButton(
+                        onPressed: _sending ? null : _forgot,
+                        child: _sending
+                            ? const SizedBox.square(
+                                dimension: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(l10n.pinForgotAction),
+                      ),
+                    ),
+                    FailureText(_recoveryFailure),
+                    if (_sentTo != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: Space.sm),
+                        child: Semantics(
+                          liveRegion: true,
+                          child: Text(
+                            l10n.pinForgotSent(_sentTo!),
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ),
+                      ),
+                  ],
                 ],
               ),
             ),

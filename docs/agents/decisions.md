@@ -4,6 +4,18 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0023 — "Esqueci o PIN": PIN novo enviado por e-mail por um servidor PHP do Synapse
+- Data: 2026-11-04 · Status: aceita (direção); **o servidor ainda não foi publicado nem exercitado** · Escopo: feature `app_lock` (M6), pasta `servidor/`; **emenda o ADR-0014** (o modo local passa a ter uma chamada de rede opcional) e o ADR-0017
+- Contexto: o PIN guardado é só hash com sal, e reinstalar para destravar apaga os dados do modo local (`tech-debt.md`). O usuário pediu um e-mail de recuperação informado junto com o PIN, e o envio de um PIN novo para ele. Ele tem hospedagem web com PHP (`synapsesolucoes.ia.br`) e não quer Blaze nem Firebase só para isso.
+- Decisão:
+  1. Ao ativar o PIN, a pessoa pode informar um **e-mail de recuperação** (opcional, com "Agora não"). O app o registra no servidor (`registrar.php`), que manda uma mensagem de confirmação **sem PIN** e devolve um **token** (HMAC de `installId|e-mail`). E-mail, token e `installId` ficam no `device.json`.
+  2. Na tela de bloqueio, "Esqueci o PIN" (só com e-mail registrado, com confirmação) faz o app **gerar um PIN novo** e mandá-lo ao servidor (`recuperar.php`), que o repassa por e-mail. **Só depois da resposta de sucesso** o app troca o PIN guardado; sem rede ou com falha, o PIN antigo continua valendo. O PIN novo nunca aparece na tela.
+  3. **O PIN antigo nunca é enviado**: só existe o hash, e mandá-lo exigiria que o PIN passasse pelo servidor no cadastro.
+  4. O servidor **não guarda e-mail nem PIN**: valida o token (HMAC), repassa e esquece. Guarda só contadores de limite (por IP, por `installId` e por e-mail com hash). Mudar o e-mail de recuperação ou desativar o PIN exige o PIN atual (senão o filho redirecionaria a recuperação).
+  5. A URL do servidor vem de `--dart-define=RECOVERY_URL=...` (fora do git). Sem ela, o recurso não aparece.
+- Alternativas descartadas: Cloud Functions (Blaze, ADR-0022 fugiu dele); e-mails do Firebase Auth (link e não código, domínios e contas só para isso); código de recuperação sem servidor (continua possível como evolução, sem depender de e-mail).
+- Consequências: o e-mail passa a **sair do aparelho** quando a pessoa o informa: declarar isso na política e nos formulários de privacidade das lojas. O PIN novo trafega por HTTPS e fica na caixa de e-mail do responsável; **se o filho abre essa caixa no mesmo aparelho, lê o PIN** (aviso ao ativar). O endpoint é público: sem os limites o servidor serviria para spam. O app não prova ao servidor que é o app; o token só prova que aquele e-mail foi registrado pelo servidor.
+
 ### ADR-0022 — Recibos das compras conferidos pelo RevenueCat
 - Data: 2026-11-04 · Status: aceita (direção); **a implementação espera a conta e as chaves do usuário** · Escopo: M4.5c; fecha o risco 11 do `migration-plan.md`
 - Contexto: no M4.5b a loja é a fonte de verdade da compra no aparelho de quem comprou, mas a assinatura de compartilhar chegaria ao convidado por um campo gravado pelo aparelho de quem assina — forjável. Sem servidor conferindo o recibo, qualquer um adulterando o app compartilharia de graça.

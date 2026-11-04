@@ -631,6 +631,73 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get backToLocalDialogBody =>
       'Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. Mudanças feitas depois não passam de um lado para o outro.';
+
+  @override
+  String get localFileErrorTitle => 'Não consegui ler os dados deste aparelho';
+
+  @override
+  String get localFileErrorBody =>
+      'O arquivo da mesada parece estar danificado. Tente de novo; se continuar, você pode começar de novo.';
+
+  @override
+  String get startOverAction => 'Começar de novo';
+
+  @override
+  String get startOverConfirmTitle => 'Começar de novo?';
+
+  @override
+  String get startOverConfirmBody =>
+      'O app volta vazio. O arquivo danificado é guardado ao lado, como cópia (mesada.json.bak), mas não aparece no app.';
+
+  @override
+  String get renameFamilyTitle => 'Nome da família';
+
+  @override
+  String get childRemovedNotice =>
+      'Este filho foi removido pelo outro responsável.';
+
+  @override
+  String get recoveryTitle => 'E-mail de recuperação';
+
+  @override
+  String get recoveryNotSet => 'Não configurado';
+
+  @override
+  String get recoveryExplain =>
+      'Se você esquecer o PIN, enviamos um PIN novo para este e-mail e o PIN atual deixa de valer. Use um e-mail que o seu filho não abra neste aparelho, porque quem ler a mensagem descobre o PIN.';
+
+  @override
+  String get recoveryEmailLabel => 'E-mail';
+
+  @override
+  String get recoverySkipAction => 'Agora não';
+
+  @override
+  String get recoverySaved =>
+      'E-mail de recuperação salvo. Enviamos uma mensagem de confirmação.';
+
+  @override
+  String get pinForgotAction => 'Esqueci o PIN';
+
+  @override
+  String get pinForgotConfirmTitle => 'Enviar um PIN novo?';
+
+  @override
+  String pinForgotConfirmBody(String email) {
+    return 'Vamos gerar um PIN novo e enviá-lo para $email. O PIN atual deixa de valer.';
+  }
+
+  @override
+  String get pinForgotSendAction => 'Enviar PIN novo';
+
+  @override
+  String pinForgotSent(String email) {
+    return 'Enviamos um PIN novo para $email. Digite-o aqui quando chegar.';
+  }
+
+  @override
+  String get errorTooManyRequests =>
+      'Muitas tentativas. Tente de novo mais tarde.';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -1262,4 +1329,71 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   @override
   String get backToLocalDialogBody =>
       'Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. As alterações feitas depois não passam de um lado para o outro.';
+
+  @override
+  String get localFileErrorTitle => 'Não consegui ler os dados deste aparelho';
+
+  @override
+  String get localFileErrorBody =>
+      'O ficheiro da mesada parece estar danificado. Tente novamente; se continuar, pode começar de novo.';
+
+  @override
+  String get startOverAction => 'Começar de novo';
+
+  @override
+  String get startOverConfirmTitle => 'Começar de novo?';
+
+  @override
+  String get startOverConfirmBody =>
+      'A app volta vazia. O ficheiro danificado é guardado ao lado, como cópia (mesada.json.bak), mas não aparece na app.';
+
+  @override
+  String get renameFamilyTitle => 'Nome da família';
+
+  @override
+  String get childRemovedNotice =>
+      'Este filho foi removido pelo outro responsável.';
+
+  @override
+  String get recoveryTitle => 'E-mail de recuperação';
+
+  @override
+  String get recoveryNotSet => 'Não configurado';
+
+  @override
+  String get recoveryExplain =>
+      'Se se esquecer do PIN, enviamos um PIN novo para este e-mail e o PIN atual deixa de valer. Use um e-mail que o seu filho não abra neste aparelho, porque quem ler a mensagem descobre o PIN.';
+
+  @override
+  String get recoveryEmailLabel => 'E-mail';
+
+  @override
+  String get recoverySkipAction => 'Agora não';
+
+  @override
+  String get recoverySaved =>
+      'E-mail de recuperação guardado. Enviámos uma mensagem de confirmação.';
+
+  @override
+  String get pinForgotAction => 'Esqueci o PIN';
+
+  @override
+  String get pinForgotConfirmTitle => 'Enviar um PIN novo?';
+
+  @override
+  String pinForgotConfirmBody(String email) {
+    return 'Vamos gerar um PIN novo e enviá-lo para $email. O PIN atual deixa de valer.';
+  }
+
+  @override
+  String get pinForgotSendAction => 'Enviar PIN novo';
+
+  @override
+  String pinForgotSent(String email) {
+    return 'Enviámos um PIN novo para $email. Introduza-o aqui quando chegar.';
+  }
+
+  @override
+  String get errorTooManyRequests =>
+      'Demasiadas tentativas. Tente novamente mais tarde.';
 }

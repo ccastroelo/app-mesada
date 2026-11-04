@@ -14,6 +14,7 @@ import '../../../ledger/ledger_providers.dart';
 import '../../../rules/rules_providers.dart';
 import '../state/child_ledger_state.dart';
 import '../state/children_state.dart';
+import '../widgets/leave_if_child_gone.dart';
 
 /// Quais regras valem para este filho. Desativar **preserva** a quantidade,
 /// só tira do saldo (ADR-0008); é o lugar do "remover linha" do legado.
@@ -27,6 +28,7 @@ class ChildRulesPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final ledger = ref.watch(childLedgerProvider(childId));
     final action = ref.watch(ledgerActionsProvider);
+    leaveIfChildGone(context, ref, childId);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.childRulesMenu)),

@@ -512,6 +512,8 @@ class FakePhotoPicker implements PhotoPicker {
 class FakePinStore implements PinStore {
   PinCredential? credential;
   bool biometricsEnabled = false;
+  PinRecovery? recovery;
+  String? installId;
 
   @override
   Future<PinCredential?> read() async => credential;
@@ -523,7 +525,18 @@ class FakePinStore implements PinStore {
   Future<void> clear() async {
     credential = null;
     biometricsEnabled = false;
+    recovery = null;
   }
+
+  @override
+  Future<PinRecovery?> readRecovery() async => recovery;
+
+  @override
+  Future<void> saveRecovery(PinRecovery value) async => recovery = value;
+
+  @override
+  Future<String> readOrCreateInstallId() async =>
+      installId ??= '0123456789abcdef0123456789abcdef';
 
   @override
   Future<bool> readBiometricsEnabled() async => biometricsEnabled;
@@ -531,6 +544,47 @@ class FakePinStore implements PinStore {
   @override
   Future<void> saveBiometricsEnabled(bool enabled) async =>
       biometricsEnabled = enabled;
+}
+
+/// O servidor do "esqueci o PIN" em memória: o teste diz se há servidor, se o
+/// envio passa e guarda o que seria enviado.
+class FakePinRecoveryService implements PinRecoveryService {
+  FakePinRecoveryService({this.available = true});
+
+  @override
+  bool available;
+
+  /// Falha devolvida pelas próximas chamadas (null = tudo certo).
+  Failure? failure;
+
+  final registered = <({String email, String installId, String locale})>[];
+  final sent = <({String email, String token, String pin, String locale})>[];
+
+  @override
+  Future<Result<String>> register({
+    required String email,
+    required String installId,
+    required String locale,
+  }) async {
+    final error = failure;
+    if (error != null) return Err(error);
+    registered.add((email: email, installId: installId, locale: locale));
+    return const Ok('token-de-teste');
+  }
+
+  @override
+  Future<Result<void>> sendNewPin({
+    required String email,
+    required String installId,
+    required String token,
+    required String pin,
+    required String locale,
+  }) async {
+    final error = failure;
+    if (error != null) return Err(error);
+    sent.add((email: email, token: token, pin: pin, locale: locale));
+    return const Ok(null);
+  }
 }
 
 /// Biometria falsa: o teste diz se o aparelho tem e se reconhece.

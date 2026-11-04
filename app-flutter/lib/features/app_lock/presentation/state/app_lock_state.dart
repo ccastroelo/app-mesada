@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/error/failure.dart';
+import '../../../../core/error/result.dart';
 import '../../data/providers.dart';
 import '../../domain/repositories/pin_store.dart';
 import '../../domain/usecases/pin_lock_rules.dart';
@@ -45,6 +47,7 @@ const awayLimit = Duration(seconds: 30);
 
 class AppLockController extends Notifier<LockState> {
   PinCredential? _credential;
+  PinRecovery? _recovery;
   bool _biometricsEnabled = false;
   DateTime? _awaySince;
 
@@ -62,10 +65,75 @@ class AppLockController extends Notifier<LockState> {
   Future<void> _load() async {
     final store = ref.read(pinStoreProvider);
     _credential = await store.read();
+    _recovery = await store.readRecovery();
     _biometricsEnabled = await store.readBiometricsEnabled();
     if (!ref.mounted) return;
     // Abrir o app com PIN ativo já pede o PIN (ou a biometria).
     state = _credential == null ? const LockOff() : const LockClosed();
+  }
+
+  /// O servidor do "esqueci o PIN" está configurado neste build (ADR-0023)?
+  bool get recoveryAvailable => ref.read(pinRecoveryServiceProvider).available;
+
+  /// O e-mail de recuperação registrado, ou null.
+  String? get recoveryEmail => _recovery?.email;
+
+  /// "Esqueci o PIN" só existe com servidor configurado e e-mail registrado.
+  bool get canRecover => recoveryAvailable && _recovery != null;
+
+  /// Registra [email] no servidor (que manda uma mensagem de confirmação, sem
+  /// PIN) e guarda o token no aparelho. [locale] escolhe o idioma do e-mail.
+  /// Quem chama deve exigir o PIN atual antes de **trocar** um e-mail já
+  /// registrado: senão o filho redirecionaria a recuperação.
+  Future<Result<void>> registerRecovery(String email, String locale) async {
+    if (!enabled) return const Err(Unexpected());
+    final store = ref.read(pinStoreProvider);
+    final installId = await store.readOrCreateInstallId();
+    final result = await ref
+        .read(pinRecoveryServiceProvider)
+        .register(email: email.trim(), installId: installId, locale: locale);
+    switch (result) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        final recovery = PinRecovery(
+          email: email.trim(),
+          token: value,
+          installId: installId,
+        );
+        await store.saveRecovery(recovery);
+        _recovery = recovery;
+        return const Ok(null);
+    }
+  }
+
+  /// "Esqueci o PIN": gera um PIN novo, manda ao servidor para ir por e-mail e
+  /// **só se o servidor aceitar** troca o PIN guardado. Sem rede ou com falha,
+  /// o PIN antigo continua valendo. O PIN novo nunca é mostrado.
+  Future<Result<void>> forgotPin(String locale) async {
+    final recovery = _recovery;
+    if (recovery == null || !recoveryAvailable || state is! LockClosed) {
+      return const Err(Unexpected());
+    }
+    final pin = newRandomPin();
+    final sent = await ref
+        .read(pinRecoveryServiceProvider)
+        .sendNewPin(
+          email: recovery.email,
+          installId: recovery.installId,
+          token: recovery.token,
+          pin: pin,
+          locale: locale,
+        );
+    if (sent is Err<void>) return sent;
+
+    final salt = newPinSalt();
+    final credential = PinCredential(salt: salt, hash: hashPin(pin, salt));
+    await ref.read(pinStoreProvider).save(credential);
+    _credential = credential;
+    // O PIN novo vale e a espera por erros do PIN antigo não faz mais sentido.
+    if (ref.mounted) state = const LockClosed();
+    return const Ok(null);
   }
 
   /// O aparelho tem biometria cadastrada?
@@ -151,6 +219,7 @@ class AppLockController extends Notifier<LockState> {
     if (!matches(pin)) return false;
     await ref.read(pinStoreProvider).clear();
     _credential = null;
+    _recovery = null;
     _biometricsEnabled = false;
     if (ref.mounted) state = const LockOff();
     return true;

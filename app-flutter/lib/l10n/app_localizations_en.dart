@@ -632,4 +632,69 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get backToLocalDialogBody =>
       'This device keeps a copy of today\'s data and stops syncing. Nothing in the cloud is deleted, and the other parent stays in it. Changes made afterwards won\'t pass from one side to the other.';
+
+  @override
+  String get localFileErrorTitle => 'Couldn\'t read this device\'s data';
+
+  @override
+  String get localFileErrorBody =>
+      'The allowance file looks damaged. Try again; if it keeps failing, you can start over.';
+
+  @override
+  String get startOverAction => 'Start over';
+
+  @override
+  String get startOverConfirmTitle => 'Start over?';
+
+  @override
+  String get startOverConfirmBody =>
+      'The app opens empty. The damaged file is kept alongside as a copy (mesada.json.bak), but it doesn\'t show up in the app.';
+
+  @override
+  String get renameFamilyTitle => 'Family name';
+
+  @override
+  String get childRemovedNotice => 'The other parent removed this child.';
+
+  @override
+  String get recoveryTitle => 'Recovery email';
+
+  @override
+  String get recoveryNotSet => 'Not set';
+
+  @override
+  String get recoveryExplain =>
+      'If you forget the PIN, we email a new PIN to this address and the current PIN stops working. Use an email your child doesn\'t open on this device, because whoever reads the message learns the PIN.';
+
+  @override
+  String get recoveryEmailLabel => 'Email';
+
+  @override
+  String get recoverySkipAction => 'Not now';
+
+  @override
+  String get recoverySaved =>
+      'Recovery email saved. We sent a confirmation message.';
+
+  @override
+  String get pinForgotAction => 'Forgot PIN';
+
+  @override
+  String get pinForgotConfirmTitle => 'Send a new PIN?';
+
+  @override
+  String pinForgotConfirmBody(String email) {
+    return 'We will generate a new PIN and email it to $email. The current PIN stops working.';
+  }
+
+  @override
+  String get pinForgotSendAction => 'Send new PIN';
+
+  @override
+  String pinForgotSent(String email) {
+    return 'We sent a new PIN to $email. Enter it here when it arrives.';
+  }
+
+  @override
+  String get errorTooManyRequests => 'Too many attempts. Try again later.';
 }

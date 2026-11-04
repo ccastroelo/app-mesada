@@ -51,6 +51,12 @@ class SettingsPage extends ConsumerWidget {
               subtitle: user == null
                   ? Text(l10n.settingsFamilyLocalOnly)
                   : null,
+              // Sem conta o nome é só do aparelho e se edita aqui; com conta
+              // ele é da família compartilhada.
+              trailing: user == null ? const Icon(Icons.edit_outlined) : null,
+              onTap: user == null
+                  ? () => showRenameFamilyDialog(context, family.name)
+                  : null,
             ),
           // Sem conta, o caminho é começar a compartilhar; com conta, o
           // convite já funciona.

@@ -33,7 +33,47 @@ class LocalStore {
     yield* _changes.stream;
   }
 
-  Future<LocalDocument> _load() => _current ??= _readOrCreate();
+  /// Lê o arquivo uma vez e guarda o resultado. Se a leitura falhar, **não**
+  /// guarda a falha: quem tentar de novo (depois de [startOver] ou de a
+  /// pessoa consertar o arquivo) lê outra vez em vez de herdar o erro.
+  Future<LocalDocument> _load() {
+    final loading = _current ??= _readOrCreate();
+    loading.then<void>(
+      (_) {},
+      onError: (_) {
+        if (identical(_current, loading)) _current = null;
+      },
+    );
+    return loading;
+  }
+
+  /// Saída de um arquivo ilegível: guarda o arquivo ruim ao lado, como
+  /// `<nome>.bak` (o anterior, se houver, é substituído), e passa a valer um
+  /// documento vazio. O arquivo novo só é criado na primeira gravação.
+  ///
+  /// Nada é apagado: quem quiser pode recuperar o `.bak` à mão.
+  Future<Result<void>> startOver() {
+    final done = _queue.then((_) => _startOver());
+    _queue = done.then((_) {}, onError: (_) {});
+    return done;
+  }
+
+  Future<Result<void>> _startOver() async {
+    try {
+      final file = await _file();
+      if (file.existsSync()) {
+        final backup = File('${file.path}.bak');
+        if (backup.existsSync()) await backup.delete();
+        await file.rename(backup.path);
+      }
+      final empty = LocalDocument.initial();
+      _current = Future.value(empty);
+      _changes.add(empty);
+      return const Ok(null);
+    } catch (error) {
+      return Err(Unexpected(error));
+    }
+  }
 
   /// Aplica [change], publica e grava. Falha de disco volta como [Err] e o que
   /// está na tela continua valendo (a pessoa não perde o toque).

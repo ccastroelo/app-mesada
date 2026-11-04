@@ -17,6 +17,7 @@ String? failureMessage(AppLocalizations l10n, Failure failure) {
     InvalidInvite() => l10n.errorInvalidInvite,
     PermissionDenied() => l10n.errorPermissionDenied,
     ReadOnly() => l10n.errorReadOnly,
+    TooManyRequests() => l10n.errorTooManyRequests,
     Unexpected() => l10n.errorUnexpected,
   };
 }

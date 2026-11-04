@@ -342,5 +342,38 @@
   },
   "settingsBackToLocalTile": "Voltar a usar só neste aparelho",
   "backToLocalDialogTitle": "Usar só neste aparelho?",
-  "backToLocalDialogBody": "Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. Mudanças feitas depois não passam de um lado para o outro."
+  "backToLocalDialogBody": "Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. Mudanças feitas depois não passam de um lado para o outro.",
+  "localFileErrorTitle": "Não consegui ler os dados deste aparelho",
+  "localFileErrorBody": "O arquivo da mesada parece estar danificado. Tente de novo; se continuar, você pode começar de novo.",
+  "startOverAction": "Começar de novo",
+  "startOverConfirmTitle": "Começar de novo?",
+  "startOverConfirmBody": "O app volta vazio. O arquivo danificado é guardado ao lado, como cópia (mesada.json.bak), mas não aparece no app.",
+  "renameFamilyTitle": "Nome da família",
+  "childRemovedNotice": "Este filho foi removido pelo outro responsável.",
+  "recoveryTitle": "E-mail de recuperação",
+  "recoveryNotSet": "Não configurado",
+  "recoveryExplain": "Se você esquecer o PIN, enviamos um PIN novo para este e-mail e o PIN atual deixa de valer. Use um e-mail que o seu filho não abra neste aparelho, porque quem ler a mensagem descobre o PIN.",
+  "recoveryEmailLabel": "E-mail",
+  "recoverySkipAction": "Agora não",
+  "recoverySaved": "E-mail de recuperação salvo. Enviamos uma mensagem de confirmação.",
+  "pinForgotAction": "Esqueci o PIN",
+  "pinForgotConfirmTitle": "Enviar um PIN novo?",
+  "pinForgotConfirmBody": "Vamos gerar um PIN novo e enviá-lo para {email}. O PIN atual deixa de valer.",
+  "@pinForgotConfirmBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "pinForgotSendAction": "Enviar PIN novo",
+  "pinForgotSent": "Enviamos um PIN novo para {email}. Digite-o aqui quando chegar.",
+  "@pinForgotSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "errorTooManyRequests": "Muitas tentativas. Tente de novo mais tarde."
 }

@@ -72,6 +72,90 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  group('seções recolhíveis', () {
+    testWidgets('tocar no título fecha e abre a seção', (tester) async {
+      await openLedger(tester);
+
+      await tester.tap(find.text('Recompensas'));
+      await tester.pumpAndSettle();
+      expect(find.text('Arrumar a cama'), findsNothing);
+      expect(find.text('Tirar nota 10'), findsNothing);
+      // A outra seção continua aberta.
+      expect(find.text('Luz acesa'), findsOneWidget);
+
+      await tester.tap(find.text('Recompensas'));
+      await tester.pumpAndSettle();
+      expect(find.text('Arrumar a cama'), findsOneWidget);
+    });
+
+    testWidgets('o leitor de tela sabe se está aberta ou recolhida', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await openLedger(tester);
+
+      expect(
+        tester.getSemantics(find.text('Descontos')),
+        matchesSemantics(
+          label: 'Descontos',
+          isButton: true,
+          isExpanded: true,
+          hasExpandedState: true,
+          hasTapAction: true,
+          hasFocusAction: true,
+          isFocusable: true,
+        ),
+      );
+      await tester.tap(find.text('Descontos'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSemantics(find.text('Descontos')).flagsCollection.isExpanded,
+        isNot(isTrue),
+      );
+      handle.dispose();
+    });
+
+    testWidgets('o saldo não muda ao recolher', (tester) async {
+      await openLedger(tester);
+
+      await tester.tap(find.text('Recompensas'));
+      await tester.pumpAndSettle();
+
+      expect(find.text(money('100,00')), findsOneWidget);
+    });
+  });
+
+  group('animação do saldo', () {
+    testWidgets('o número corre até o novo saldo em 250 ms', (tester) async {
+      await openLedger(tester);
+
+      await tester.tap(stepper('Tirar nota 10', increase: true));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      // No meio do caminho: nem o saldo antigo nem o novo.
+      expect(find.text(money('100,00')), findsNothing);
+      expect(find.text(money('101,50')), findsNothing);
+
+      await tester.pumpAndSettle();
+      expect(find.text(money('101,50')), findsOneWidget);
+    });
+
+    testWidgets('com reduzir movimento o saldo troca na hora', (tester) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      await openLedger(tester);
+
+      await tester.tap(stepper('Tirar nota 10', increase: true));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text(money('101,50')), findsOneWidget);
+    });
+  });
+
   group('tela do filho', () {
     testWidgets('o cartão abre os lançamentos, em duas seções', (tester) async {
       await openLedger(tester);

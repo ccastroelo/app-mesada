@@ -6,6 +6,7 @@ import 'package:mesada/core/error/failure.dart';
 import 'package:mesada/core/error/result.dart';
 import 'package:mesada/core/storage/local_document.dart';
 import 'package:mesada/core/storage/local_store.dart';
+import 'package:mesada/features/auth_family/data/repositories/local_family_source.dart';
 
 void main() {
   late Directory base;
@@ -102,6 +103,120 @@ void main() {
 
     await expectLater(store.watch().first, throwsA(anything));
     expect(file().readAsStringSync(), 'isto não é json');
+  });
+
+  group('arquivo ilegível: saída', () {
+    File backup() => File('${file().path}.bak');
+
+    test('ler de novo depois de consertar não herda o erro', () async {
+      write('isto não é json');
+      await expectLater(store.watch().first, throwsA(anything));
+
+      write(
+        jsonEncode({
+          'rules': [
+            {'id': 'r1'},
+          ],
+        }),
+      );
+
+      expect((await store.watch().first).rules.single['id'], 'r1');
+    });
+
+    test(
+      'começar de novo guarda o arquivo ruim como .bak e abre vazio',
+      () async {
+        write('isto não é json');
+        await expectLater(store.watch().first, throwsA(anything));
+
+        final result = await store.startOver();
+
+        expect(result, isA<Ok<void>>());
+        expect(backup().readAsStringSync(), 'isto não é json');
+        expect(file().existsSync(), isFalse);
+        final document = await store.watch().first;
+        expect(document.rules, isEmpty);
+        expect(document.familyId, LocalDocument.localFamilyId);
+      },
+    );
+
+    test(
+      'depois de recomeçar, gravar cria o arquivo novo e mantém o .bak',
+      () async {
+        write('isto não é json');
+        await store.startOver();
+
+        await addRule('r1');
+
+        expect(file().existsSync(), isTrue);
+        expect(backup().readAsStringSync(), 'isto não é json');
+        expect((await store.watch().first).rules.single['id'], 'r1');
+      },
+    );
+
+    test('um .bak antigo é substituído', () async {
+      backup().writeAsStringSync('velho');
+      write('{"rules": 1');
+
+      await store.startOver();
+
+      expect(backup().readAsStringSync(), '{"rules": 1');
+    });
+
+    test('sem arquivo não há o que guardar e continua vazio', () async {
+      final result = await store.startOver();
+
+      expect(result, isA<Ok<void>>());
+      expect(backup().existsSync(), isFalse);
+      expect((await store.watch().first).rules, isEmpty);
+    });
+
+    test('o stream aberto recebe o documento vazio', () async {
+      write(
+        jsonEncode({
+          'rules': [
+            {'id': 'r1'},
+          ],
+        }),
+      );
+      final seen = <int>[];
+      final subscription = store.watch().listen(
+        (document) => seen.add(document.rules.length),
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      await store.startOver();
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await subscription.cancel();
+
+      expect(seen, [1, 0]);
+    });
+  });
+
+  group('nome da família', () {
+    test('renomear grava no arquivo e aparece na leitura seguinte', () async {
+      final source = LocalFamilySource(store);
+
+      final result = await source.rename('  Família Castro ');
+
+      expect(result, isA<Ok<void>>());
+      expect((await source.watchFamily().first).name, 'Família Castro');
+      expect(
+        (jsonDecode(file().readAsStringSync()) as Map)['family'],
+        containsPair('name', 'Família Castro'),
+      );
+    });
+
+    test('nome vazio volta ao padrão e o id continua local', () async {
+      final source = LocalFamilySource(store);
+      await source.rename('Castro');
+
+      await source.rename('   ');
+
+      final family = await source.watchFamily().first;
+      expect(family.name, '');
+      expect(family.id, LocalDocument.localFamilyId);
+    });
   });
 
   test('campo ausente ou com tipo errado cai no padrão', () async {

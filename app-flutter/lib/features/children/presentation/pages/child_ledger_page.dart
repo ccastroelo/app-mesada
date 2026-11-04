@@ -12,7 +12,6 @@ import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/error_state.dart';
 import '../../../../core/widgets/failure_message.dart';
-import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../entitlement/entitlement_providers.dart';
 import '../../../ledger/ledger.dart';
@@ -23,6 +22,7 @@ import '../state/child_ledger_state.dart';
 import '../state/child_report_state.dart';
 import '../state/children_state.dart';
 import '../widgets/child_avatar.dart';
+import '../widgets/leave_if_child_gone.dart';
 
 /// A partir desta escala de texto o stepper desce para uma segunda linha
 /// (design.md §4.4).
@@ -46,6 +46,10 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
   int _lastDelta = 0;
   bool _chipVisible = false;
   Timer? _chipTimer;
+
+  /// Seções fechadas (design.md §4.4). Só da tela: ao reabrir, voltam abertas.
+  bool _rewardsCollapsed = false;
+  bool _discountsCollapsed = false;
 
   @override
   void dispose() {
@@ -125,6 +129,7 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
     final action = ref.watch(ledgerActionsProvider);
     final data = ledger.value;
     final canWrite = ref.watch(canWriteProvider);
+    leaveIfChildGone(context, ref, widget.childId);
 
     return Scaffold(
       appBar: AppBar(title: Text(data?.child.name ?? '')),
@@ -220,12 +225,23 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
       padding: const EdgeInsets.only(bottom: Space.xl),
       children: [
         if (rewards.isNotEmpty) ...[
-          SectionHeader(l10n.rulesRewardsSection),
-          for (final row in rewards) _rowTile(row),
+          _SectionToggle(
+            title: l10n.rulesRewardsSection,
+            collapsed: _rewardsCollapsed,
+            onTap: () => setState(() => _rewardsCollapsed = !_rewardsCollapsed),
+          ),
+          if (!_rewardsCollapsed)
+            for (final row in rewards) _rowTile(row),
         ],
         if (discounts.isNotEmpty) ...[
-          SectionHeader(l10n.rulesDiscountsSection),
-          for (final row in discounts) _rowTile(row),
+          _SectionToggle(
+            title: l10n.rulesDiscountsSection,
+            collapsed: _discountsCollapsed,
+            onTap: () =>
+                setState(() => _discountsCollapsed = !_discountsCollapsed),
+          ),
+          if (!_discountsCollapsed)
+            for (final row in discounts) _rowTile(row),
         ],
       ],
     );
@@ -254,6 +270,56 @@ class _ChildLedgerPageState extends ConsumerState<ChildLedgerPage> {
       title: l10n.childLedgerAllOffTitle(data.child.name),
       actionLabel: ref.watch(canWriteProvider) ? l10n.childRulesMenu : null,
       onAction: () => context.push('/filhos/${widget.childId}/regras'),
+    );
+  }
+}
+
+/// Cabeçalho de seção que abre e fecha a lista (design.md §4.4). O leitor de
+/// tela anuncia "expandido" ou "recolhido"; alvo de toque de 48 dp.
+class _SectionToggle extends StatelessWidget {
+  const _SectionToggle({
+    required this.title,
+    required this.collapsed,
+    required this.onTap,
+  });
+
+  final String title;
+  final bool collapsed;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      button: true,
+      expanded: !collapsed,
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Space.lg),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+                ExcludeSemantics(
+                  child: Icon(
+                    collapsed ? Icons.expand_more : Icons.expand_less,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -350,16 +416,27 @@ class _Header extends StatelessWidget {
                           // Flexível: em fonte grande o saldo quebra em vez de
                           // estourar a linha.
                           Flexible(
-                            child: Text(
-                              balance,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: negative
-                                    ? colors.negative
-                                    : colors.positive,
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
+                            // O número corre do valor anterior ao novo em
+                            // 250 ms (design.md §6); com "reduzir movimento"
+                            // troca na hora. A primeira exibição não anima.
+                            child: TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: ledger.balanceCents.toDouble(),
+                              ),
+                              duration: MediaQuery.disableAnimationsOf(context)
+                                  ? Duration.zero
+                                  : const Duration(milliseconds: 250),
+                              builder: (context, cents, _) => Text(
+                                formatCents(cents.round(), locale: locale),
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: negative
+                                      ? colors.negative
+                                      : colors.positive,
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

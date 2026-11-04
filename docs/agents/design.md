@@ -239,3 +239,12 @@ Substitui o que a §13 diz sobre a Família ser um recurso pago à parte; o rest
 - **Assinatura vencida**: para só a sincronização. Cada um segue usando o app que tem, com os dados que já estavam no aparelho; nada é apagado e ninguém cai em só leitura por isso.
 - **Quem tem o app antigo** (iOS 1.2) não vê teste nem compra: o uso local é liberado para sempre. Se quiser compartilhar, assina como qualquer um.
 - **A introdução** (§4.9), cartão 4, já diz que dá para ativar o compartilhamento depois, em Ajustes.
+
+
+## 18. Emenda de 2026-11-04 — "Esqueci o PIN" por e-mail (ADR-0023)
+
+Complementa a §4.11.
+
+- **Ao ativar o PIN**, depois de confirmá-lo, um passo pede o **e-mail de recuperação**, com o aviso de que quem lê a mensagem descobre o PIN e de que o filho não deve abrir essa caixa no aparelho. "Agora não" pula; sem e-mail, o fluxo é o de antes. Só aparece quando o build tem servidor configurado.
+- **Em Ajustes › Segurança** entra a linha "E-mail de recuperação" (mostra o endereço mascarado ou "Não configurado"). Trocar o e-mail pede o PIN atual primeiro.
+- **Na tela de bloqueio**, com e-mail registrado, aparece "Esqueci o PIN". Ele confirma (mostrando o e-mail mascarado), gera um PIN novo, o envia por e-mail e **só depois que o envio é aceito** troca o PIN. O PIN novo nunca aparece na tela, e a espera por erros do PIN antigo é zerada. Sem rede, o PIN antigo continua valendo e o erro aparece abaixo do botão.

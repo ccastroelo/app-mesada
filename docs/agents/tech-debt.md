@@ -29,25 +29,11 @@ Lista viva de armadilhas conhecidas. Cada item diz onde dói e o que fazer; nada
 
 - As 20 regras-padrão vêm do `faltas.plist` com só correções de ortografia. O pt-PT usa a lista em português do Brasil (o legado tinha a mesma lista nos dois), e o inglês/espanhol mantêm frases desajeitadas do original ("Delay to school"). Vale revisar com falante nativo.
 
-## Arquivo local ilegível deixa o app na tela de erro, sem saída
-
-- **Onde**: `LocalStore._readOrCreate` (M1.5). Se `mesada.json` não for JSON válido, o erro sai no stream e o portão mostra a tela de erro; "Tentar de novo" vai falhar de novo.
-- **Por que é assim**: começar vazio esconderia a perda dos dados. Avisar é melhor que fingir.
-- **O que fazer**: oferecer nessa tela "começar de novo" (renomeia o arquivo ruim para `.bak` e cria um vazio), com aviso claro. A gravação é atômica, então isso só deve acontecer por corrupção de disco ou edição manual.
-
-## Nome da família não dá para editar no modo local
-
-- No grátis a família nasce sem nome e a tela mostra o padrão do idioma ("Minha família"). O campo de nome só aparece ao criar a família **com conta** (fluxo da assinatura).
-- Se incomodar antes do M4.5, basta um campo de edição em Ajustes › Família gravando `family['name']` pelo `LocalStore`.
-
 ## Pendências que o M4 deixou de propósito
 
-Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que ficaram para depois, para não inflar o marco.
+Só o som sobrou (seções recolhíveis, animação do saldo e o filho excluído com a tela aberta foram feitos em 2026-11-04). Nada aqui bloqueia o uso da tela de lançamentos.
 
 - **Som do lançamento** (design §2 e §4.8): não existe. Tocar um som curto pede uma dependência nova (`audioplayers` ou similar) e a opção de ligar/desligar vive em Ajustes › Preferências, que é de outro marco. Hoje há só o retorno tátil (`HapticFeedback`, sem dependência).
-- **Seções recolhíveis** (design §4.4): Recompensas e Descontos aparecem sempre abertas.
-- **Animação do saldo** (design §6): o chip do último lançamento aparece e some, mas o número do saldo troca sem transição.
-- **Filho excluído com a tela aberta** (só acontece com assinatura, quando o outro responsável exclui): a tela do filho mostra o estado de erro em vez de voltar sozinha para a lista.
 
 ## O PDF do relatório usa a fonte Helvetica embutida (Latin-1)
 
@@ -55,12 +41,13 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 - **O que dói**: nome de filho ou descrição de regra com caractere fora do Latin-1 (alfabeto cirílico, japonês, emoji) sai vazio ou errado **no documento** — na tela está certo.
 - **O que fazer**: embutir uma fonte TrueType (Roboto, ~170 KB como asset) e usá-la no `pw.ThemeData`. Só vale quando aparecer um caso real.
 
-## Esquecer o PIN não tem saída dentro do app
+## "Esqueci o PIN" por e-mail existe no código, mas o servidor nunca rodou
 
-- **Onde**: feature `app_lock` (M6, ADR-0017). A tela de bloqueio só aceita o PIN certo; não há "esqueci o PIN".
-- **Por que dói mais aqui**: com os dados no aparelho (ADR-0014), reinstalar o app para destravar **apaga a mesada da família**. No modo assinante o dado volta da nuvem; no grátis, não volta.
-- **O que fazer**: decidir um caminho de saída e implementar — por exemplo, um aviso claro na tela de bloqueio ("esqueceu? reinstalar apaga os dados deste aparelho") e, melhor ainda, exportar/compartilhar os dados antes. Enquanto não houver, vale avisar no texto de Ajustes › Segurança ao ativar o PIN.
-- O gatilho de 30 s fora do app usa `AppLifecycleListener` e **não foi exercitado em aparelho**: os testes chamam `onAway`/`onBack` direto no controlador.
+- **O que há**: o fluxo do app (cadastro do e-mail, "Esqueci o PIN", limites) e o servidor PHP em `servidor/` (ADR-0023). 390 testes cobrem o app, inclusive o cliente HTTP contra um servidor local. **O PHP nunca foi executado**: a máquina de desenvolvimento não tem PHP. O README de `servidor/` traz os testes de `curl` para rodar no servidor de verdade.
+- **Passos do usuário**: publicar `servidor/pin/` por HTTPS, criar o `config.php` (segredo de 32+ caracteres, remetente), configurar SPF e DKIM do domínio, e compilar o app com `--dart-define=RECOVERY_URL=...`. Sem a URL o recurso fica escondido.
+- **Limites do desenho**: quem lê o e-mail do responsável descobre o PIN novo (o filho, se abre essa caixa no mesmo aparelho); sem e-mail registrado, ou sem acesso a ele, a saída continua sendo reinstalar e perder os dados do modo local. O endpoint é público e só se defende por limites e pelo token. O e-mail passa a sair do aparelho: **declarar nas lojas e na política de privacidade**.
+- **Pontas soltas**: o app só troca o PIN depois da resposta do servidor, mas se o app fechar entre a resposta e a gravação, o e-mail chega com um PIN que o app não adotou (a pessoa pede de novo; o limite é 3 por hora). O PIN novo não é mostrado em lugar nenhum do app.
+- **Ainda não feito**: backup/exportação dos dados (caminho 2 discutido; precisa de aprovação, o ADR-0001 descartou importação) e código de recuperação sem servidor.
 
 ## A biometria não foi exercitada em aparelho
 

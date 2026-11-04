@@ -14,3 +14,4 @@ export 'presentation/state/controllers.dart' show signOutControllerProvider;
 export 'presentation/state/gate.dart';
 export 'presentation/widgets/back_to_local_dialog.dart';
 export 'presentation/widgets/invite_dialog.dart';
+export 'presentation/widgets/rename_family_dialog.dart';

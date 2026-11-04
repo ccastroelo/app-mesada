@@ -107,6 +107,23 @@ class BackToLocalController extends ActionController {
   });
 }
 
+/// Nome da família no modo local (ADR-0014): só grava no arquivo do aparelho.
+class RenameLocalFamilyController extends ActionController {
+  Future<bool> rename(String name) =>
+      run(() => ref.read(localFamilySourceProvider).rename(name));
+}
+
+/// Saída da tela de erro quando o arquivo local está ilegível: guarda o ruim
+/// como `.bak` e recomeça vazio. Só faz sentido no modo local.
+class StartOverController extends ActionController {
+  Future<bool> startOver() => run(() async {
+    final result = await ref.read(localFamilySourceProvider).startOver();
+    // A leitura que falhou deixou o stream da família em erro: reabre.
+    if (result is Ok && ref.mounted) ref.invalidate(localFamilyProvider);
+    return result;
+  });
+}
+
 class JoinFamilyController extends ActionController {
   Future<bool> join(String code) => run(() async {
     final user = _currentUser(ref);
@@ -130,6 +147,16 @@ final signInControllerProvider =
 final createFamilyControllerProvider =
     NotifierProvider.autoDispose<CreateFamilyController, ActionState>(
       CreateFamilyController.new,
+    );
+
+final renameLocalFamilyControllerProvider =
+    NotifierProvider.autoDispose<RenameLocalFamilyController, ActionState>(
+      RenameLocalFamilyController.new,
+    );
+
+final startOverControllerProvider =
+    NotifierProvider.autoDispose<StartOverController, ActionState>(
+      StartOverController.new,
     );
 
 final backToLocalControllerProvider =

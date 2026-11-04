@@ -1210,6 +1210,120 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Este aparelho fica com uma cópia dos dados de agora e deixa de sincronizar. O que está na nuvem não é apagado, e o outro responsável continua nela. Mudanças feitas depois não passam de um lado para o outro.'**
   String get backToLocalDialogBody;
+
+  /// No description provided for @localFileErrorTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não consegui ler os dados deste aparelho'**
+  String get localFileErrorTitle;
+
+  /// No description provided for @localFileErrorBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'O arquivo da mesada parece estar danificado. Tente de novo; se continuar, você pode começar de novo.'**
+  String get localFileErrorBody;
+
+  /// No description provided for @startOverAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Começar de novo'**
+  String get startOverAction;
+
+  /// No description provided for @startOverConfirmTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Começar de novo?'**
+  String get startOverConfirmTitle;
+
+  /// No description provided for @startOverConfirmBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'O app volta vazio. O arquivo danificado é guardado ao lado, como cópia (mesada.json.bak), mas não aparece no app.'**
+  String get startOverConfirmBody;
+
+  /// No description provided for @renameFamilyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da família'**
+  String get renameFamilyTitle;
+
+  /// No description provided for @childRemovedNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este filho foi removido pelo outro responsável.'**
+  String get childRemovedNotice;
+
+  /// No description provided for @recoveryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail de recuperação'**
+  String get recoveryTitle;
+
+  /// No description provided for @recoveryNotSet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não configurado'**
+  String get recoveryNotSet;
+
+  /// No description provided for @recoveryExplain.
+  ///
+  /// In pt, this message translates to:
+  /// **'Se você esquecer o PIN, enviamos um PIN novo para este e-mail e o PIN atual deixa de valer. Use um e-mail que o seu filho não abra neste aparelho, porque quem ler a mensagem descobre o PIN.'**
+  String get recoveryExplain;
+
+  /// No description provided for @recoveryEmailLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get recoveryEmailLabel;
+
+  /// No description provided for @recoverySkipAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agora não'**
+  String get recoverySkipAction;
+
+  /// No description provided for @recoverySaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail de recuperação salvo. Enviamos uma mensagem de confirmação.'**
+  String get recoverySaved;
+
+  /// No description provided for @pinForgotAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esqueci o PIN'**
+  String get pinForgotAction;
+
+  /// No description provided for @pinForgotConfirmTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar um PIN novo?'**
+  String get pinForgotConfirmTitle;
+
+  /// No description provided for @pinForgotConfirmBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vamos gerar um PIN novo e enviá-lo para {email}. O PIN atual deixa de valer.'**
+  String pinForgotConfirmBody(String email);
+
+  /// No description provided for @pinForgotSendAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar PIN novo'**
+  String get pinForgotSendAction;
+
+  /// No description provided for @pinForgotSent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviamos um PIN novo para {email}. Digite-o aqui quando chegar.'**
+  String pinForgotSent(String email);
+
+  /// No description provided for @errorTooManyRequests.
+  ///
+  /// In pt, this message translates to:
+  /// **'Muitas tentativas. Tente de novo mais tarde.'**
+  String get errorTooManyRequests;
 }
 
 class _AppLocalizationsDelegate

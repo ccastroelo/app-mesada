@@ -37,6 +37,42 @@ String newPinSalt() {
   ].join();
 }
 
+/// PIN novo aleatório, de [pinLength] dígitos, para o "esqueci o PIN".
+String newRandomPin() {
+  final value = Random.secure().nextInt(pow(10, pinLength).toInt());
+  return value.toString().padLeft(pinLength, '0');
+}
+
+/// Identificador deste aparelho para o servidor de recuperação (16 bytes em
+/// hexadecimal). Não é dado pessoal; só liga o e-mail registrado ao aparelho.
+String newInstallId() {
+  final random = Random.secure();
+  return [
+    for (var i = 0; i < 16; i++)
+      random.nextInt(256).toRadixString(16).padLeft(2, '0'),
+  ].join();
+}
+
+/// Idioma dos e-mails do servidor (ADR-0023): pt, pt_PT, en ou es. O que não
+/// é nenhum deles recebe inglês.
+String recoveryLocale(String languageCode, String? countryCode) {
+  return switch (languageCode) {
+    'pt' => countryCode == 'PT' ? 'pt_PT' : 'pt',
+    'es' => 'es',
+    _ => 'en',
+  };
+}
+
+/// "ana@exemplo.com" vira "a**@exemplo.com": mostra para onde vai o PIN sem
+/// escancarar o endereço na tela de bloqueio.
+String maskEmail(String email) {
+  final at = email.indexOf('@');
+  if (at <= 0) return email;
+  final local = email.substring(0, at);
+  final hidden = local.length <= 1 ? '' : '*' * (local.length - 1);
+  return '${local[0]}$hidden${email.substring(at)}';
+}
+
 /// SHA-256 de sal + PIN. Guardar o hash em vez do PIN evita que ele apareça
 /// em texto num backup do aparelho; contra quem tem o aparelho na mão e
 /// paciência, 10 mil combinações não param ninguém — e não é esse o alvo.
