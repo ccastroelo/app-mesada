@@ -98,7 +98,7 @@ void main() {
       await openApp(tester);
       await openHelp(tester);
 
-      expect(find.text('contato@ideiasmob.com.br'), findsOneWidget);
+      expect(find.text('contato@synapsesolucoes.ia.br'), findsOneWidget);
       await tester.tap(find.text('Falar com a gente'));
       await tester.pumpAndSettle();
 

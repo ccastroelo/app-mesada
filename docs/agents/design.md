@@ -223,6 +223,6 @@ Tira "biometria no lugar do PIN" da §11 (fora de escopo) e complementa a §4.11
 
 ## 16. Emenda de 2026-11-03 — o que o M7 entregou diferente
 
-- **Falar com a gente** (§4.8) **copia** o e-mail de contato (`contato@ideiasmob.com.br`, o mesmo do app antigo) em vez de abrir o compositor de e-mail. Abrir exigiria `url_launcher`, e o endereço copiado resolve; reabrir se incomodar.
+- **Falar com a gente** (§4.8) **copia** o e-mail de contato (`contato@synapsesolucoes.ia.br`; o domínio do app antigo saiu do ar) em vez de abrir o compositor de e-mail. Abrir exigiria `url_launcher`, e o endereço copiado resolve; reabrir se incomodar.
 - **Sobre** (§4.8) mostra o nome do app e onde os dados ficam, mas **não a versão**: ela exigiria `package_info_plus`, e a versão de release ainda não foi definida (precisa ser > 1.2, ADR-0007). Mostrar "1.0.0" seria pior que não mostrar.
 - A **introdução** (§4.9) saiu como desenhada, em 4 cartões de texto e ícone, com o 4º apresentando a Família como assinatura (§13). Ela aparece na primeira abertura — no modo local não há "criar família" visível — e é reabrível em Ajustes › Ajuda.

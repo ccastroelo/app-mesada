@@ -8,9 +8,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
 
-/// Endereço de contato, o mesmo do app antigo (`imAjudaVC.m:61`). Trocar aqui
-/// se mudar de caixa de entrada.
-const contactEmail = 'contato@ideiasmob.com.br';
+/// Endereço de contato. O app antigo usava `ideiasmob.com.br`
+/// (`imAjudaVC.m:61`), que saiu do ar; o atual é este. Trocar aqui se mudar
+/// de caixa de entrada.
+const contactEmail = 'contato@synapsesolucoes.ia.br';
 
 /// Ajustes › Ajuda (design.md §4.8): rever a introdução, falar com a gente e
 /// Sobre.

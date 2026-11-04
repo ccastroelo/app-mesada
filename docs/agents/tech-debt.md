@@ -71,4 +71,4 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 ## Sobre não mostra a versão, e o contato só copia
 
 - **Sobre** (M7): sem `package_info_plus` não dá para ler a versão em tempo de execução, e a versão de release ainda não foi definida (> 1.2, build > 9 — ADR-0007). Quando ela for decidida, entra a dependência (ou uma constante gerada no build) e a linha aparece.
-- **Falar com a gente** (M7): copia `contato@ideiasmob.com.br` para a área de transferência. Abrir o compositor de e-mail já preenchido exigiria `url_launcher`. Vale confirmar também se esse endereço do app antigo ainda é lido.
+- **Falar com a gente** (M7): copia `contato@synapsesolucoes.ia.br` para a área de transferência. Abrir o compositor de e-mail já preenchido exigiria `url_launcher`. O local-part (`contato@`) veio do app antigo; confirmar se é essa a caixa certa no domínio novo.
