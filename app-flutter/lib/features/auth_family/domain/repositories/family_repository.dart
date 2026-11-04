@@ -24,7 +24,6 @@ abstract class FamilyRepository {
   Future<Result<void>> createFamilyFromLocal({
     required AppUser user,
     required String name,
-    required Map<String, Object?> plan,
     required List<Map<String, dynamic>> children,
     required List<Map<String, dynamic>> rules,
     required List<Map<String, dynamic>> entries,

@@ -12,7 +12,7 @@ import 'package:mesada/features/app_lock/app_lock_providers.dart';
 import 'package:mesada/features/app_lock/data/providers.dart';
 import 'package:mesada/features/auth_family/data/providers.dart';
 import 'package:mesada/features/children/data/providers.dart';
-import 'package:mesada/features/family_plan/data/providers.dart';
+import 'package:mesada/features/entitlement/data/providers.dart';
 import 'package:mesada/features/help/data/providers.dart';
 import 'package:mesada/features/ledger/data/providers.dart';
 import 'package:mesada/features/rules/data/providers.dart';
@@ -22,7 +22,7 @@ import 'fakes.dart';
 /// Abre o app inteiro sem tocar no Firebase.
 ///
 /// [mode] escolhe o portão: `cloud` (padrão aqui) exercita a composição da
-/// assinatura, com conta e família falsas. `local` é o padrão do app de
+/// compartilhamento, com conta e família falsas. `local` é o padrão do app de
 /// verdade (ADR-0014): aí os repositórios que **não** receberem um falso são
 /// os de verdade, sobre um arquivo numa pasta temporária.
 Future<void> pumpApp(
@@ -39,8 +39,8 @@ Future<void> pumpApp(
   FakePinStore? pinStore,
   FakeBiometricAuth? biometrics,
   FakeIntroStore? introStore,
-  FakePlanStore? planStore,
-  FakePlanGateway? planGateway,
+  FakeEntitlementStore? entitlementStore,
+  FakeLegacyDetector? legacyDetector,
   DateTime Function()? clock,
   LocalStore? store,
   DeviceSettings? deviceSettings,
@@ -69,9 +69,13 @@ Future<void> pumpApp(
         // Introdução já vista por padrão: ela não entra no caminho dos
         // outros testes.
         introStoreProvider.overrideWithValue(introStore ?? FakeIntroStore()),
-        // Nunca falar com a loja de verdade num teste.
-        planStoreProvider.overrideWithValue(planStore ?? FakePlanStore()),
-        planGatewayProvider.overrideWithValue(planGateway ?? FakePlanGateway()),
+        // A marca do aparelho em memória: nenhum teste grava no disco por ela.
+        entitlementStoreProvider.overrideWithValue(
+          entitlementStore ?? FakeEntitlementStore(),
+        ),
+        legacyAppDetectorProvider.overrideWithValue(
+          legacyDetector ?? FakeLegacyDetector(),
+        ),
         localStoreProvider.overrideWithValue(store ?? temporaryStore()),
         authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),
         familyRepositoryProvider.overrideWithValue(

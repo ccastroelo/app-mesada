@@ -1052,80 +1052,44 @@ abstract class AppLocalizations {
   /// No description provided for @intro4Body.
   ///
   /// In pt, this message translates to:
-  /// **'Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois.'**
+  /// **'Os dois responsáveis veem os mesmos números em tempo real. Dá para ativar depois, em Ajustes.'**
   String get intro4Body;
 
-  /// No description provided for @planPitch.
+  /// No description provided for @sharingPitch.
   ///
   /// In pt, this message translates to:
   /// **'Os dois responsáveis veem os mesmos números, em tempo real, cada um no seu aparelho.'**
-  String get planPitch;
+  String get sharingPitch;
 
-  /// No description provided for @planLocalOnly.
+  /// No description provided for @sharingOtherNeedsApp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O outro responsável instala o Mesada no aparelho dele, cria a conta e entra com o código que você enviar.'**
+  String get sharingOtherNeedsApp;
+
+  /// No description provided for @sharingLocalOnly.
   ///
   /// In pt, this message translates to:
   /// **'Hoje os dados ficam só neste aparelho.'**
-  String get planLocalOnly;
+  String get sharingLocalOnly;
 
-  /// No description provided for @planOneTime.
-  ///
-  /// In pt, this message translates to:
-  /// **'Pagamento único, sem mensalidade.'**
-  String get planOneTime;
-
-  /// No description provided for @planBuyAction.
-  ///
-  /// In pt, this message translates to:
-  /// **'Liberar por {price}'**
-  String planBuyAction(String price);
-
-  /// No description provided for @planRestoreAction.
-  ///
-  /// In pt, this message translates to:
-  /// **'Restaurar compras'**
-  String get planRestoreAction;
-
-  /// No description provided for @planRestoreEmpty.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma compra encontrada nesta conta da loja.'**
-  String get planRestoreEmpty;
-
-  /// No description provided for @planStoreUnavailable.
-  ///
-  /// In pt, this message translates to:
-  /// **'A loja não respondeu agora. Tente de novo mais tarde.'**
-  String get planStoreUnavailable;
-
-  /// No description provided for @planActiveTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Família liberada'**
-  String get planActiveTitle;
-
-  /// No description provided for @planActiveSince.
-  ///
-  /// In pt, this message translates to:
-  /// **'Pagamento único, desde {date}'**
-  String planActiveSince(String date);
-
-  /// No description provided for @settingsFamilyPlanSubtitle.
+  /// No description provided for @settingsFamilySharingSubtitle.
   ///
   /// In pt, this message translates to:
   /// **'Compartilhar com o outro responsável'**
-  String get settingsFamilyPlanSubtitle;
+  String get settingsFamilySharingSubtitle;
 
-  /// No description provided for @planStartSharing.
+  /// No description provided for @sharingStart.
   ///
   /// In pt, this message translates to:
   /// **'Entrar para compartilhar'**
-  String get planStartSharing;
+  String get sharingStart;
 
-  /// No description provided for @planSharingHint.
+  /// No description provided for @sharingHint.
   ///
   /// In pt, this message translates to:
   /// **'Você entra com uma conta e os dados deste aparelho sobem para a nuvem. Depois é só convidar o outro responsável.'**
-  String get planSharingHint;
+  String get sharingHint;
 
   /// No description provided for @backToLocalAction.
   ///

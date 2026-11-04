@@ -53,17 +53,17 @@ void main() {
     expect(await container.read(savedModeProvider.future), AppMode.local);
   });
 
-  test('a troca de modo não apaga o PIN nem o plano', () async {
+  test('a troca de modo não apaga o PIN nem a marca do app', () async {
     await settings.merge({
       'pinHash': 'abc',
-      'familyPlan': {'kind': 'lifetime'},
+      'entitlement': {'modelVersion': 1},
     });
 
     await settings.merge({'mode': 'cloud'});
 
     final json = await settings.read();
     expect(json['pinHash'], 'abc');
-    expect(json['familyPlan'], isNotNull);
+    expect(json['entitlement'], isNotNull);
     expect(json['mode'], 'cloud');
   });
 }

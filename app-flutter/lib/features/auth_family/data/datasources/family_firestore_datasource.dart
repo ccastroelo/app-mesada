@@ -29,7 +29,7 @@ class FamilyFirestoreDataSource {
   /// (só depois, porque as regras de segurança exigem já existir como membro).
   /// Cria a família já com o conteúdo **deste aparelho**, em vez das
   /// regras-padrão: é a virada de fonte de verdade do ADR-0014, que acontece
-  /// uma vez, quando a Família é liberada.
+  /// uma vez, quando a pessoa escolhe compartilhar.
   ///
   /// Os ids locais são preservados, senão os lançamentos (`childId_ruleId`)
   /// apontariam para o vazio. Tudo num lote só — o pior caso aqui é umas
@@ -38,7 +38,6 @@ class FamilyFirestoreDataSource {
     required String uid,
     required String email,
     required String name,
-    required Map<String, Object?> plan,
     required List<Map<String, dynamic>> children,
     required List<Map<String, dynamic>> rules,
     required List<Map<String, dynamic>> entries,
@@ -49,7 +48,6 @@ class FamilyFirestoreDataSource {
       'name': name,
       'createdBy': uid,
       'createdAt': FieldValue.serverTimestamp(),
-      'plan': plan,
     });
     batch.set(family.collection('members').doc(uid), {
       'email': email,

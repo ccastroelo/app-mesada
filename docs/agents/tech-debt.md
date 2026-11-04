@@ -73,16 +73,16 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 - **Sobre** (M7): sem `package_info_plus` não dá para ler a versão em tempo de execução, e a versão de release ainda não foi definida (> 1.2, build > 9 — ADR-0007). Quando ela for decidida, entra a dependência (ou uma constante gerada no build) e a linha aparece.
 - **Falar com a gente** (M7): copia `contato@synapsesolucoes.ia.br` para a área de transferência. Abrir o compositor de e-mail já preenchido exigiria `url_launcher`. O local-part (`contato@`) veio do app antigo; confirmar se é essa a caixa certa no domínio novo.
 
-## A compra da Família não foi exercitada contra loja de verdade
+## A compra e a assinatura ainda não existem no código
 
-- **Onde**: `family_plan/data/repositories/in_app_purchase_plan_gateway.dart` (ADR-0020). Como a biometria, é canal de plataforma: nos testes o `PlanGateway` é um falso, então o que está coberto é a decisão (o que gravar, o que mostrar), não o diálogo de pagamento.
-- **Pré-requisito do usuário**: criar o produto **`mesada_familia`** (não-consumível) no App Store Connect e no Google Play, com o mesmo id. Sem isso a oferta volta nula e a tela mostra "a loja não respondeu" — que é exatamente o que acontece hoje.
-- **O que falta ver em aparelho**: compra em ambiente de teste (sandbox/teste interno), compra cancelada, "Restaurar compras" em aparelho novo e a compra pendente de aprovação (cartão em análise).
-- **E falta a outra metade do M4.5**: o direito gravado em `families/{id}`, as regras do Firestore conhecendo o plano, e a virada de fonte de verdade (subir o local e trocar o `appModeProvider`). Sem isso, comprar hoje não compartilha nada.
+- O modelo está decidido (ADR-0021), mas o código só tem o **núcleo**: a marca do aparelho e `evaluateAccess`. O gateway de compra do M4.5 antigo (um produto, a Família) foi apagado; volta com **dois** produtos, `mesada_app` e `mesada_compartilhar`, que o usuário precisa criar nas duas lojas com esses ids.
+- Enquanto isso **ninguém é bloqueado**: nada consulta `evaluateAccess`, e compartilhar não pede assinatura. Um build de hoje daria acesso completo para sempre.
+- **Antes de vender**: (1) o teste de 15 dias é um contador do próprio app, que o relógio ou a reinstalação burlam (guardar a data no Keychain ajuda no iOS); (2) a assinatura chega ao convidado por um campo no documento da família, forjável sem validação no servidor (Cloud Functions no plano Blaze, ou RevenueCat); (3) conferir a revisão das lojas para "uma compra libera o acesso de outra pessoa"; (4) a detecção do app antigo só enxerga quem salvou algo nele (o app antigo só gravava os `.plist` ao salvar).
+- Como a biometria, a compra é canal de plataforma: nos testes o gateway será um falso, então o que ficará coberto é a decisão, não o diálogo de pagamento. Será preciso testar em ambiente de teste das lojas (compra, cancelamento, restaurar, pendente de aprovação).
 
 ## A virada para a nuvem nunca rodou de verdade
 
-- **Onde**: `createFamilyFromLocal` (datasource da `auth_family`), o modo guardado em `core/storage/app_mode_state.dart` e a tela da Família (M4.5, ADR-0014/0020). Os testes usam repositório falso e pasta temporária: cobrem a **decisão** (quando virar, o que subir, o que preservar), não o Firestore.
-- **Pré-requisitos do usuário**: habilitar Authentication e Firestore no `mesada-proj`; criar o produto `mesada_familia` nas duas lojas; **rodar os testes das regras no emulador** (`firebase-tests`, precisa do terminal dele) e **publicar as regras** (`firebase deploy --only firestore:rules`) — nada disso o Claude faz sozinho.
-- **O que falta ver rodando**: subir um aparelho com dados, comprar, entrar, criar a família e confirmar que filhos, regras e lançamentos chegaram com os **mesmos ids** (senão os lançamentos apontam para o vazio); depois convidar o segundo responsável e ver os dois lançando.
-- **Lacuna conhecida**: nada **lê** o `plan` do documento da família para decidir se compartilha. Hoje quem manda é a cópia local do direito, e o único caminho para a nuvem passa por ela. Se um dia o segundo aparelho precisar conferir o plano, a leitura é o que falta.
+- **Onde**: `createFamilyFromLocal` (datasource da `auth_family`), o modo guardado em `core/storage/app_mode_state.dart` e a tela de Ajustes › Família (ADR-0014). Os testes usam repositório falso e pasta temporária: cobrem a **decisão** (quando virar, o que subir, o que preservar), não o Firestore.
+- **Pré-requisitos do usuário**: habilitar Authentication no `mesada-proj` (o Firestore já existe); **rodar os testes das regras no emulador** (`firebase-tests`, precisa do terminal dele). As regras publicadas são as do ADR-0011; **elas ainda não conhecem a assinatura**.
+- **O que falta ver rodando**: subir um aparelho com dados, entrar, criar a família e confirmar que filhos, regras e lançamentos chegaram com os **mesmos ids** (senão os lançamentos apontam para o vazio); depois convidar o segundo responsável e ver os dois lançando.
+

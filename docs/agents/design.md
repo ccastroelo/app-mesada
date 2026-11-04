@@ -1,6 +1,6 @@
 # Design — Mesada (proposta para aprovação)
 
-> **Status: APROVADO em 2026-10-28** · **emendas em 2026-11-03: §13** (Família por assinatura, entrada sem conta), **§14** (relatório em PDF), **§15** (biometria) e **§16** (o que o M7 entregou diferente) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
+> **Status: APROVADO em 2026-10-28** · **emendas em 2026-11-03: §13** (Família por assinatura, entrada sem conta), **§14** (relatório em PDF), **§15** (biometria), **§16** (o que o M7 entregou diferente) e **§17** (2026-11-04: teste, compra e assinatura) (os 7 itens da §12 como propostos, paleta petróleo). Marco D concluído; as telas entram a partir do M0/M1. Regras de negócio não mudam: valem `behavior-inventory.md` §2 e os ADRs (`decisions.md`).
 > Escopo do redesenho: visual **e** fluxo (ADR-0005). O app é de uso diário, em pé, com uma mão: a ação mais frequente (lançar ±1) precisa ser a mais fácil.
 
 ## 1. Princípios
@@ -226,3 +226,16 @@ Tira "biometria no lugar do PIN" da §11 (fora de escopo) e complementa a §4.11
 - **Falar com a gente** (§4.8) **copia** o e-mail de contato (`contato@synapsesolucoes.ia.br`; o domínio do app antigo saiu do ar) em vez de abrir o compositor de e-mail. Abrir exigiria `url_launcher`, e o endereço copiado resolve; reabrir se incomodar.
 - **Sobre** (§4.8) mostra o nome do app e onde os dados ficam, mas **não a versão**: ela exigiria `package_info_plus`, e a versão de release ainda não foi definida (precisa ser > 1.2, ADR-0007). Mostrar "1.0.0" seria pior que não mostrar.
 - A **introdução** (§4.9) saiu como desenhada, em 4 cartões de texto e ícone, com o 4º apresentando a Família como assinatura (§13). Ela aparece na primeira abertura — no modo local não há "criar família" visível — e é reabrível em Ajustes › Ajuda.
+
+## 17. Emenda de 2026-11-04 — teste, compra e assinatura (ADR-0021)
+
+Substitui o que a §13 diz sobre a Família ser um recurso pago à parte; o resto da §13 (entrada sem conta, vencer não apaga nada) continua valendo.
+
+- **Quem usa o quê.** O app é grátis para baixar. Tem **15 dias de teste** completos; depois, a **compra única do app** libera o uso neste aparelho para sempre. **Compartilhar** com o outro responsável é uma **assinatura**, paga por quem cria a família; o **convidado instala de graça** e usa o app inteiro enquanto a assinatura da família estiver ativa, sem a compra única.
+- **Durante o teste**: uma faixa discreta em Filhos diz quantos dias faltam ("Teste grátis: 9 dias") e leva à tela de compra. Nos últimos 3 dias a faixa fica mais visível; nada bloqueia.
+- **Teste acabou, sem compra: só leitura.** Filhos, saldos e relatórios continuam à vista, mas **não se lança nem se edita**: os botões −/+ e os botões flutuantes ficam desligados, e uma faixa fixa explica e oferece a compra. A pessoa nunca fica refém dos próprios dados.
+- **Tela de compra** (a mesma pelas duas entradas): o que está incluso, o preço **formatado pela loja**, **Comprar** e **Restaurar compras**. Se a loja não responder, diz isso com clareza e mantém "Restaurar".
+- **Ajustes › Família**: sem assinatura, explica o compartilhamento e leva à assinatura; com assinatura ativa, mostra membros, **Convidar** e **Sair da família**, como na §4.8. O texto avisa que **o outro responsável instala o Mesada no aparelho dele** e entra com o código.
+- **Assinatura vencida**: o dono volta a usar só neste aparelho, com os dados que já tem, e mantém tudo se comprou o app. O convidado que nunca comprou cai em **só leitura** até comprar o app ou a família renovar.
+- **Quem tem o app antigo** (iOS 1.2) não vê teste nem compra: o uso local é liberado para sempre. Se quiser compartilhar, assina como qualquer um.
+- **A introdução** (§4.9), cartão 4, já diz que dá para ativar o compartilhamento depois, em Ajustes.

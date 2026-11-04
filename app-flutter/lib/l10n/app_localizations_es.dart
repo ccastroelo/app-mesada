@@ -532,51 +532,29 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get intro4Body =>
-      'Con la suscripción Familia, los dos ven los mismos números en tiempo real. Puedes decidir más tarde.';
+      'Los dos responsables ven los mismos números en tiempo real. Puedes activarlo más tarde, en Ajustes.';
 
   @override
-  String get planPitch =>
+  String get sharingPitch =>
       'Los dos responsables ven los mismos números, en tiempo real, cada uno en su dispositivo.';
 
   @override
-  String get planLocalOnly =>
+  String get sharingOtherNeedsApp =>
+      'El otro responsable instala Mesada en su dispositivo, crea la cuenta y entra con el código que le envíes.';
+
+  @override
+  String get sharingLocalOnly =>
       'Por ahora los datos se quedan solo en este dispositivo.';
 
   @override
-  String get planOneTime => 'Pago único, sin suscripción.';
+  String get settingsFamilySharingSubtitle =>
+      'Compartir con el otro responsable';
 
   @override
-  String planBuyAction(String price) {
-    return 'Desbloquear por $price';
-  }
+  String get sharingStart => 'Entrar para compartir';
 
   @override
-  String get planRestoreAction => 'Restaurar compras';
-
-  @override
-  String get planRestoreEmpty =>
-      'No se encontró ninguna compra en esta cuenta de la tienda.';
-
-  @override
-  String get planStoreUnavailable =>
-      'La tienda no respondió. Inténtalo más tarde.';
-
-  @override
-  String get planActiveTitle => 'Familia desbloqueada';
-
-  @override
-  String planActiveSince(String date) {
-    return 'Pago único, desde $date';
-  }
-
-  @override
-  String get settingsFamilyPlanSubtitle => 'Compartir con el otro responsable';
-
-  @override
-  String get planStartSharing => 'Entrar para compartir';
-
-  @override
-  String get planSharingHint =>
+  String get sharingHint =>
       'Entras con una cuenta y los datos de este dispositivo suben a la nube. Después invitas al otro responsable.';
 
   @override

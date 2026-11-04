@@ -32,7 +32,7 @@ lib/
                        e o relatório em PDF compartilhado (M5)
     app_lock/          Bloqueio: biometria com PIN de reserva, Ajustes › Segurança (M6)
     help/              Introdução em 4 cartões e Ajustes › Ajuda (M7)
-    family_plan/       Família: a compra única que libera o compartilhamento (M4.5)
+    entitlement/       Acesso ao app: marca do aparelho (início do teste, origem) e regra de acesso (M4.5)
     settings/          Ajustes (família, convite, segurança, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
@@ -128,14 +128,13 @@ O roteador decide a tela só pelo `Gate` selado (`GateLoading | GateError | Gate
 - Os 4 cartões são **só texto e ícone** (`design.md` §4.9). O app antigo usava imagens de tela por idioma, que envelheceram e não dava para traduzir.
 
 
-## A Família, o recurso pago (M4.5 em andamento, ADR-0020)
+## O acesso ao app: teste, compra e assinatura (M4.5, ADR-0021)
 
-- `FamilyPlan` (`family_plan/domain`) **não é um booleano "pagou"**: guarda `kind` (`lifetime` hoje), `productId`, `since` e `modelVersion`. É essa marca que permite trocar a cobrança para assinatura um dia **sem cobrar de novo de quem já pagou** — a regra futura olha a versão do modelo.
-- O direito mora em três lugares, com papéis diferentes: a **loja** é a fonte de verdade (a compra não-consumível fica na conta Apple/Google para sempre), o **`device.json`** é cópia local para o app saber o que vale sem rede, e o **documento da família** é o que fará o aparelho do outro responsável confiar — essa parte ainda não existe.
-- `PlanGateway` (contrato) esconde a loja; `InAppPurchasePlanGateway` fala com o `in_app_purchase`. Detalhe que o contrato esconde: a loja **responde pelo `purchaseStream`**, não pelo retorno da chamada, então comprar e restaurar disparam a ação e esperam a confirmação do nosso produto chegar pelo stream, com um limite de paciência. Nos testes o contrato é um falso: nenhum teste fala com loja.
-- A tela (`Ajustes › Família`) tem três estados: proposta com o preço **formatado pela loja**, loja sem resposta (e aí ainda dá para restaurar) e direito ativo, mostrando desde quando.
-- **A virada para a nuvem** (ADR-0014) acontece assim: o modo fica guardado no `device.json` (`savedModeProvider`), e o portão não mostra conteúdo antes de saber qual é. Na tela da Família, quem já pagou toca em "Entrar para compartilhar" e o modo vira `cloud`; o portão passa a pedir conta, e **criar a família leva o conteúdo deste aparelho** (`createFamilyFromLocal`, com os ids locais preservados para os lançamentos não apontarem para o vazio) em vez de semear as 20 regras-padrão. Quem desistir no meio tem a saída "Usar só neste aparelho" nas boas-vindas, senão ficaria preso numa tela de login com os dados fora de alcance.
-- **O que ainda falta no M4.5**: as regras do Firestore foram escritas para aceitar o campo `plan`, mas **não foram rodadas no emulador nem publicadas**; nada ainda **lê** o plano do documento da família para decidir (hoje quem controla é a cópia local); e nada disso foi exercitado contra o Firebase de verdade.
+- **O que se vende**: app grátis para baixar; 15 dias de teste; depois a compra única do app (`mesada_app`); compartilhar é uma assinatura (`mesada_compartilhar`); o convidado não paga a compra única. **A compra e a assinatura são direitos que a loja guarda e confirma**; o app não inventa "pagou".
+- `AppEntitlement` (`entitlement/domain`) é a **marca do aparelho** no `device.json`: `since` (primeiro uso = início do teste), `modelVersion` e `origin` (`newInstall` | `legacyUpdate`). Nunca é um booleano. É criada **uma só vez**, no primeiro uso, pelo `entitlementProvider` (observado em `app.dart`), e depois nunca é reescrita. A origem vem do `LegacyAppDetector`, que procura os `.plist` do app antigo em Documents (o bundle id é o mesmo, ADR-0007).
+- `evaluateAccess` é a **regra de acesso**, pura e testada: app antigo > comprou > membro de família com assinatura ativa > dentro dos 15 dias > só leitura (`FullAccess` ou `ReadOnlyAccess`). Recebe `ownsApp` e `inActiveFamily` de fora; **ainda não há quem os forneça** (falta o gateway de compra), então nada consulta a regra e ninguém é bloqueado.
+- **A virada para a nuvem** (ADR-0014) já funciona: o modo fica guardado no `device.json` (`savedModeProvider`) e o portão não mostra conteúdo antes de saber qual é. Em Ajustes › Família, "Entrar para compartilhar" troca o modo para `cloud`; o portão passa a pedir conta, e **criar a família leva o conteúdo deste aparelho** (`createFamilyFromLocal`, com os ids locais preservados para os lançamentos não apontarem para o vazio) em vez de semear as 20 regras-padrão. Quem desistir no meio tem a saída "Usar só neste aparelho" nas boas-vindas. Hoje essa tela **não exige assinatura**: o gate entra com a compra.
+- **O que falta** (próximo passo, M4.5b): gateway de compra com os dois produtos; aviso dos dias de teste; modo só leitura nas telas de escrita; a assinatura gravada no documento da família e lida pelo convidado, com as regras do Firestore para isso; validação de recibo no servidor antes de vender.
 
 ## Composição e testes
 

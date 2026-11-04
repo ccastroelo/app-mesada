@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/app_lock/app_lock_providers.dart';
+import 'features/entitlement/entitlement_providers.dart';
 import 'l10n/app_localizations.dart';
 
 class MesadaApp extends ConsumerStatefulWidget {
@@ -46,6 +47,8 @@ class _MesadaAppState extends ConsumerState<MesadaApp> {
 
   @override
   Widget build(BuildContext context) {
+    // Grava a marca do app no primeiro uso (ADR-0021); o valor não é usado aqui.
+    ref.watch(entitlementProvider);
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.light(),

@@ -4,8 +4,33 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
-### ADR-0020 — A Família é compra única por família, não assinatura
-- Data: 2026-11-03 · Status: aceita · Escopo: nova feature `family_plan`, M4.5; fecha a pergunta aberta do ADR-0015
+### ADR-0021 — Teste de 15 dias, compra única do app e assinatura para compartilhar
+- Data: 2026-11-04 · Status: aceita · Escopo: produto, M4.5; **substitui o ADR-0020** e os itens 3, 5, 6 e 8 do ADR-0015; renomeia os termos do ADR-0014
+- Contexto: o ADR-0020 vendia a "Família" por compra única dentro do app. O usuário corrigiu em 2026-11-04 e fechou o modelo: (a) o que se compra uma vez é o **app**; (b) o **compartilhamento** é assinatura; (c) o **convidado não paga a compra única**; (d) quem já pagou **não é cobrado de novo** quando houver assinatura; (e) há **15 dias de teste**. O app antigo (iOS 1.2) foi pago e depois ficou grátis.
+- Decisão:
+  1. **O app é grátis para baixar** (o convidado precisa instalar sem pagar). O acesso completo vem de uma destas fontes:
+     - **Teste**: 15 dias a partir do primeiro uso, tudo liberado, só neste aparelho.
+     - **Compra única do app** (produto não-consumível `mesada_app`): libera o uso neste aparelho para sempre.
+     - **Assinatura para compartilhar** (produto auto-renovável `mesada_compartilhar`): libera a nuvem e o convite. Paga quem cria e mantém a família.
+     - **Ser membro de uma família com assinatura ativa**: o convidado usa o app inteiro, sem a compra única, enquanto a assinatura estiver ativa.
+     - **Vir do app antigo**: uso local para sempre, sem teste nem compra (ver 6). Para compartilhar, assina como qualquer um.
+  2. **Acabou o teste e não comprou: só leitura.** Vê filhos, saldos e relatórios; não lança nem edita até comprar. Nunca fica refém dos próprios dados.
+  3. **Assinatura vencida**: o dono volta a usar só neste aparelho, com os dados que já tem (a nuvem para de sincronizar; nada é apagado) e mantém o acesso se comprou o app. O **convidado sem a compra única cai no mesmo caso do teste vencido**: só leitura até comprar o app ou a família renovar.
+  4. **Precedência do acesso**: veio do app antigo > comprou o app > membro de família ativa > dentro dos 15 dias > só leitura. É uma função pura (`evaluateAccess`).
+  5. **A marca do aparelho** (`entitlement` no `device.json`): `since` é o primeiro uso e **o início do teste**; `modelVersion`; `origin` (`newInstall` ou `legacyUpdate`), decidida no primeiro uso pela presença dos arquivos do app antigo em `Documents`. Guarda-se a origem, nunca um "pagou: sim/não". **Modelo 1 = este modelo.** A compra única, porém, **a loja é que guarda e confirma**; a marca só diz de onde o aparelho veio.
+  6. **Quem tem o app antigo recebe uso local para sempre**, inclusive quem o baixou de graça na fase grátis. Distinguir quem **pagou** de quem baixou grátis pediria o `AppTransaction` do StoreKit (data da compra original) e o usuário preferiu honrar todos. Reavaliar se virar problema.
+  7. **Futuro**: se a assinatura mudar de preço ou ganhar outro plano, quem comprou o app não paga a compra única de novo. Isso se sustenta porque a compra única é um direito guardado pela loja, não pela marca.
+- Alternativas descartadas: app pago na loja (o convidado teria de comprar para instalar); a Família como compra única dentro do app (era o ADR-0020); bloquear tudo depois do teste; carência para o convidado.
+- Consequências e riscos, ditos de frente:
+  - **O teste é um contador nosso**: as lojas só dão teste nativo para assinatura. Mudar o relógio ou reinstalar o burla. Guardar a data no Keychain (iOS) ajuda; é um furo pequeno e aceito.
+  - **A assinatura chega ao convidado** por um campo no documento da família, gravado pelo aparelho de quem assina. Sem um servidor conferindo o recibo, dá para forjar e compartilhar de graça. **Antes do lançamento**, validar no servidor (Cloud Functions no plano Blaze, ou um serviço como o RevenueCat). Aceito só até haver venda.
+  - Uma compra liberar o acesso de outra pessoa é comum em planos de família ou equipe, mas **a revisão da Apple e do Google deve ser conferida antes de publicar**.
+  - A nuvem passa a ser paga pela assinatura: custo recorrente com receita recorrente.
+  - **Dois produtos nas duas lojas**: `mesada_app` e `mesada_compartilhar`. Nunca removê-los, porque "restaurar compras" depende deles.
+  - Código: sai a compra única da Família (`family_plan`); a compra volta com dois produtos. As regras do Firestore **ainda não têm** o campo da assinatura (foram revertidas à versão publicada) e vão precisar dele: editar, testar no emulador e publicar com OK do usuário.
+
+### ADR-0020 — A Família é compra única por família, não assinatura (substituída pelo ADR-0021)
+- Data: 2026-11-03 · Status: **substituída por ADR-0021 em 2026-11-04** (o usuário esclareceu que a compra única é o app, não o compartilhamento) · Escopo: nova feature `family_plan`, M4.5; fecha a pergunta aberta do ADR-0015
 - Contexto: o ADR-0015 deixou preço e período em aberto. O custo de nuvem deste app é pequeno — dezenas de documentos por família, contra a cota gratuita de 50 mil leituras por dia do Firestore —, então "receita recorrente para cobrir custo recorrente" pesa pouco aqui. Do outro lado, assinatura custa código: renovação, cancelamento, período de graça, reembolso, e cada caminho desses precisa ser testado.
 - Decisão: **produto não-consumível, uma compra por família** (`in_app_purchase`). Sem renovação e sem validade, então não há expiração a checar — o que combina com a regra já aprovada de que vencer não tranca nada (ADR-0015). Quem compra libera o recurso para a família; o segundo responsável entra de graça pelo código de convite. **Restaurar compras** é obrigatório, porque a compra pertence à conta da loja (Apple ID / Google Play), não ao login do app.
 - **O direito é guardado com tipo, produto, data e versão do modelo — nunca como um booleano "pagou"** (pedido do usuário, 2026-11-03). Se um dia a cobrança virar assinatura, quem pagou a compra única **não pode ser cobrado de novo**, e isso só é possível se o dado disser de onde o direito veio:
@@ -50,7 +75,7 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 - Consequências: uma dependência nova (`pdf`); por ser Dart puro, a geração entra nos testes de unidade. O PDF usa a Helvetica embutida (Latin-1), que não tem o sinal "−" (U+2212) usado pelo `formatCents`: o gerador troca por "-" no documento. O relatório funciona no modo local, sem conta e sem rede.
 
 ### ADR-0015 — Conta só ao assinar; assinatura por família
-- Data: 2026-11-03 · Status: aceita · Escopo: feature `auth_family`, nova feature de assinatura, roteador
+- Data: 2026-11-03 · Status: aceita, **parcialmente substituída pelo ADR-0021** (preço e período ficam fechados: compra única do app mais assinatura para compartilhar; e o item 6, "vencida não tranca nada", vira só leitura para quem não comprou o app) · Escopo: feature `auth_family`, nova feature de assinatura, roteador
 - Contexto: com os dados locais (ADR-0014), exigir login na primeira abertura só adiciona atrito e cria usuários no Auth sem receita. Compartilhar, porém, exige identidade: as regras do Firestore (ADR-0011) precisam de um `uid` para saber quem é membro.
 - Decisão:
   1. **No grátis não existe conta**: a primeira abertura cria uma família **local** (só o nome) e vai direto para Filhos. O roteador deixa de exigir login (`redirectFor` muda).
@@ -65,7 +90,7 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 - Consequências: quem burlar o cliente sincroniza de graça — não vaza dado de ninguém, e endurecer exige servidor. Preço e período (mensal, anual ou compra única) seguem **em aberto**. Importação dos dados do legado segue descartada (ADR-0001, reconfirmado em 2026-11-03).
 
 ### ADR-0014 — Dados locais por padrão; nuvem só com a assinatura "Família"
-- Data: 2026-11-03 · Status: aceita · Escopo: projeto todo — **substitui em parte o ADR-0002**
+- Data: 2026-11-03 · Status: aceita · Escopo: projeto todo — **substitui em parte o ADR-0002**. *Desde o ADR-0021 (2026-11-04), o uso só neste aparelho deixa de ser grátis para sempre: são 15 dias de teste e depois a compra única do app. A nuvem continua só com a assinatura, e quem vem do app antigo segue com o uso local sem custo.*
 - Contexto: o ADR-0002 punha o Firestore como base de todo mundo, o que gera custo desde o primeiro usuário, sem receita. Um responsável num aparelho não precisa de nuvem nenhuma; compartilhar com o outro responsável é o que vale ser pago.
 - Decisão: **uma fonte de verdade por vez**, nunca as duas.
   - **Grátis**: um único arquivo JSON na pasta do app (escrita atômica — grava `.tmp` e renomeia — e campo `schemaVersion`), carregado em memória e publicado por streams. O Firebase **não** é inicializado.

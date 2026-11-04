@@ -531,49 +531,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get intro4Body =>
-      'With the Family subscription, both of you see the same numbers in real time. You can decide later.';
+      'Both parents see the same numbers in real time. You can turn this on later, in Settings.';
 
   @override
-  String get planPitch =>
+  String get sharingPitch =>
       'Both parents see the same numbers, in real time, each on their own device.';
 
   @override
-  String get planLocalOnly => 'Right now your data stays on this device only.';
+  String get sharingOtherNeedsApp =>
+      'The other parent installs Mesada on their own device, creates an account and joins with the code you send.';
 
   @override
-  String get planOneTime => 'One-time payment, no subscription.';
+  String get sharingLocalOnly =>
+      'Right now your data stays on this device only.';
 
   @override
-  String planBuyAction(String price) {
-    return 'Unlock for $price';
-  }
+  String get settingsFamilySharingSubtitle => 'Share with the other parent';
 
   @override
-  String get planRestoreAction => 'Restore purchases';
+  String get sharingStart => 'Sign in to share';
 
   @override
-  String get planRestoreEmpty => 'No purchase found on this store account.';
-
-  @override
-  String get planStoreUnavailable =>
-      'The store didn\'t answer. Try again later.';
-
-  @override
-  String get planActiveTitle => 'Family unlocked';
-
-  @override
-  String planActiveSince(String date) {
-    return 'One-time payment, since $date';
-  }
-
-  @override
-  String get settingsFamilyPlanSubtitle => 'Share with the other parent';
-
-  @override
-  String get planStartSharing => 'Sign in to share';
-
-  @override
-  String get planSharingHint =>
+  String get sharingHint =>
       'You sign in with an account and this device\'s data moves to the cloud. Then you invite the other parent.';
 
   @override

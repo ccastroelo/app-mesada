@@ -8,10 +8,8 @@ import 'package:mesada/core/storage/providers.dart';
 import 'package:mesada/features/auth_family/data/providers.dart';
 import 'package:mesada/features/auth_family/presentation/state/controllers.dart';
 import 'package:mesada/features/auth_family/presentation/state/gate.dart';
-import 'package:mesada/features/family_plan/data/providers.dart';
-import 'package:mesada/features/family_plan/family_plan.dart';
 
-import '../../support/fakes.dart';
+import '../../../support/fakes.dart';
 
 /// A virada de fonte de verdade (ADR-0014): criar a família leva o conteúdo
 /// deste aparelho, em vez de semear as 20 regras-padrão.
@@ -33,7 +31,7 @@ void main() {
     '${base.path}${Platform.pathSeparator}mesada.json',
   ).writeAsStringSync(jsonEncode(document));
 
-  Future<bool> createFamily({required FamilyPlan plan}) async {
+  Future<bool> createFamily() async {
     final container = ProviderContainer(
       overrides: [
         authRepositoryProvider.overrideWithValue(
@@ -41,7 +39,6 @@ void main() {
         ),
         familyRepositoryProvider.overrideWithValue(family),
         localStoreProvider.overrideWithValue(LocalStore(() async => base)),
-        planStoreProvider.overrideWithValue(FakePlanStore(plan: plan)),
       ],
     );
     addTearDown(container.dispose);
@@ -58,7 +55,7 @@ void main() {
         .create('Família Castro', 'pt');
   }
 
-  test('com plano e dados locais, a família nasce com eles', () async {
+  test('com dados neste aparelho, a família nasce com eles', () async {
     seedLocal({
       'children': [
         {'id': 'c1', 'name': 'Lucas', 'allowanceCents': 10000, 'order': 0},
@@ -71,9 +68,7 @@ void main() {
       ],
     });
 
-    final ok = await createFamily(
-      plan: FamilyPlan.lifetime(since: DateTime(2026, 11, 3)),
-    );
+    final ok = await createFamily();
 
     expect(ok, isTrue);
     final uploaded = family.uploaded;
@@ -81,31 +76,27 @@ void main() {
     expect(uploaded!.children.single['name'], 'Lucas');
     expect(uploaded.rules.single['description'], 'Cama');
     expect(uploaded.entries.single['quantity'], 3);
-    // O direito sobe junto, com a marca do modelo (ADR-0020).
-    expect(uploaded.plan['kind'], 'lifetime');
-    expect(uploaded.plan['modelVersion'], 1);
     // E nada de regras-padrão: os dados do aparelho é que valem.
     expect(family.lastSeeds, isNull);
   });
 
-  test('sem plano, a família nasce com as regras-padrão', () async {
+  test('só com regras neste aparelho, elas é que sobem', () async {
     seedLocal({
       'rules': [
         {'id': 'r1', 'description': 'Cama', 'valueCents': 50, 'order': 0},
       ],
     });
 
-    final ok = await createFamily(plan: const FamilyPlan.none());
+    final ok = await createFamily();
 
     expect(ok, isTrue);
-    expect(family.uploaded, isNull);
-    expect(family.lastSeeds?.length, 20);
+    expect(family.uploaded!.rules.single['id'], 'r1');
+    expect(family.uploaded!.children, isEmpty);
+    expect(family.lastSeeds, isNull);
   });
 
-  test('com plano mas sem nada local, também semeia', () async {
-    final ok = await createFamily(
-      plan: FamilyPlan.lifetime(since: DateTime(2026, 11, 3)),
-    );
+  test('sem nada neste aparelho, semeia as regras-padrão', () async {
+    final ok = await createFamily();
 
     expect(ok, isTrue);
     expect(family.uploaded, isNull);

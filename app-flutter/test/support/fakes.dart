@@ -9,7 +9,7 @@ import 'package:mesada/features/auth_family/domain/repositories/auth_repository.
 import 'package:mesada/features/auth_family/domain/repositories/family_repository.dart';
 import 'package:mesada/features/auth_family/domain/usecases/invite_code.dart';
 import 'package:mesada/features/children/children.dart';
-import 'package:mesada/features/family_plan/family_plan.dart';
+import 'package:mesada/features/entitlement/entitlement.dart';
 import 'package:mesada/features/help/help.dart';
 import 'package:mesada/features/ledger/ledger.dart';
 import 'package:mesada/features/rules/rules.dart';
@@ -115,7 +115,6 @@ class FakeFamilyRepository implements FamilyRepository {
 
   /// O que a virada para a nuvem mandou subir (ADR-0014).
   ({
-    Map<String, Object?> plan,
     List<Map<String, dynamic>> children,
     List<Map<String, dynamic>> rules,
     List<Map<String, dynamic>> entries,
@@ -126,13 +125,12 @@ class FakeFamilyRepository implements FamilyRepository {
   Future<Result<void>> createFamilyFromLocal({
     required AppUser user,
     required String name,
-    required Map<String, Object?> plan,
     required List<Map<String, dynamic>> children,
     required List<Map<String, dynamic>> rules,
     required List<Map<String, dynamic>> entries,
   }) async {
     lastName = name;
-    uploaded = (plan: plan, children: children, rules: rules, entries: entries);
+    uploaded = (children: children, rules: rules, entries: entries);
     final error = createError;
     if (error != null) return error;
     _set(Family(id: 'f1', name: name));
@@ -548,52 +546,29 @@ class FakeIntroStore implements IntroStore {
   Future<void> markSeen() async => wasSeen = true;
 }
 
-/// Direito em memória.
-class FakePlanStore implements PlanStore {
-  FakePlanStore({this.plan = const FamilyPlan.none()});
+/// Marca do app em memória (ADR-0021).
+class FakeEntitlementStore implements EntitlementStore {
+  FakeEntitlementStore({this.entitlement});
 
-  FamilyPlan plan;
-
-  @override
-  Future<FamilyPlan> read() async => plan;
+  AppEntitlement? entitlement;
+  int saves = 0;
 
   @override
-  Future<void> save(FamilyPlan value) async => plan = value;
+  Future<AppEntitlement?> read() async => entitlement;
+
+  @override
+  Future<void> save(AppEntitlement value) async {
+    saves++;
+    entitlement = value;
+  }
 }
 
-/// Loja falsa: o teste diz se há oferta e se a compra e a restauração dão
-/// certo.
-class FakePlanGateway implements PlanGateway {
-  FakePlanGateway({
-    this.price = 'R\$ 19,90',
-    this.hasOffer = true,
-    this.buys = true,
-    this.restores = false,
-  });
+/// Detector do app antigo: o teste diz se havia rastro dele no aparelho.
+class FakeLegacyDetector implements LegacyAppDetector {
+  FakeLegacyDetector({this.found = false});
 
-  String price;
-  bool hasOffer;
-  bool buys;
-  bool restores;
-  final calls = <String>[];
+  bool found;
 
   @override
-  Future<PlanOffer?> offer() async {
-    calls.add('offer');
-    return hasOffer
-        ? PlanOffer(productId: FamilyPlan.lifetimeProductId, price: price)
-        : null;
-  }
-
-  @override
-  Future<bool> buy() async {
-    calls.add('buy');
-    return buys;
-  }
-
-  @override
-  Future<bool> restore() async {
-    calls.add('restore');
-    return restores;
-  }
+  Future<bool> existed() async => found;
 }

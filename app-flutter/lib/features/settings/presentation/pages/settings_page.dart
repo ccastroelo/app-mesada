@@ -15,8 +15,8 @@ class SettingsPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final gate = ref.watch(gateProvider);
     final ready = gate is GateReady ? gate : null;
-    // Sem conta = modo local (ADR-0015): compartilhar e sair só aparecem com
-    // conta, que chega com a assinatura Família.
+    // Sem conta = modo local (ADR-0014): convidar e sair só aparecem com
+    // conta, que a pessoa cria ao escolher compartilhar (ADR-0021).
     final user = ready?.user;
     final family = ready?.family;
 
@@ -35,13 +35,13 @@ class SettingsPage extends ConsumerWidget {
                   ? Text(l10n.settingsFamilyLocalOnly)
                   : null,
             ),
-          // Sem conta, Família é o recurso pago (ADR-0015/0020); com conta, o
+          // Sem conta, o caminho é começar a compartilhar; com conta, o
           // convite já funciona.
           if (user == null)
             ListTile(
               leading: const Icon(Icons.group_add_outlined),
               title: Text(l10n.settingsFamilySection),
-              subtitle: Text(l10n.settingsFamilyPlanSubtitle),
+              subtitle: Text(l10n.settingsFamilySharingSubtitle),
               onTap: () => context.push('/ajustes/familia'),
             ),
           if (user != null)
