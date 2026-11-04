@@ -35,6 +35,15 @@ class SettingsPage extends ConsumerWidget {
                   ? Text(l10n.settingsFamilyLocalOnly)
                   : null,
             ),
+          // Sem conta, Família é o recurso pago (ADR-0015/0020); com conta, o
+          // convite já funciona.
+          if (user == null)
+            ListTile(
+              leading: const Icon(Icons.group_add_outlined),
+              title: Text(l10n.settingsFamilySection),
+              subtitle: Text(l10n.settingsFamilyPlanSubtitle),
+              onTap: () => context.push('/ajustes/familia'),
+            ),
           if (user != null)
             ListTile(
               leading: const Icon(Icons.person_add_alt_outlined),

@@ -158,5 +158,15 @@
   "intro3Title": "Registrar",
   "intro3Body": "Toca + o − y el saldo cambia al instante.",
   "intro4Title": "Los dos responsables",
-  "intro4Body": "Con la suscripción Familia, los dos ven los mismos números en tiempo real. Puedes decidir más tarde."
+  "intro4Body": "Con la suscripción Familia, los dos ven los mismos números en tiempo real. Puedes decidir más tarde.",
+  "planPitch": "Los dos responsables ven los mismos números, en tiempo real, cada uno en su dispositivo.",
+  "planLocalOnly": "Por ahora los datos se quedan solo en este dispositivo.",
+  "planOneTime": "Pago único, sin suscripción.",
+  "planBuyAction": "Desbloquear por {price}",
+  "planRestoreAction": "Restaurar compras",
+  "planRestoreEmpty": "No se encontró ninguna compra en esta cuenta de la tienda.",
+  "planStoreUnavailable": "La tienda no respondió. Inténtalo más tarde.",
+  "planActiveTitle": "Familia desbloqueada",
+  "planActiveSince": "Pago único, desde {date}",
+  "settingsFamilyPlanSubtitle": "Compartir con el otro responsable"
 }

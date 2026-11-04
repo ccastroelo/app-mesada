@@ -72,3 +72,10 @@ Nada aqui bloqueia o uso da tela de lançamentos; são itens do `design.md` que 
 
 - **Sobre** (M7): sem `package_info_plus` não dá para ler a versão em tempo de execução, e a versão de release ainda não foi definida (> 1.2, build > 9 — ADR-0007). Quando ela for decidida, entra a dependência (ou uma constante gerada no build) e a linha aparece.
 - **Falar com a gente** (M7): copia `contato@synapsesolucoes.ia.br` para a área de transferência. Abrir o compositor de e-mail já preenchido exigiria `url_launcher`. O local-part (`contato@`) veio do app antigo; confirmar se é essa a caixa certa no domínio novo.
+
+## A compra da Família não foi exercitada contra loja de verdade
+
+- **Onde**: `family_plan/data/repositories/in_app_purchase_plan_gateway.dart` (ADR-0020). Como a biometria, é canal de plataforma: nos testes o `PlanGateway` é um falso, então o que está coberto é a decisão (o que gravar, o que mostrar), não o diálogo de pagamento.
+- **Pré-requisito do usuário**: criar o produto **`mesada_familia`** (não-consumível) no App Store Connect e no Google Play, com o mesmo id. Sem isso a oferta volta nula e a tela mostra "a loja não respondeu" — que é exatamente o que acontece hoje.
+- **O que falta ver em aparelho**: compra em ambiente de teste (sandbox/teste interno), compra cancelada, "Restaurar compras" em aparelho novo e a compra pendente de aprovação (cartão em análise).
+- **E falta a outra metade do M4.5**: o direito gravado em `families/{id}`, as regras do Firestore conhecendo o plano, e a virada de fonte de verdade (subir o local e trocar o `appModeProvider`). Sem isso, comprar hoje não compartilha nada.

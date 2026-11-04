@@ -10,6 +10,7 @@ import '../../features/children/presentation/pages/child_edit_page.dart';
 import '../../features/children/presentation/pages/child_ledger_page.dart';
 import '../../features/children/presentation/pages/child_rules_page.dart';
 import '../../features/children/presentation/pages/children_page.dart';
+import '../../features/family_plan/presentation/pages/family_plan_page.dart';
 import '../../features/help/help_providers.dart';
 import '../../features/help/presentation/pages/help_page.dart';
 import '../../features/help/presentation/pages/intro_page.dart';
@@ -102,6 +103,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const SecurityPage(),
       ),
       GoRoute(path: '/ajustes/ajuda', builder: (_, _) => const HelpPage()),
+      GoRoute(
+        path: '/ajustes/familia',
+        builder: (_, _) => const FamilyPlanPage(),
+      ),
       GoRoute(path: _welcome, builder: (_, _) => const WelcomePage()),
       GoRoute(path: _signIn, builder: (_, _) => const SignInPage()),
       GoRoute(

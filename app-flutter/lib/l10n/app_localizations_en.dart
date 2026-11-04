@@ -532,4 +532,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get intro4Body =>
       'With the Family subscription, both of you see the same numbers in real time. You can decide later.';
+
+  @override
+  String get planPitch =>
+      'Both parents see the same numbers, in real time, each on their own device.';
+
+  @override
+  String get planLocalOnly => 'Right now your data stays on this device only.';
+
+  @override
+  String get planOneTime => 'One-time payment, no subscription.';
+
+  @override
+  String planBuyAction(String price) {
+    return 'Unlock for $price';
+  }
+
+  @override
+  String get planRestoreAction => 'Restore purchases';
+
+  @override
+  String get planRestoreEmpty => 'No purchase found on this store account.';
+
+  @override
+  String get planStoreUnavailable =>
+      'The store didn\'t answer. Try again later.';
+
+  @override
+  String get planActiveTitle => 'Family unlocked';
+
+  @override
+  String planActiveSince(String date) {
+    return 'One-time payment, since $date';
+  }
+
+  @override
+  String get settingsFamilyPlanSubtitle => 'Share with the other parent';
 }

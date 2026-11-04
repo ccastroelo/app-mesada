@@ -10,6 +10,7 @@ import 'package:mesada/features/app_lock/app_lock_providers.dart';
 import 'package:mesada/features/app_lock/data/providers.dart';
 import 'package:mesada/features/auth_family/data/providers.dart';
 import 'package:mesada/features/children/data/providers.dart';
+import 'package:mesada/features/family_plan/data/providers.dart';
 import 'package:mesada/features/help/data/providers.dart';
 import 'package:mesada/features/ledger/data/providers.dart';
 import 'package:mesada/features/rules/data/providers.dart';
@@ -36,6 +37,8 @@ Future<void> pumpApp(
   FakePinStore? pinStore,
   FakeBiometricAuth? biometrics,
   FakeIntroStore? introStore,
+  FakePlanStore? planStore,
+  FakePlanGateway? planGateway,
   DateTime Function()? clock,
   LocalStore? store,
   Locale locale = const Locale('pt', 'BR'),
@@ -56,6 +59,9 @@ Future<void> pumpApp(
         // Introdução já vista por padrão: ela não entra no caminho dos
         // outros testes.
         introStoreProvider.overrideWithValue(introStore ?? FakeIntroStore()),
+        // Nunca falar com a loja de verdade num teste.
+        planStoreProvider.overrideWithValue(planStore ?? FakePlanStore()),
+        planGatewayProvider.overrideWithValue(planGateway ?? FakePlanGateway()),
         localStoreProvider.overrideWithValue(store ?? temporaryStore()),
         authRepositoryProvider.overrideWithValue(auth ?? FakeAuthRepository()),
         familyRepositoryProvider.overrideWithValue(

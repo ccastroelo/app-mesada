@@ -1054,6 +1054,66 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois.'**
   String get intro4Body;
+
+  /// No description provided for @planPitch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os dois responsáveis veem os mesmos números, em tempo real, cada um no seu aparelho.'**
+  String get planPitch;
+
+  /// No description provided for @planLocalOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje os dados ficam só neste aparelho.'**
+  String get planLocalOnly;
+
+  /// No description provided for @planOneTime.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento único, sem mensalidade.'**
+  String get planOneTime;
+
+  /// No description provided for @planBuyAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Liberar por {price}'**
+  String planBuyAction(String price);
+
+  /// No description provided for @planRestoreAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar compras'**
+  String get planRestoreAction;
+
+  /// No description provided for @planRestoreEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma compra encontrada nesta conta da loja.'**
+  String get planRestoreEmpty;
+
+  /// No description provided for @planStoreUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'A loja não respondeu agora. Tente de novo mais tarde.'**
+  String get planStoreUnavailable;
+
+  /// No description provided for @planActiveTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Família liberada'**
+  String get planActiveTitle;
+
+  /// No description provided for @planActiveSince.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento único, desde {date}'**
+  String planActiveSince(String date);
+
+  /// No description provided for @settingsFamilyPlanSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar com o outro responsável'**
+  String get settingsFamilyPlanSubtitle;
 }
 
 class _AppLocalizationsDelegate

@@ -9,6 +9,7 @@ import 'package:mesada/features/auth_family/domain/repositories/auth_repository.
 import 'package:mesada/features/auth_family/domain/repositories/family_repository.dart';
 import 'package:mesada/features/auth_family/domain/usecases/invite_code.dart';
 import 'package:mesada/features/children/children.dart';
+import 'package:mesada/features/family_plan/family_plan.dart';
 import 'package:mesada/features/help/help.dart';
 import 'package:mesada/features/ledger/ledger.dart';
 import 'package:mesada/features/rules/rules.dart';
@@ -519,4 +520,54 @@ class FakeIntroStore implements IntroStore {
 
   @override
   Future<void> markSeen() async => wasSeen = true;
+}
+
+/// Direito em memória.
+class FakePlanStore implements PlanStore {
+  FakePlanStore({this.plan = const FamilyPlan.none()});
+
+  FamilyPlan plan;
+
+  @override
+  Future<FamilyPlan> read() async => plan;
+
+  @override
+  Future<void> save(FamilyPlan value) async => plan = value;
+}
+
+/// Loja falsa: o teste diz se há oferta e se a compra e a restauração dão
+/// certo.
+class FakePlanGateway implements PlanGateway {
+  FakePlanGateway({
+    this.price = 'R\$ 19,90',
+    this.hasOffer = true,
+    this.buys = true,
+    this.restores = false,
+  });
+
+  String price;
+  bool hasOffer;
+  bool buys;
+  bool restores;
+  final calls = <String>[];
+
+  @override
+  Future<PlanOffer?> offer() async {
+    calls.add('offer');
+    return hasOffer
+        ? PlanOffer(productId: FamilyPlan.lifetimeProductId, price: price)
+        : null;
+  }
+
+  @override
+  Future<bool> buy() async {
+    calls.add('buy');
+    return buys;
+  }
+
+  @override
+  Future<bool> restore() async {
+    calls.add('restore');
+    return restores;
+  }
 }

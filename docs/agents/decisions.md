@@ -4,6 +4,26 @@ Registro leve de decisões de arquitetura e produto que devem guiar trabalhos fu
 
 ## Decisões
 
+### ADR-0020 — A Família é compra única por família, não assinatura
+- Data: 2026-11-03 · Status: aceita · Escopo: nova feature `family_plan`, M4.5; fecha a pergunta aberta do ADR-0015
+- Contexto: o ADR-0015 deixou preço e período em aberto. O custo de nuvem deste app é pequeno — dezenas de documentos por família, contra a cota gratuita de 50 mil leituras por dia do Firestore —, então "receita recorrente para cobrir custo recorrente" pesa pouco aqui. Do outro lado, assinatura custa código: renovação, cancelamento, período de graça, reembolso, e cada caminho desses precisa ser testado.
+- Decisão: **produto não-consumível, uma compra por família** (`in_app_purchase`). Sem renovação e sem validade, então não há expiração a checar — o que combina com a regra já aprovada de que vencer não tranca nada (ADR-0015). Quem compra libera o recurso para a família; o segundo responsável entra de graça pelo código de convite. **Restaurar compras** é obrigatório, porque a compra pertence à conta da loja (Apple ID / Google Play), não ao login do app.
+- **O direito é guardado com tipo, produto, data e versão do modelo — nunca como um booleano "pagou"** (pedido do usuário, 2026-11-03). Se um dia a cobrança virar assinatura, quem pagou a compra única **não pode ser cobrado de novo**, e isso só é possível se o dado disser de onde o direito veio:
+  - `kind`: `lifetime` hoje; um `subscription` entraria ao lado, sem apagar o primeiro.
+  - `productId`: qual produto foi comprado.
+  - `since`: quando o direito passou a valer.
+  - `modelVersion`: 1 para o modelo atual. É por ele que uma regra futura diz "modelo 1 é vitalício e não cobra".
+- Alternativas descartadas: assinatura mensal ou anual (receita recorrente, mas muito mais caminho para implementar e testar num app desta escala); cobrança por pessoa (cobraria do convidado justamente o recurso vendido).
+- Consequências: o id do produto (`mesada_familia`) tem de ser criado **igual** nas duas lojas, e isso é passo do usuário. O direito vive em três lugares com papéis diferentes: a loja é a fonte de verdade, o `device.json` é cache para abrir o app sem rede, e `families/{id}` é o que faz o aparelho do outro responsável confiar. As regras do Firestore ainda **não** falam de assinatura (hoje só checam quem é membro): mudar isso exige editar, testar no emulador e republicar com OK do usuário. Sem validação de recibo em servidor, burlar o cliente dá compartilhamento de graça — já aceito no ADR-0015.
+- **Nunca remover o produto `mesada_familia` das lojas.** É ele que o "Restaurar compras" procura; apagado, quem pagou perde a prova da compra e o direito vitalício só sobreviveria no documento da família. Ele é a última linha de defesa do marcador.
+
+### ADR-0019 — CI/CD no Codemagic, no lugar do GitHub Actions
+- Data: 2026-11-03 · Status: aceita · Escopo: repositório (CI/CD)
+- Contexto: a CI mínima do M0 nasceu como GitHub Actions (`.github/workflows/ci.yml`, commit `f453fbc`). O usuário escolheu o Codemagic em 2026-11-03. Pesa a favor: o Codemagic constrói e publica **iOS sem exigir um Mac** do desenvolvedor, e aqui só há Windows — e o app precisa sair nas duas lojas (ADR-0007).
+- Decisão: um `codemagic.yaml` na raiz com o workflow **verificacao** (`flutter pub get`, `analyze`, `test` em `app-flutter/`, Flutter 3.44.4, máquina Linux) e o workflow do GitHub Actions **removido**, para não ter duas CIs fazendo a mesma coisa e dando dois sinais.
+- Alternativas descartadas: manter as duas (Actions como porteiro de PR e Codemagic para build) — dobra o custo e a confusão quando uma passa e a outra não; só GitHub Actions (build de iOS exigiria runner macOS, mais caro e mais configuração).
+- Consequências: **o arquivo sozinho não liga nada** — o repositório precisa ser conectado no Codemagic e o webhook criado lá, senão nada dispara. O build de release continua em aberto, porque depende de três decisões do usuário: versão/build (> 1.2, build > 9), assinatura (certificado iOS e keystore Android) e contas das lojas. Os testes das regras do Firestore seguem fora da CI (precisam do emulador e de Java). **Nenhuma execução foi vista ainda** — nem a do Actions, que subiu e nunca pôde ser conferida daqui.
+
 ### ADR-0018 — Biometria para desbloquear, com o PIN do app como reserva
 - Data: 2026-11-03 · Status: aceita · Escopo: feature `app_lock`; muda o `design.md` §11
 - Contexto: o PIN de 4 dígitos (ADR-0017) é chato de digitar todo dia e fraco por natureza. O usuário pediu Face ID em 2026-11-03. O `design.md` §11 punha "biometria no lugar do PIN" fora de escopo.

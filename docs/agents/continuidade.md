@@ -11,8 +11,9 @@
 - **M5 (relatório) pronto no código (2026-11-03)**: "Enviar relatório" na barra inferior da tela do filho e no menu ⋮ do cartão gera um **PDF** no aparelho (pacote `pdf`, Dart puro) e abre a folha de compartilhamento com um resumo em texto (ADR-0016, que substitui o corpo em HTML do design — `mailto:` não carrega HTML). Entram só as regras ativas com quantidade > 0. **O destinatário não vem preenchido**; o e-mail do filho vai no texto. 178 testes.
 - **M6 (PIN) pronto no código (2026-11-03)**: Ajustes › Segurança com ativar (digitar + confirmar), alterar e desativar, todos exigindo o PIN atual; tela de bloqueio com teclado próprio, 4 pontos, vibração e contagem regressiva; trava depois de **30 s fora do app** (design §10) e, a cada 3 erros, espera que dobra (30 s → teto de 15 min), sem fechar o app. O PIN fica em `device.json`, separado do `mesada.json`, como hash com sal (ADR-0017) — sem `flutter_secure_storage`, porque o alvo é o filho curioso. **Biometria (ADR-0018)**: a tela de bloqueio pede Face ID/digital sozinha ao aparecer e o PIN fica como reserva (o código do aparelho **não** serve, porque o filho costuma saber); interruptor em Ajustes › Segurança, só com PIN ativo. 226 testes. **Esquecer o PIN não tem saída no app** e a **biometria nunca rodou em aparelho** (`tech-debt.md`).
 - **M7 (ajuda) pronto no código (2026-11-03)**: introdução em 4 cartões (texto e ícone, 4 idiomas) na primeira abertura e reabrível em Ajustes › Ajuda; contato copiando `contato@synapsesolucoes.ia.br` e Sobre dizendo que os dados ficam no aparelho. A marca "já vi" fica no `device.json`, junto do PIN. 235 testes. Sem versão no Sobre e sem abrir o compositor de e-mail (`tech-debt.md`, `design.md` §16).
+- **M4.5 (Família) começou (2026-11-03)**: decidido **pagamento único** por família (ADR-0020), e o direito é guardado com **tipo, produto, data e versão do modelo** — nunca um "pagou: sim/não" —, para um dia poder virar assinatura sem cobrar de quem já pagou. Prontos: contrato da loja com `in_app_purchase` (produto `mesada_familia`), cópia local no `device.json`, e Ajustes › Família com proposta, preço da loja, comprar e restaurar. 247 testes. **Comprar ainda não compartilha nada**: falta gravar o direito em `families/{id}`, ensinar as regras do Firestore e virar a fonte de verdade para a nuvem.
 - Modo: **reescrita**. Design **aprovado** (ADR-0009). Marco **M0 parcial**: tema, rotas das 3 abas, `Result/Failure`, dinheiro em centavos, l10n (4 idiomas), lints e 6 testes. `analyze` limpo.
-- Falta do M0: **só o ícone**. A CI mínima entrou em 2026-11-03 (`.github/workflows/ci.yml`, `analyze` + `test`); ela ainda não executou, porque depende do primeiro push. A inicialização do Firebase saiu do M0 e virou parte do M4.5 (ADR-0014).
+- Falta do M0: **só o ícone**. A CI é o **Codemagic** (ADR-0019): `codemagic.yaml` na raiz roda `analyze` + `test`; o workflow do GitHub Actions foi removido. **Nenhuma execução foi vista ainda**, e o Codemagic só dispara depois de o repositório ser conectado lá (passo do usuário). A inicialização do Firebase saiu do M0 e virou parte do M4.5 (ADR-0014).
 - Tag `legacy/1.2` marca o app iOS antigo (commit `a61a69e`).
 - **M1 (auth_family) com código completo (2026-10-28)**: boas-vindas, entrar/criar conta por e-mail, Google (OAuth do Firebase), escolha de família, criar família (semeia as 20 regras no idioma), entrar com código, convite em Ajustes (copiar/compartilhar), sair. Roteador com guardas (`redirectFor`). `architecture.md` descreve o fluxo. **Falta validar em aparelho/emulador com o Firebase real**: criar conta, criar família, convidar e entrar com a segunda conta, Google. O APK de debug compila.
 - Fora do M1 (ainda não existe): "Entrar com a Apple", sair/trocar de família, tela de introdução (4 cartões), banner offline, redefinição de senha só testada com fake.
@@ -41,17 +42,19 @@ flutter test
 
 Já tendo o clone: `git pull --tags` na raiz e depois `flutter pub get`. Os arquivos de localização gerados (`app-flutter/lib/l10n/app_localizations*.dart`) são versionados; rode `flutter gen-l10n` só depois de editar um `.arb`.
 
-Resultado esperado: `analyze` sem problemas e 235 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`, que só valem para o modo nuvem). Se divergir, registre o baseline em `flutter.md` antes de mexer.
+Resultado esperado: `analyze` sem problemas e 247 testes passando (mais os 28 das regras do Firestore, em `firebase-tests/`, que só valem para o modo nuvem). Se divergir, registre o baseline em `flutter.md` antes de mexer.
 
 ## Próximos passos (ordem)
 
-> Desde 2026-11-03 o app é local por padrão e a nuvem é da assinatura (ADR-0014/0015). **Paridade com o legado alcançada**: M1.5, M4, M5, M6 e M7 com código pronto. O que falta é hardware, ícone e a assinatura.
+> Paridade com o legado alcançada (M1.5, M4, M5, M6, M7). O que falta é a outra metade do M4.5, hardware e ícone.
 
-1. **Validar em aparelho**, com `flutter-preview` e um aparelho com biometria cadastrada. É o maior buraco do projeto: Face ID/digital ao abrir, cancelar caindo no PIN, o Android com `FlutterFragmentActivity`, o PDF do relatório num leitor, e as telas em 1,0×/1,3×/2,0×, claro e escuro (`tech-debt.md`).
-2. **Ícone** (fecha o M0): dependência `flutter_launcher_icons` e o desenho em PNG (conceito no `design.md` §9).
-3. **M4.5 Família (assinatura)**: tela do recurso, `in_app_purchase`, restaurar compras, conta no momento de compartilhar, envio inicial do local para o Firestore e troca do `appModeProvider`. **Só aqui** voltam a ser necessários o Auth e o Firestore habilitados no console.
-4. M8 (corte) é decisão do usuário: inventário todo `portado`/`descartado`, beta, e só então arquivar o legado.
-5. **Do usuário, quando quiser**: decidir a saída para "esqueci o PIN" (reinstalar apaga os dados locais); confirmar o e-mail de contato; definir versão/build de release (> 1.2, build > 9) — o Sobre depende disso; revogar a chave/secret do Dropbox e a do Flurry do app antigo (`behavior-inventory.md` §5); **definir preço e período da Família**.
+1. **Fechar o M4.5**: gravar o direito em `families/{id}` (ADR-0020), ensinar as regras do Firestore a conhecer o plano (editar, testar no emulador, republicar **com OK do usuário**), subir o `mesada.json` para o Firestore na primeira vez e virar o `appModeProvider` para `cloud`. Sem isso, comprar não compartilha nada.
+2. **Do usuário, para o M4.5 sair do papel**: criar o produto **`mesada_familia`** (não-consumível, mesmo id) no App Store Connect e no Google Play; habilitar Authentication e Firestore no `mesada-proj`; decidir o preço.
+3. **Validar em aparelho**, com `flutter-preview`: biometria (Face ID/digital, cancelar caindo no PIN, Android com `FlutterFragmentActivity`), compra em ambiente de teste, PDF do relatório num leitor, e as telas em 1,0×/1,3×/2,0×, claro e escuro (`tech-debt.md`).
+4. **Ícone** (fecha o M0): `flutter_launcher_icons` e o desenho em PNG (`design.md` §9).
+5. **Conectar o repositório no Codemagic** (ADR-0019): o `codemagic.yaml` está pronto, mas nada dispara até o webhook existir.
+6. M8 (corte) é decisão do usuário.
+7. **Pendências antigas do usuário**: saída para "esqueci o PIN" (reinstalar apaga os dados locais); versão/build de release (> 1.2, build > 9) — o Sobre depende disso; revogar a chave/secret do Dropbox e a do Flurry do app antigo (`behavior-inventory.md` §5).
 
 ## Cuidados
 

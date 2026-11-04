@@ -530,6 +530,44 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get intro4Body =>
       'Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois.';
+
+  @override
+  String get planPitch =>
+      'Os dois responsáveis veem os mesmos números, em tempo real, cada um no seu aparelho.';
+
+  @override
+  String get planLocalOnly => 'Hoje os dados ficam só neste aparelho.';
+
+  @override
+  String get planOneTime => 'Pagamento único, sem mensalidade.';
+
+  @override
+  String planBuyAction(String price) {
+    return 'Liberar por $price';
+  }
+
+  @override
+  String get planRestoreAction => 'Restaurar compras';
+
+  @override
+  String get planRestoreEmpty =>
+      'Nenhuma compra encontrada nesta conta da loja.';
+
+  @override
+  String get planStoreUnavailable =>
+      'A loja não respondeu agora. Tente de novo mais tarde.';
+
+  @override
+  String get planActiveTitle => 'Família liberada';
+
+  @override
+  String planActiveSince(String date) {
+    return 'Pagamento único, desde $date';
+  }
+
+  @override
+  String get settingsFamilyPlanSubtitle =>
+      'Compartilhar com o outro responsável';
 }
 
 /// The translations for Portuguese, as used in Portugal (`pt_PT`).
@@ -1060,4 +1098,41 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   @override
   String get intro4Body =>
       'Com a subscrição Família, os dois veem os mesmos números em tempo real. Pode decidir mais tarde.';
+
+  @override
+  String get planPitch =>
+      'Os dois responsáveis veem os mesmos números, em tempo real, cada um no seu aparelho.';
+
+  @override
+  String get planLocalOnly => 'Hoje os dados ficam só neste aparelho.';
+
+  @override
+  String get planOneTime => 'Pagamento único, sem mensalidade.';
+
+  @override
+  String planBuyAction(String price) {
+    return 'Desbloquear por $price';
+  }
+
+  @override
+  String get planRestoreAction => 'Restaurar compras';
+
+  @override
+  String get planRestoreEmpty =>
+      'Nenhuma compra encontrada nesta conta da loja.';
+
+  @override
+  String get planStoreUnavailable =>
+      'A loja não respondeu agora. Tente outra vez mais tarde.';
+
+  @override
+  String get planActiveTitle => 'Família desbloqueada';
+
+  @override
+  String planActiveSince(String date) {
+    return 'Pagamento único, desde $date';
+  }
+
+  @override
+  String get settingsFamilyPlanSubtitle => 'Partilhar com o outro responsável';
 }

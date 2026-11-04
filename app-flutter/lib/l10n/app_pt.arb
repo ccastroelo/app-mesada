@@ -295,5 +295,29 @@
   "intro3Title": "Lançar",
   "intro3Body": "Toque em + ou − e o saldo muda na hora.",
   "intro4Title": "Os dois responsáveis",
-  "intro4Body": "Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois."
+  "intro4Body": "Com a assinatura Família, os dois veem os mesmos números em tempo real. Dá para decidir depois.",
+  "planPitch": "Os dois responsáveis veem os mesmos números, em tempo real, cada um no seu aparelho.",
+  "planLocalOnly": "Hoje os dados ficam só neste aparelho.",
+  "planOneTime": "Pagamento único, sem mensalidade.",
+  "planBuyAction": "Liberar por {price}",
+  "@planBuyAction": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "planRestoreAction": "Restaurar compras",
+  "planRestoreEmpty": "Nenhuma compra encontrada nesta conta da loja.",
+  "planStoreUnavailable": "A loja não respondeu agora. Tente de novo mais tarde.",
+  "planActiveTitle": "Família liberada",
+  "planActiveSince": "Pagamento único, desde {date}",
+  "@planActiveSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsFamilyPlanSubtitle": "Compartilhar com o outro responsável"
 }

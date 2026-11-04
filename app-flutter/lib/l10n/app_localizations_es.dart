@@ -533,4 +533,42 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get intro4Body =>
       'Con la suscripción Familia, los dos ven los mismos números en tiempo real. Puedes decidir más tarde.';
+
+  @override
+  String get planPitch =>
+      'Los dos responsables ven los mismos números, en tiempo real, cada uno en su dispositivo.';
+
+  @override
+  String get planLocalOnly =>
+      'Por ahora los datos se quedan solo en este dispositivo.';
+
+  @override
+  String get planOneTime => 'Pago único, sin suscripción.';
+
+  @override
+  String planBuyAction(String price) {
+    return 'Desbloquear por $price';
+  }
+
+  @override
+  String get planRestoreAction => 'Restaurar compras';
+
+  @override
+  String get planRestoreEmpty =>
+      'No se encontró ninguna compra en esta cuenta de la tienda.';
+
+  @override
+  String get planStoreUnavailable =>
+      'La tienda no respondió. Inténtalo más tarde.';
+
+  @override
+  String get planActiveTitle => 'Familia desbloqueada';
+
+  @override
+  String planActiveSince(String date) {
+    return 'Pago único, desde $date';
+  }
+
+  @override
+  String get settingsFamilyPlanSubtitle => 'Compartir con el otro responsable';
 }

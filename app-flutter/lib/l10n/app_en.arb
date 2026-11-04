@@ -158,5 +158,15 @@
   "intro3Title": "Add entries",
   "intro3Body": "Tap + or − and the balance updates right away.",
   "intro4Title": "Both parents",
-  "intro4Body": "With the Family subscription, both of you see the same numbers in real time. You can decide later."
+  "intro4Body": "With the Family subscription, both of you see the same numbers in real time. You can decide later.",
+  "planPitch": "Both parents see the same numbers, in real time, each on their own device.",
+  "planLocalOnly": "Right now your data stays on this device only.",
+  "planOneTime": "One-time payment, no subscription.",
+  "planBuyAction": "Unlock for {price}",
+  "planRestoreAction": "Restore purchases",
+  "planRestoreEmpty": "No purchase found on this store account.",
+  "planStoreUnavailable": "The store didn't answer. Try again later.",
+  "planActiveTitle": "Family unlocked",
+  "planActiveSince": "One-time payment, since {date}",
+  "settingsFamilyPlanSubtitle": "Share with the other parent"
 }

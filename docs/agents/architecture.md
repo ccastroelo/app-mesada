@@ -32,6 +32,7 @@ lib/
                        e o relatório em PDF compartilhado (M5)
     app_lock/          Bloqueio: biometria com PIN de reserva, Ajustes › Segurança (M6)
     help/              Introdução em 4 cartões e Ajustes › Ajuda (M7)
+    family_plan/       Família: a compra única que libera o compartilhamento (M4.5)
     settings/          Ajustes (família, convite, segurança, conta/sair)
   l10n/                .arb (pt, pt_PT, en, es) + arquivos gerados versionados
 test/                  espelha lib/; test/support tem fakes e pumpApp
@@ -125,6 +126,15 @@ O roteador decide a tela só pelo `Gate` selado (`GateLoading | GateError | Gate
 - A marca mora no `device.json`, pelo mesmo `DeviceSettings` do PIN: a escrita é por junção, então marcar a introdução não mexe no bloqueio.
 - A ordem das guardas é PIN → introdução → conteúdo. Quem tem PIN ativo digita antes de ver a introdução.
 - Os 4 cartões são **só texto e ícone** (`design.md` §4.9). O app antigo usava imagens de tela por idioma, que envelheceram e não dava para traduzir.
+
+
+## A Família, o recurso pago (M4.5 em andamento, ADR-0020)
+
+- `FamilyPlan` (`family_plan/domain`) **não é um booleano "pagou"**: guarda `kind` (`lifetime` hoje), `productId`, `since` e `modelVersion`. É essa marca que permite trocar a cobrança para assinatura um dia **sem cobrar de novo de quem já pagou** — a regra futura olha a versão do modelo.
+- O direito mora em três lugares, com papéis diferentes: a **loja** é a fonte de verdade (a compra não-consumível fica na conta Apple/Google para sempre), o **`device.json`** é cópia local para o app saber o que vale sem rede, e o **documento da família** é o que fará o aparelho do outro responsável confiar — essa parte ainda não existe.
+- `PlanGateway` (contrato) esconde a loja; `InAppPurchasePlanGateway` fala com o `in_app_purchase`. Detalhe que o contrato esconde: a loja **responde pelo `purchaseStream`**, não pelo retorno da chamada, então comprar e restaurar disparam a ação e esperam a confirmação do nosso produto chegar pelo stream, com um limite de paciência. Nos testes o contrato é um falso: nenhum teste fala com loja.
+- A tela (`Ajustes › Família`) tem três estados: proposta com o preço **formatado pela loja**, loja sem resposta (e aí ainda dá para restaurar) e direito ativo, mostrando desde quando.
+- **O que falta no M4.5**: a virada de fonte de verdade — subir o `mesada.json` para o Firestore e trocar o `appModeProvider` para `cloud` — e o direito gravado em `families/{id}`. As regras do Firestore ainda não falam de plano nenhum.
 
 ## Composição e testes
 

@@ -9,6 +9,7 @@ Comandos e baseline do projeto Flutter em `app-flutter/` (rode tudo a partir des
 - `applicationId` / bundle id: `br.eti.claudiocastro.mesada` (ADR-0007)
 - Estado: Riverpod · rotas: `go_router` · l10n: `gen-l10n` (pt, pt_PT, en, es; `lib/l10n/`)
 - Relatório: `pdf` (Dart puro) gerando o documento e `share_plus` entregando ao sistema (ADR-0016)
+- Família (pago): `in_app_purchase`, produto não-consumível `mesada_familia` — **tem de existir com esse id nas duas lojas** (ADR-0020)
 - Bloqueio: `local_auth` (biometria) com o PIN do app como reserva (ADR-0018); o PIN é `crypto` (SHA-256 com sal) num arquivo do aparelho, sem `flutter_secure_storage` (ADR-0017)
 - Configuração de plataforma da biometria: Android usa `FlutterFragmentActivity` e declara `USE_BIOMETRIC`; iOS tem `NSFaceIDUsageDescription`. **Não exercitada em aparelho** (`tech-debt.md`)
 
@@ -26,9 +27,9 @@ flutter test
 | Verificação | Resultado |
 |---|---|
 | `flutter analyze` | sem problemas |
-| `flutter test` | **235 testes passando** (os 178 do M5 mais 48 do M6: espera crescente, hash e sal do PIN, `DeviceSettings`, controlador com relógio controlado — inclusive os 30 s fora do app —, biometria com falso e os fluxos da tela de bloqueio e de Ajustes › Segurança; mais 9 do M7: introdução, Ajuda e a marca no `device.json`) — atualizado em 2026-11-03 |
+| `flutter test` | **247 testes passando** (os 178 do M5 mais 48 do M6: espera crescente, hash e sal do PIN, `DeviceSettings`, controlador com relógio controlado — inclusive os 30 s fora do app —, biometria com falso e os fluxos da tela de bloqueio e de Ajustes › Segurança; mais 9 do M7 (introdução, Ajuda e a marca no `device.json`) e 12 do M4.5 (a marca do direito, a cópia local e os estados da tela da Família)) — atualizado em 2026-11-03 |
 | `flutter build apk --debug` | compilava em 2026-10-28; **não refeito** depois de tirar o Firebase do `main.dart` (Gradle precisa rodar fora do sandbox no Windows: "Unable to establish loopback connection") |
-| CI (GitHub Actions) | `.github/workflows/ci.yml`: `flutter pub get`, `analyze` e `test` em `app-flutter/` a cada push em `main` e em todo PR. Flutter fixo em 3.44.4. **Nunca executou** — só roda depois do primeiro push. |
+| CI/CD (Codemagic, ADR-0019) | `codemagic.yaml` na raiz, workflow `verificacao`: `flutter pub get`, `analyze` e `test` em `app-flutter/`, Flutter 3.44.4, máquina Linux. **Não dispara sozinho**: o repositório precisa ser conectado no Codemagic e o webhook criado lá. **Nenhuma execução vista ainda.** O workflow do GitHub Actions foi removido. Build de release depende de versão, assinatura e contas das lojas. |
 | Aviso do build | `firebase_auth` e `firebase_core` ainda aplicam o Kotlin Gradle Plugin; o Flutter avisa que versões futuras vão exigir "Built-in Kotlin". Acompanhar atualizações dos plugins. |
 | Executado em aparelho/emulador | **sim, em 2026-11-03** (primeira execução fora dos testes, pelo usuário; sem relato de problema). A conferência tela por tela em 1,0×/1,3×/2,0×, claro e escuro (`flutter-preview`) segue pendente. |
 | Firebase | projeto `mesada-proj`; apps Android e iOS registrados. **Não é mais inicializado** no `main.dart`: o modo local não usa Firebase (ADR-0014). Auth e Firestore seguem desabilitados no console — passam a ser pré-requisito do M4.5. |
