@@ -12,12 +12,10 @@ void main() {
   AppAccess access({
     AppEntitlement? entitlement,
     bool ownsApp = false,
-    bool inActiveFamily = false,
     required DateTime now,
   }) => evaluateAccess(
     entitlement: entitlement ?? fresh(),
     ownsApp: ownsApp,
-    inActiveFamily: inActiveFamily,
     now: now,
   );
 
@@ -85,26 +83,11 @@ void main() {
       expectFull(access(ownsApp: true, now: later), AccessSource.purchased);
     });
 
-    test('o convidado entra pela família com assinatura ativa', () {
-      expectFull(
-        access(inActiveFamily: true, now: later),
-        AccessSource.familyMember,
-      );
-    });
-
-    test('sem compra nem família ativa, só leitura', () {
+    test('sem compra, só leitura: a família não dá acesso ao app', () {
+      // Cada pessoa precisa do próprio acesso, o convidado inclusive. A
+      // assinatura de compartilhar nem entra nesta regra.
       expect(access(now: later), isA<ReadOnlyAccess>());
     });
-
-    test(
-      'família que deixou de estar ativa devolve ao caso do teste vencido',
-      () {
-        expect(
-          access(inActiveFamily: false, now: later),
-          isA<ReadOnlyAccess>(),
-        );
-      },
-    );
   });
 
   group('app antigo', () {
@@ -135,20 +118,6 @@ void main() {
       expectFull(
         access(entitlement: legacy(), ownsApp: true, now: later),
         AccessSource.legacy,
-      );
-    });
-
-    test('compra vence a família', () {
-      expectFull(
-        access(ownsApp: true, inActiveFamily: true, now: later),
-        AccessSource.purchased,
-      );
-    });
-
-    test('família vence o teste', () {
-      expectFull(
-        access(inActiveFamily: true, now: DateTime(2026, 11, 5)),
-        AccessSource.familyMember,
       );
     });
 

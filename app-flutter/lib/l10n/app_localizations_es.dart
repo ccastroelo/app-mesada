@@ -540,7 +540,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sharingOtherNeedsApp =>
-      'El otro responsable instala Mesada en su dispositivo, crea la cuenta y entra con el código que le envíes.';
+      'El otro responsable instala Mesada en su dispositivo (con su propio acceso a la app), crea la cuenta y entra con el código que le envíes.';
 
   @override
   String get sharingLocalOnly =>

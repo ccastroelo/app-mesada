@@ -160,7 +160,7 @@
   "intro4Title": "Los dos responsables",
   "intro4Body": "Los dos responsables ven los mismos números en tiempo real. Puedes activarlo más tarde, en Ajustes.",
   "sharingPitch": "Los dos responsables ven los mismos números, en tiempo real, cada uno en su dispositivo.",
-  "sharingOtherNeedsApp": "El otro responsable instala Mesada en su dispositivo, crea la cuenta y entra con el código que le envíes.",
+  "sharingOtherNeedsApp": "El otro responsable instala Mesada en su dispositivo (con su propio acceso a la app), crea la cuenta y entra con el código que le envíes.",
   "sharingLocalOnly": "Por ahora los datos se quedan solo en este dispositivo.",
   "settingsFamilySharingSubtitle": "Compartir con el otro responsable",
   "sharingStart": "Entrar para compartir",

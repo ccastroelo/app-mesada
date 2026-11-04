@@ -13,7 +13,7 @@ Vale para todos os agentes e computadores. O pedido atual do usuário define o t
 
 ## Decisões de produto vigentes (não "melhorar")
 
-- **Dados locais por padrão** (ADR-0014): sem conta e sem Firebase até a pessoa escolher compartilhar. **Modelo de venda** (ADR-0021): app grátis para baixar, 15 dias de teste, depois **compra única do app**; **compartilhar é uma assinatura**, e o convidado não paga a compra única. Acabou o teste sem comprar: **só leitura**. Quem veio do app antigo usa local para sempre.
+- **Dados locais por padrão** (ADR-0014): sem conta e sem Firebase até a pessoa escolher compartilhar. **Modelo de venda** (ADR-0021): **app grátis para baixar; 15 dias de teste; depois a compra única do app (`mesada_app`), que cada pessoa paga, o convidado inclusive; compartilhar (sincronizar) é uma assinatura por família (`mesada_compartilhar`), paga por quem cria a família**. Acabou o teste sem comprar: **só leitura**. A assinatura libera só a sincronização, nunca o uso do app. Quem veio do app antigo usa local para sempre.
 - **Sem importação** de dados do legado (ADR-0001); mesmo `applicationId` `br.eti.claudiocastro.mesada` (ADR-0007).
 - Foto do filho só no aparelho; nada de imagem de menor na nuvem (ADR-0006).
 - Dinheiro em centavos inteiros, nunca `double` (ADR-0002).

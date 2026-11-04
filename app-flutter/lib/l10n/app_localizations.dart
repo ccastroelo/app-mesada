@@ -1064,7 +1064,7 @@ abstract class AppLocalizations {
   /// No description provided for @sharingOtherNeedsApp.
   ///
   /// In pt, this message translates to:
-  /// **'O outro responsável instala o Mesada no aparelho dele, cria a conta e entra com o código que você enviar.'**
+  /// **'O outro responsável instala o Mesada no aparelho dele (com o acesso ao app dele), cria a conta e entra com o código que você enviar.'**
   String get sharingOtherNeedsApp;
 
   /// No description provided for @sharingLocalOnly.

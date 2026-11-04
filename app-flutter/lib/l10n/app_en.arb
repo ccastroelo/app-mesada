@@ -160,7 +160,7 @@
   "intro4Title": "Both parents",
   "intro4Body": "Both parents see the same numbers in real time. You can turn this on later, in Settings.",
   "sharingPitch": "Both parents see the same numbers, in real time, each on their own device.",
-  "sharingOtherNeedsApp": "The other parent installs Mesada on their own device, creates an account and joins with the code you send.",
+  "sharingOtherNeedsApp": "The other parent installs Mesada on their own device (with their own access to the app), creates an account and joins with the code you send.",
   "sharingLocalOnly": "Right now your data stays on this device only.",
   "settingsFamilySharingSubtitle": "Share with the other parent",
   "sharingStart": "Sign in to share",

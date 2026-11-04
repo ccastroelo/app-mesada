@@ -539,7 +539,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sharingOtherNeedsApp =>
-      'The other parent installs Mesada on their own device, creates an account and joins with the code you send.';
+      'The other parent installs Mesada on their own device (with their own access to the app), creates an account and joins with the code you send.';
 
   @override
   String get sharingLocalOnly =>

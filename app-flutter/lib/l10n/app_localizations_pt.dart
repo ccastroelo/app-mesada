@@ -537,7 +537,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sharingOtherNeedsApp =>
-      'O outro responsável instala o Mesada no aparelho dele, cria a conta e entra com o código que você enviar.';
+      'O outro responsável instala o Mesada no aparelho dele (com o acesso ao app dele), cria a conta e entra com o código que você enviar.';
 
   @override
   String get sharingLocalOnly => 'Hoje os dados ficam só neste aparelho.';
@@ -1092,7 +1092,7 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get sharingOtherNeedsApp =>
-      'O outro responsável instala o Mesada no aparelho dele, cria a conta e entra com o código que lhe enviar.';
+      'O outro responsável instala o Mesada no aparelho dele (com o acesso à app dele), cria a conta e entra com o código que lhe enviar.';
 
   @override
   String get sharingLocalOnly => 'Hoje os dados ficam só neste aparelho.';
