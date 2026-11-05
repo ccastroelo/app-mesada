@@ -614,6 +614,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settingsPurchaseReadOnly => 'O teste acabou: só leitura';
 
   @override
+  String get sharingLapsedNotice =>
+      'A assinatura de compartilhar terminou. Este aparelho voltou a guardar os dados aqui, com tudo o que havia na nuvem; nada foi apagado. Para voltar a compartilhar, assine de novo.';
+
+  @override
   String get sharingSubscribeHint =>
       'Compartilhar é uma assinatura por família: quem cria a família assina, e o outro responsável só precisa ter o app.';
 
@@ -1310,6 +1314,10 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get settingsPurchaseReadOnly => 'O teste terminou: só leitura';
+
+  @override
+  String get sharingLapsedNotice =>
+      'A subscrição de partilhar terminou. Este aparelho voltou a guardar os dados aqui, com tudo o que havia na nuvem; nada foi apagado. Para voltar a partilhar, subscreva de novo.';
 
   @override
   String get sharingSubscribeHint =>

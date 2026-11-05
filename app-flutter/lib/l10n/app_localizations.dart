@@ -1181,6 +1181,12 @@ abstract class AppLocalizations {
   /// **'O teste acabou: só leitura'**
   String get settingsPurchaseReadOnly;
 
+  /// No description provided for @sharingLapsedNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'A assinatura de compartilhar terminou. Este aparelho voltou a guardar os dados aqui, com tudo o que havia na nuvem; nada foi apagado. Para voltar a compartilhar, assine de novo.'**
+  String get sharingLapsedNotice;
+
   /// No description provided for @sharingSubscribeHint.
   ///
   /// In pt, this message translates to:

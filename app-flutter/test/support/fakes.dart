@@ -686,6 +686,19 @@ class FakeStoreGateway implements StoreGateway {
     restores++;
     return restorable;
   }
+
+  /// O que o validador reconhece agora. **Null é "não sei"** (ADR-0022), e é
+  /// o padrão: a maioria dos testes não fala de assinatura.
+  Set<StoreProduct>? activeNow;
+
+  /// Em nome de quem o validador foi consultado, na ordem.
+  final owners = <String?>[];
+
+  @override
+  Future<Set<StoreProduct>?> active() async => activeNow;
+
+  @override
+  Future<void> useFamily(String? familyId) async => owners.add(familyId);
 }
 
 /// A cópia local das compras, em memória.
@@ -710,4 +723,13 @@ class FakePurchaseStore implements PurchaseStore {
   Future<void> save(PurchaseRecord record) async {
     records[record.product] = record;
   }
+
+  /// A marca de que a volta ao local foi por vencimento da assinatura.
+  bool lapsed = false;
+
+  @override
+  Future<bool> sharingLapsed() async => lapsed;
+
+  @override
+  Future<void> setSharingLapsed(bool value) async => lapsed = value;
 }

@@ -11,6 +11,8 @@ import 'package:mesada/features/auth_family/auth_family.dart';
 import 'package:mesada/features/auth_family/data/providers.dart';
 import 'package:mesada/features/auth_family/domain/entities/family_snapshot.dart';
 import 'package:mesada/features/auth_family/presentation/state/controllers.dart';
+import 'package:mesada/features/entitlement/data/providers.dart';
+import 'package:mesada/features/entitlement/entitlement.dart';
 
 import '../../../support/fakes.dart';
 import '../../../support/pump_app.dart';
@@ -21,6 +23,7 @@ void main() {
     late LocalStore store;
     late DeviceSettings settings;
     late FakeFamilyRepository family;
+    late FakeStoreGateway gateway;
     late ProviderContainer container;
 
     setUp(() async {
@@ -42,6 +45,7 @@ void main() {
           {'childId': 'c1', 'ruleId': 'r1', 'quantity': 2},
         ],
       );
+      gateway = FakeStoreGateway();
       await settings.merge({'mode': 'cloud', 'pinHash': 'abc'});
       container = ProviderContainer(
         overrides: [
@@ -52,6 +56,7 @@ void main() {
           familyRepositoryProvider.overrideWithValue(family),
           localStoreProvider.overrideWithValue(store),
           deviceSettingsProvider.overrideWithValue(settings),
+          storeGatewayProvider.overrideWithValue(gateway),
         ],
       );
       // O portão e a ação precisam de alguém ouvindo (são autoDispose/streams).
@@ -104,6 +109,55 @@ void main() {
 
       final document = await store.watch().first;
       expect(document.children.map((child) => child['id']), ['c1']);
+    });
+
+    test(
+      'assinatura vencida: o vigia baixa o retrato e volta ao local',
+      () async {
+        gateway.activeNow = {StoreProduct.app};
+
+        await container.read(sharingWatchProvider.future);
+
+        // Consultado em nome da família, não do aparelho.
+        expect(gateway.owners, ['f1']);
+        expect(family.downloads, ['f1']);
+        final json = await settings.read();
+        expect(json['mode'], 'local');
+        expect(json['sharingLapsed'], isTrue);
+        await expectLater(
+        container.read(sharingLapsedMarkProvider.future),
+        completion(isTrue),
+      );
+        final document = await store.watch().first;
+        expect(document.children.single['id'], 'c1');
+      },
+    );
+
+    test('assinatura valendo: o vigia não mexe em nada', () async {
+      gateway.activeNow = {StoreProduct.app, StoreProduct.sharing};
+
+      await container.read(sharingWatchProvider.future);
+
+      expect(family.downloads, isEmpty);
+      expect((await settings.read())['mode'], 'cloud');
+    });
+
+    test('validador calado não tira ninguém da nuvem', () async {
+      // `activeNow` nulo é "não sei": sem rede, sem chave no build.
+      await container.read(sharingWatchProvider.future);
+
+      expect(family.downloads, isEmpty);
+      expect((await settings.read())['mode'], 'cloud');
+    });
+
+    test('se o retrato falhar no vencimento, segue na nuvem', () async {
+      gateway.activeNow = {StoreProduct.app};
+      family.snapshotFailure = const NoConnection();
+
+      await container.read(sharingWatchProvider.future);
+
+      expect((await settings.read())['mode'], 'cloud');
+      expect((await settings.read())['sharingLapsed'], isNull);
     });
 
     test('se baixar falhar, nada muda: segue na nuvem', () async {

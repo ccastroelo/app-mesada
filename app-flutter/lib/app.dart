@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/app_lock/app_lock_providers.dart';
+import 'features/auth_family/auth_family.dart';
 import 'features/entitlement/entitlement_providers.dart';
 import 'l10n/app_localizations.dart';
 
@@ -34,6 +35,8 @@ class _MesadaAppState extends ConsumerState<MesadaApp> {
             lock.onBack();
             // O teste pode ter acabado enquanto o app estava em segundo plano.
             ref.invalidate(accessProvider);
+            // E a assinatura pode ter vencido: o vigia confere de novo.
+            ref.invalidate(validatedProductsProvider);
           case AppLifecycleState.inactive || AppLifecycleState.detached:
             break;
         }
@@ -51,6 +54,9 @@ class _MesadaAppState extends ConsumerState<MesadaApp> {
   Widget build(BuildContext context) {
     // Grava a marca do app no primeiro uso (ADR-0021); o valor não é usado aqui.
     ref.watch(entitlementProvider);
+    // Vigia da assinatura de compartilhar (ADR-0022): se venceu, baixa o
+    // retrato e volta a trabalhar só neste aparelho.
+    ref.watch(sharingWatchProvider);
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.light(),

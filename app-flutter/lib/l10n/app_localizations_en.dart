@@ -615,6 +615,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsPurchaseReadOnly => 'The trial is over: read-only';
 
   @override
+  String get sharingLapsedNotice =>
+      'Your sharing subscription has ended. This device went back to keeping the data here, with everything that was in the cloud; nothing was deleted. To share again, subscribe once more.';
+
+  @override
   String get sharingSubscribeHint =>
       'Sharing is a subscription per family: whoever creates the family subscribes, and the other parent only needs the app.';
 

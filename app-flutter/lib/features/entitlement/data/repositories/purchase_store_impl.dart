@@ -11,6 +11,7 @@ class PurchaseStoreImpl implements PurchaseStore {
   final DeviceSettings _settings;
 
   static const _key = 'purchases';
+  static const _lapsedKey = 'sharingLapsed';
 
   @override
   Future<Map<StoreProduct, PurchaseRecord>> read() async {
@@ -36,4 +37,12 @@ class PurchaseStoreImpl implements PurchaseStore {
       },
     });
   }
+
+  @override
+  Future<bool> sharingLapsed() async =>
+      (await _settings.read())[_lapsedKey] == true;
+
+  @override
+  Future<void> setSharingLapsed(bool lapsed) =>
+      _settings.merge({_lapsedKey: lapsed});
 }

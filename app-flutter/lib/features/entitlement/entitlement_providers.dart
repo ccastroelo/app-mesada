@@ -12,6 +12,8 @@ export 'presentation/state/entitlement_state.dart'
         entitlementProvider,
         purchaseActionsProvider,
         purchasesProvider,
-        sharingSubscribedProvider,
+        sharingActiveProvider,
+        sharingLapsedProvider,
+        validatedProductsProvider,
         storeOfferProvider;
 export 'presentation/widgets/access_banner.dart';

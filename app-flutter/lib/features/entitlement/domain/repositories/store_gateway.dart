@@ -20,4 +20,18 @@ abstract class StoreGateway {
 
   /// Procura as compras da conta da loja e devolve as dos nossos produtos.
   Future<Set<StoreProduct>> restore();
+
+  /// O que o validador reconhece **agora** (ADR-0022), para o dono em uso.
+  ///
+  /// Null quer dizer **não sei** — sem rede, sem chave, validador fora do ar —
+  /// e é diferente de um conjunto vazio, que é "não tem nada". Quem pergunta
+  /// decide o que fazer com a dúvida.
+  Future<Set<StoreProduct>?> active();
+
+  /// Passa a consultar e comprar em nome da família [familyId].
+  ///
+  /// É assim que o **convidado** vê a assinatura que o outro responsável pagou:
+  /// os dois aparelhos usam o id da família como dono no validador (ADR-0022).
+  /// Nulo volta ao dono anônimo deste aparelho.
+  Future<void> useFamily(String? familyId);
 }

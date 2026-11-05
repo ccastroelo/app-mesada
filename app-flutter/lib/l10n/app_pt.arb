@@ -331,6 +331,7 @@
   "purchaseOwned": "Você já tem o app. Obrigado!",
   "settingsPurchaseTile": "Comprar o app",
   "settingsPurchaseReadOnly": "O teste acabou: só leitura",
+  "sharingLapsedNotice": "A assinatura de compartilhar terminou. Este aparelho voltou a guardar os dados aqui, com tudo o que havia na nuvem; nada foi apagado. Para voltar a compartilhar, assine de novo.",
   "sharingSubscribeHint": "Compartilhar é uma assinatura por família: quem cria a família assina, e o outro responsável só precisa ter o app.",
   "sharingSubscribeAction": "Assinar por {price}",
   "@sharingSubscribeAction": {

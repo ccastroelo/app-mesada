@@ -64,15 +64,49 @@ final canWriteProvider = Provider<bool>(
   (ref) => ref.watch(accessProvider).value?.canWrite ?? true,
 );
 
-/// A família já tem a assinatura de compartilhar neste aparelho?
+/// O que o validador reconhece **agora** em nome da família ([familyId] vira o
+/// dono no RevenueCat), que é como o **convidado** vê a assinatura paga pelo
+/// outro responsável — ele não tem compra nenhuma na própria conta da loja
+/// (ADR-0022). Nulo em [familyId] é quem ainda não tem família: aí a pergunta
+/// é só sobre este aparelho.
 ///
-/// **Limite conhecido (ADR-0021):** a cópia local não sabe quando a assinatura
-/// vence; sem validação no servidor, ela vale como ativa depois de comprada.
-final sharingSubscribedProvider = Provider<bool>(
-  (ref) =>
-      ref.watch(purchasesProvider).value?.containsKey(StoreProduct.sharing) ??
-      false,
-);
+/// **Resposta nula é "não sei"** (sem rede, sem chave no build), diferente de
+/// um conjunto vazio, que é "não tem nada".
+final validatedProductsProvider =
+    FutureProvider.family<Set<StoreProduct>?, String?>((ref, familyId) async {
+      final gateway = ref.watch(storeGatewayProvider);
+      await gateway.useFamily(familyId);
+      return gateway.active();
+    });
+
+/// A assinatura de compartilhar está valendo para esta família?
+///
+/// Se o validador não responde, vale a cópia local das compras — que só existe
+/// no aparelho de quem assinou, e **não sabe quando a assinatura vence**. Isto
+/// é de propósito: a dúvida não tira o compartilhamento de quem pagou, e não
+/// dá nada a quem não pagou.
+final sharingActiveProvider = FutureProvider.family<bool, String?>((
+  ref,
+  familyId,
+) async {
+  final active = await ref.watch(validatedProductsProvider(familyId).future);
+  if (active != null) return active.contains(StoreProduct.sharing);
+  final local = await ref.watch(purchasesProvider.future);
+  return local.containsKey(StoreProduct.sharing);
+});
+
+/// A assinatura de compartilhar **venceu**?
+///
+/// Só é `true` quando o validador respondeu e o direito não está lá. Sem
+/// resposta é nulo, nunca `true`: ninguém é tirado da nuvem por falta de rede
+/// — e o convidado, que nunca tem cópia local, dependeria só disso.
+final sharingLapsedProvider = FutureProvider.family<bool?, String?>((
+  ref,
+  familyId,
+) async {
+  final active = await ref.watch(validatedProductsProvider(familyId).future);
+  return active == null ? null : !active.contains(StoreProduct.sharing);
+});
 
 /// O preço e a oferta de um produto, como a loja respondeu.
 final storeOfferProvider = FutureProvider.family<StoreOffer?, StoreProduct>(

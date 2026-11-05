@@ -147,4 +147,29 @@ void main() {
     expect(enter, findsOneWidget);
     expect(find.text('Restaurar compras'), findsNothing);
   });
+
+  testWidgets('o validador reconhece a assinatura mesmo sem cópia local', (
+    tester,
+  ) async {
+    // É o caso do convidado: a assinatura é da família, não da conta dele.
+    final gateway = FakeStoreGateway()..activeNow = {StoreProduct.sharing};
+    await openSharing(tester, gateway: gateway);
+
+    expect(enter, findsOneWidget);
+    expect(find.textContaining('Assinar por'), findsNothing);
+  });
+
+  testWidgets('depois do vencimento, explica que o aparelho voltou ao local', (
+    tester,
+  ) async {
+    final purchases = FakePurchaseStore.ownsApp()..lapsed = true;
+
+    await openSharing(tester, purchases: purchases);
+
+    expect(
+      find.textContaining('assinatura de compartilhar terminou'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('nada foi apagado'), findsOneWidget);
+  });
 }

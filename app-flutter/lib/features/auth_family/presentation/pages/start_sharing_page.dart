@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/storage/app_mode_state.dart';
 import '../../../../core/storage/providers.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../entitlement/entitlement.dart';
 import '../../../entitlement/entitlement_providers.dart';
+import '../state/controllers.dart';
 
 /// Ajustes › Família: começar a compartilhar com o outro responsável.
 ///
@@ -25,7 +25,13 @@ class StartSharingPage extends ConsumerWidget {
     final muted = theme.textTheme.bodyMedium?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
     );
-    final subscribed = ref.watch(sharingSubscribedProvider);
+    // Pergunta ao validador (ADR-0022). Aqui ainda não há família, então a
+    // pergunta é sobre este aparelho; é depois, já na nuvem, que o id da
+    // família passa a ser o dono e o convidado vê a mesma assinatura.
+    final subscribed = ref.watch(sharingActiveProvider(null)).value ?? false;
+    // Quando a assinatura venceu, o vigia já baixou o retrato e trouxe este
+    // aparelho de volta ao local (ADR-0022); aqui se explica o que houve.
+    final lapsed = ref.watch(sharingLapsedMarkProvider).value ?? false;
     final offer = ref.watch(storeOfferProvider(StoreProduct.sharing));
     final action = ref.watch(purchaseActionsProvider);
     final actions = ref.read(purchaseActionsProvider.notifier);
@@ -44,6 +50,21 @@ class StartSharingPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(Space.lg),
         children: [
+          if (lapsed) ...[
+            Card(
+              color: theme.colorScheme.secondaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(Space.md),
+                child: Text(
+                  l10n.sharingLapsedNotice,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSecondaryContainer,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: Space.md),
+          ],
           Text(l10n.sharingPitch, style: theme.textTheme.titleMedium),
           const SizedBox(height: Space.md),
           Text(l10n.sharingOtherNeedsApp, style: muted),
@@ -77,7 +98,7 @@ class StartSharingPage extends ConsumerWidget {
               Text(l10n.sharingHint, style: muted),
               const SizedBox(height: Space.md),
               FilledButton(
-                onPressed: () => setAppMode(ref, AppMode.cloud),
+                onPressed: () => resumeSharing(ref),
                 child: Text(l10n.sharingStart),
               ),
             ],

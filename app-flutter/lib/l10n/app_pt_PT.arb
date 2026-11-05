@@ -180,6 +180,7 @@
   "purchaseOwned": "Já tem a app. Obrigado!",
   "settingsPurchaseTile": "Comprar a app",
   "settingsPurchaseReadOnly": "O teste terminou: só leitura",
+  "sharingLapsedNotice": "A subscrição de partilhar terminou. Este aparelho voltou a guardar os dados aqui, com tudo o que havia na nuvem; nada foi apagado. Para voltar a partilhar, subscreva de novo.",
   "sharingSubscribeHint": "Partilhar é uma subscrição por família: quem cria a família subscreve, e o outro responsável só precisa de ter a app.",
   "sharingSubscribeAction": "Subscrever por {price}",
   "settingsBackToLocalTile": "Voltar a usar só neste aparelho",

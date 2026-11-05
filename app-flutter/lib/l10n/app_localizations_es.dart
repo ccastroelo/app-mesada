@@ -618,6 +618,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsPurchaseReadOnly => 'La prueba terminó: solo lectura';
 
   @override
+  String get sharingLapsedNotice =>
+      'La suscripción para compartir terminó. Este dispositivo volvió a guardar los datos aquí, con todo lo que había en la nube; no se borró nada. Para volver a compartir, suscríbete de nuevo.';
+
+  @override
   String get sharingSubscribeHint =>
       'Compartir es una suscripción por familia: quien crea la familia se suscribe, y el otro responsable solo necesita la app.';
 
