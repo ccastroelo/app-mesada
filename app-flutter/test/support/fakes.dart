@@ -635,6 +635,25 @@ class FakeEntitlementStore implements EntitlementStore {
   }
 }
 
+/// O cofre do sistema em memória: o Keychain é canal de plataforma e não
+/// responde num teste.
+class FakeSecureTrialStore implements SecureTrialStore {
+  FakeSecureTrialStore({this.since});
+
+  /// O que estava guardado antes desta instalação (nulo = cofre vazio).
+  DateTime? since;
+  int saves = 0;
+
+  @override
+  Future<DateTime?> read() async => since;
+
+  @override
+  Future<void> save(DateTime value) async {
+    saves++;
+    since = value;
+  }
+}
+
 /// Detector do app antigo: o teste diz se havia rastro dele no aparelho.
 class FakeLegacyDetector implements LegacyAppDetector {
   FakeLegacyDetector({this.found = false});

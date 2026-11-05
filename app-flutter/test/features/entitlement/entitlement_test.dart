@@ -151,10 +151,17 @@ void main() {
       }
     });
 
-    ProviderContainer open(FakeEntitlementStore store, DateTime now) {
+    ProviderContainer open(
+      FakeEntitlementStore store,
+      DateTime now, {
+      FakeSecureTrialStore? vault,
+    }) {
       final container = ProviderContainer(
         overrides: [
           entitlementStoreProvider.overrideWithValue(store),
+          secureTrialStoreProvider.overrideWithValue(
+            vault ?? FakeSecureTrialStore(),
+          ),
           legacyAppDetectorProvider.overrideWithValue(FakeLegacyDetector()),
           purchaseStoreProvider.overrideWithValue(FakePurchaseStore()),
           clockProvider.overrideWithValue(() => now),
@@ -212,6 +219,52 @@ void main() {
       ).read(accessProvider.future);
 
       expect(store.saves, 0);
+    });
+
+    test('primeiro uso guarda o início do teste no cofre (ADR-0024)', () async {
+      final store = FakeEntitlementStore();
+      final vault = FakeSecureTrialStore();
+
+      final entitlement = await open(
+        store,
+        since,
+        vault: vault,
+      ).read(entitlementProvider.future);
+
+      expect(entitlement.since, since);
+      expect(vault.since, since);
+    });
+
+    test('reinstalar não devolve os 15 dias: a data vem do cofre', () async {
+      // O `device.json` foi com o app; o cofre do sistema ficou.
+      final vault = FakeSecureTrialStore(since: since);
+      final store = FakeEntitlementStore();
+
+      final access = await open(
+        store,
+        since.add(const Duration(days: 20)),
+        vault: vault,
+      ).read(accessProvider.future);
+
+      expect(access, isA<ReadOnlyAccess>());
+      expect(store.entitlement!.since, since);
+      // A data que já estava lá não é reescrita.
+      expect(vault.saves, 0);
+    });
+
+    test('cofre vazio com marca antiga: espelha a data que já havia', () async {
+      final store = FakeEntitlementStore(
+        entitlement: AppEntitlement(since: since),
+      );
+      final vault = FakeSecureTrialStore();
+
+      await open(
+        store,
+        since.add(const Duration(days: 2)),
+        vault: vault,
+      ).read(entitlementProvider.future);
+
+      expect(vault.since, since);
     });
   });
 

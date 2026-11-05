@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Keychain Sharing, exigido pelo flutter_secure_storage (ADR-0024).
+	     Grupo vazio = só o Keychain deste app. -->
+	<key>keychain-access-groups</key>
+	<array/>
+</dict>
+</plist>

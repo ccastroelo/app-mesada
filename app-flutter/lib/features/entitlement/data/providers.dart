@@ -5,8 +5,10 @@ import '../../../core/storage/providers.dart';
 import '../domain/repositories/entitlement_store.dart';
 import '../domain/repositories/legacy_app_detector.dart';
 import '../domain/repositories/purchase_store.dart';
+import '../domain/repositories/secure_trial_store.dart';
 import '../domain/repositories/store_gateway.dart';
 import 'repositories/entitlement_store_impl.dart';
+import 'repositories/keychain_trial_store.dart';
 import 'repositories/legacy_files_detector.dart';
 import 'repositories/purchase_store_impl.dart';
 import 'repositories/revenuecat_store_gateway.dart';
@@ -14,6 +16,12 @@ import 'repositories/revenuecat_store_gateway.dart';
 /// Raiz de composição da feature; os testes trocam por falsos.
 final entitlementStoreProvider = Provider<EntitlementStore>(
   (ref) => EntitlementStoreImpl(ref.watch(deviceSettingsProvider)),
+);
+
+/// O cofre do sistema onde o início do teste sobrevive a reinstalar
+/// (ADR-0024). Os testes trocam por um falso: é um canal de plataforma.
+final secureTrialStoreProvider = Provider<SecureTrialStore>(
+  (ref) => KeychainTrialStore(),
 );
 
 final legacyAppDetectorProvider = Provider<LegacyAppDetector>(

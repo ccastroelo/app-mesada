@@ -14,18 +14,31 @@ import '../../domain/usecases/evaluate_access.dart';
 /// origem — atualização do app antigo ou instalação nova (ADR-0021). Depois
 /// disso nunca é reescrita: a data, o modelo e a origem ficam como foram no
 /// começo.
+///
+/// O início do teste é espelhado no cofre do sistema (ADR-0024), que no iOS
+/// sobrevive a apagar o app: **reinstalar não devolve os 15 dias**. Quando o
+/// `device.json` não tem marca mas o cofre tem a data, a marca nasce com a
+/// data de lá. A origem e o modelo não vão para o cofre — é só uma data.
 final entitlementProvider = FutureProvider<AppEntitlement>((ref) async {
   final store = ref.watch(entitlementStoreProvider);
+  final vault = ref.watch(secureTrialStoreProvider);
   final existing = await store.read();
-  if (existing != null) return existing;
+  final vaulted = await vault.read();
+  if (existing != null) {
+    // Marca de uma versão anterior a esta, ou cofre apagado: espelha agora,
+    // para a próxima reinstalação já encontrar a data.
+    if (vaulted == null) await vault.save(existing.since);
+    return existing;
+  }
   final existed = await ref.read(legacyAppDetectorProvider).existed();
   final created = AppEntitlement(
-    since: ref.read(clockProvider)(),
+    since: vaulted ?? ref.read(clockProvider)(),
     origin: existed
         ? EntitlementOrigin.legacyUpdate
         : EntitlementOrigin.newInstall,
   );
   await store.save(created);
+  if (vaulted == null) await vault.save(created.since);
   return created;
 });
 

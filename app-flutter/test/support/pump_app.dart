@@ -41,6 +41,7 @@ Future<void> pumpApp(
   FakePinRecoveryService? recovery,
   FakeIntroStore? introStore,
   FakeEntitlementStore? entitlementStore,
+  FakeSecureTrialStore? secureTrialStore,
   FakeLegacyDetector? legacyDetector,
   FakeStoreGateway? storeGateway,
   FakePurchaseStore? purchaseStore,
@@ -80,6 +81,10 @@ Future<void> pumpApp(
         // A marca do aparelho em memória: nenhum teste grava no disco por ela.
         entitlementStoreProvider.overrideWithValue(
           entitlementStore ?? FakeEntitlementStore(),
+        ),
+        // O cofre do sistema em memória: o Keychain não responde num teste.
+        secureTrialStoreProvider.overrideWithValue(
+          secureTrialStore ?? FakeSecureTrialStore(),
         ),
         legacyAppDetectorProvider.overrideWithValue(
           legacyDetector ?? FakeLegacyDetector(),
