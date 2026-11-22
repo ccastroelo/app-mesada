@@ -38,7 +38,7 @@ flutter test
 
 ## Testes das regras do Firestore (emulador local)
 
-Pasta `app-flutter/firebase-tests/` (Node 22, Java 21, `firebase` CLI). Baseline (2026-10-28): **28 testes passando**. Em 2026-11-04 entraram **6 testes do campo `plan`** (ADR-0020) que **nunca foram executados** — o emulador precisa do terminal do usuário. Não toca a nuvem (projeto `demo-mesada`).
+Pasta `app-flutter/firebase-tests/` (Node 22, Java 21, `firebase` CLI). Baseline (2026-10-28): **28 testes passando** — e o arquivo tem exatamente esses 28 hoje (conferido em 2026-11-21). Os **6 testes do campo `plan`** que entraram em 2026-11-04 (ADR-0020) **saíram junto com o campo**, quando o modelo de venda mudou (ADR-0021) e as regras voltaram à versão publicada: nunca foram executados e não há mais nada a rodar por causa deles. A suíte cobre as regras **publicadas**; reexecutar exige o emulador no terminal do usuário. Não toca a nuvem (projeto `demo-mesada`).
 
 ```bash
 cd app-flutter/firebase-tests

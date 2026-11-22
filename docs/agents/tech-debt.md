@@ -71,6 +71,6 @@ Só o som sobrou (seções recolhíveis, animação do saldo e o filho excluído
 ## A virada para a nuvem nunca rodou de verdade
 
 - **Onde**: `createFamilyFromLocal` (datasource da `auth_family`), o modo guardado em `core/storage/app_mode_state.dart` e a tela de Ajustes › Família (ADR-0014). Os testes usam repositório falso e pasta temporária: cobrem a **decisão** (quando virar, o que subir, o que preservar), não o Firestore.
-- **Pré-requisitos do usuário**: habilitar Authentication no `mesada-proj` (o Firestore já existe); **rodar os testes das regras no emulador** (`firebase-tests`, precisa do terminal dele). As regras publicadas são as do ADR-0011; **elas ainda não conhecem a assinatura**.
+- **Pré-requisito do usuário**: habilitar Authentication no `mesada-proj` (o Firestore já existe). As regras publicadas são as do ADR-0011, com os 28 testes do emulador rodados em 2026-10-28, e **não mudaram desde então** — não há nada novo a rodar ali; só uma mudança futura nas regras pede o emulador outra vez (`firebase-tests`, no terminal dele). **Elas ainda não conhecem a assinatura.**
 - **O que falta ver rodando**: subir um aparelho com dados, entrar, criar a família e confirmar que filhos, regras e lançamentos chegaram com os **mesmos ids** (senão os lançamentos apontam para o vazio); depois convidar o segundo responsável e ver os dois lançando.
 
